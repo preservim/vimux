@@ -6,6 +6,8 @@ Easily interact with tmux from vim. This project is still in development so some
 
 With **[vim-bundle](https://github.com/benmills/vim-bundle)**: `vim-bundle install benmills/vimux`
 
+Otherwise download the latest [tarball](https://github.com/benmills/vimux/tarball/master), extract it and move `plugin/vimux.vim` inside `~/.vim/plugin`. If you're using [pathogen](https://github.com/tpope/vim-pathogen) than move the entire folder extracted from the tarball into `~/.vim/bundle`.
+
 ## Usage
 
 ### RunVimTmuxCommand 
@@ -29,5 +31,7 @@ map <Leader>zc :call CloseVimTmuxWindows()<CR>
 ```
 
 ## Todo
+
+The features I would like to add in the near future.
 
 * Add the ability to target any tmux session, window and pane
