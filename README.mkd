@@ -1,0 +1,33 @@
+# vimux
+
+Easily interact with tmux from vim. This project is still in development so some features are still missing.
+
+## Installation
+
+With **[vim-bundle](https://github.com/benmills/vim-bundle)**: `vim-bundle install benmills/vimux`
+
+## Usage
+
+### RunVimTmuxCommand 
+Run a system command in a small horizontal split bellow the current pane vim is in.
+
+*Example:*
+
+```viml
+" Run the current file with rspec
+map <Leader>zr :call RunVimTmuxCommand("clear %% rspec " . bufname("%"))<CR>
+```
+
+### CloseVimTmuxWindows 
+Close all other tmux panes in the current window.
+
+*Example:*
+
+```viml
+" Close all other tmux panes in current window
+map <Leader>zc :call CloseVimTmuxWindows()<CR>
+```
+
+## Todo
+
+* Add the ability to target any tmux session, window and pane
