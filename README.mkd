@@ -17,7 +17,7 @@ Run a system command in a small horizontal split bellow the current pane vim is 
 
 ```viml
 " Run the current file with rspec
-map <Leader>zr :call RunVimTmuxCommand("clear %% rspec " . bufname("%"))<CR>
+map <Leader>rb :call RunVimTmuxCommand("clear %% rspec " . bufname("%"))<CR>
 ```
 
 ### RunLastVimTmuxCommand
@@ -27,7 +27,7 @@ Run the last command executed by `RunVimTmuxCommand`
 
 ```viml
 " Run last command executed by RunVimTmuxCommand
-map <Leader>zr :call RunLastVimTmuxCommand<CR>
+map <Leader>rl :call RunLastVimTmuxCommand<CR>
 ```
 
 ### CloseVimTmuxWindows
@@ -37,14 +37,14 @@ Close all other tmux panes in the current window.
 
 ```viml
 " Close all other tmux panes in current window
-map <Leader>zc :CloseVimTmuxWindows<CR>
+map <Leader>rx :CloseVimTmuxWindows<CR>
 ```
 
 ## Options
 
 ### VimuxHeight
 Set the percent height of the runner pane opened by `RunVimTmuxCommand`.
-**Default: `20`**
+**Default: `"20"`**
 
 ```viml
 let VimuxHeight = "50"
