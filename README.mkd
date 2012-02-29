@@ -95,3 +95,4 @@ The features I would like to add in the near future.
 
 * Add the ability to target any tmux session, window and pane
 * Implment an interupt command that stops the currently running command
+* Exit copy-mode before running a command
