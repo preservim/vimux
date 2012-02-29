@@ -17,7 +17,17 @@ Run a system command in a small horizontal split bellow the current pane vim is 
 
 ```viml
 " Run the current file with rspec
-map <Leader>rb :call RunVimTmuxCommand("clear %% rspec " . bufname("%"))<CR>
+map <Leader>rb :call RunVimTmuxCommand("clear && rspec " . bufname("%"))<CR>
+```
+
+### PromptVimTmuxCommand
+Prompt for a command and run it in a small horizontal split bellow the current pane.
+
+*Example:*
+
+```viml
+" Prompt for a command to run
+map <Leader>rp :PromptVimTmuxCommand<CR>
 ```
 
 ### RunLastVimTmuxCommand
@@ -28,6 +38,16 @@ Run the last command executed by `RunVimTmuxCommand`
 ```viml
 " Run last command executed by RunVimTmuxCommand
 map <Leader>rl :call RunLastVimTmuxCommand<CR>
+```
+
+### InspectVimTmuxRunner
+Move into the tmux runner pane created by `RunVimTmuxCommand` and enter copy mode (scroll mode).
+
+*Example:*
+
+```viml
+" Inspect runner pane
+map <Leader>ri :InspectVimTmuxRunner<CR>
 ```
 
 ### CloseVimTmuxWindows

@@ -4,6 +4,8 @@ end
 
 command RunLastVimTmuxCommand :call RunLastVimTmuxCommand()
 command CloseVimTmuxWindows :call CloseVimTmuxWindows()
+command InspectVimTmuxRunner :call InspectVimTmuxRunner()
+command PromptVimTmuxCommand :call PromptVimTmuxCommand()
 
 function! RunVimTmuxCommand(command)
   let g:_VimTmuxCmd = a:command
@@ -27,6 +29,15 @@ endfunction
 function! CloseVimTmuxWindows()
   ruby CurrentTmuxSession.new.close_other_panes
   call ClearVimTmuxWindow()
+endfunction
+
+function! InspectVimTmuxRunner()
+  ruby CurrentTmuxSession.new.inspect_runner
+endfunction
+
+function! PromptVimTmuxCommand()
+  let l:command = input("Command? ")
+  call RunVimTmuxCommand(l:command)
 endfunction
 
 ruby << EOF
@@ -60,6 +71,11 @@ class TmuxSession
     else
       20
     end
+  end
+
+  def inspect_runner
+    run("select-pane -t #{target(:pane => runner_pane)}")
+    run("copy-mode")
   end
 
   def current_panes
