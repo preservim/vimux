@@ -10,7 +10,7 @@ Otherwise download the latest [tarball](https://github.com/benmills/vimux/tarbal
 
 ## Usage
 
-### RunVimTmuxCommand 
+### RunVimTmuxCommand
 Run a system command in a small horizontal split bellow the current pane vim is in.
 
 *Example:*
@@ -20,14 +20,34 @@ Run a system command in a small horizontal split bellow the current pane vim is 
 map <Leader>zr :call RunVimTmuxCommand("clear %% rspec " . bufname("%"))<CR>
 ```
 
-### CloseVimTmuxWindows 
+### RunLastVimTmuxCommand
+Run the last command executed by `RunVimTmuxCommand`
+
+*Example:*
+
+```viml
+" Run last command executed by RunVimTmuxCommand
+map <Leader>zr :call RunLastVimTmuxCommand<CR>
+```
+
+### CloseVimTmuxWindows
 Close all other tmux panes in the current window.
 
 *Example:*
 
 ```viml
 " Close all other tmux panes in current window
-map <Leader>zc :call CloseVimTmuxWindows()<CR>
+map <Leader>zc :CloseVimTmuxWindows<CR>
+```
+
+## Options
+
+### VimuxHeight
+Set the percent height of the runner pane opened by `RunVimTmuxCommand`.
+**Default: `20`**
+
+```viml
+let VimuxHeight = "50"
 ```
 
 ## Todo

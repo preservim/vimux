@@ -2,18 +2,31 @@ if !has("ruby")
   finish
 end
 
+command RunLastVimTmuxCommand :call RunLastVimTmuxCommand()
+command CloseVimTmuxWindows :call CloseVimTmuxWindows()
+
 function! RunVimTmuxCommand(command)
   let g:_VimTmuxCmd = a:command
   ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
 endfunction
 
+function! RunLastVimTmuxCommand()
+  if exists("g:_VimTmuxCmd")
+    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+  else
+    echo "No last command"
+  endif
+endfunction
+
 function! ClearVimTmuxWindow()
-  unlet g:_VimTmuxRunnerPane
+  if exists("g:_VimTmuxRunnerPane")
+    unlet g:_VimTmuxRunnerPane
+  end
 endfunction
 
 function! CloseVimTmuxWindows()
   ruby CurrentTmuxSession.new.close_other_panes
-  unlet g:_VimTmuxRunnerPane
+  call ClearVimTmuxWindow()
 endfunction
 
 ruby << EOF
@@ -22,21 +35,41 @@ class TmuxSession
     @session = session
     @window = window
     @pane = pane
+    @runner_pane = vim_cached_runner_pane
+  end
+
+  def vim_cached_runner_pane
     if Vim.evaluate('exists("g:_VimTmuxRunnerPane")') != 0
-      @runner_pane = Vim.evaluate('g:_VimTmuxRunnerPane')
+      Vim.evaluate('g:_VimTmuxRunnerPane')
     else
-      @runner_pane = nil
+      nil
+    end
+  end
+
+  def vim_cached_runner_pane=(runner_pane)
+    Vim.command("let g:_VimTmuxRunnerPane = '#{runner_pane}'")
+  end
+
+  def clear_vim_cached_runner_pane
+    Vim.command("unlet g:_VimTmuxRunnerPane")
+  end
+
+  def height
+    if Vim.evaluate('exists("g:VimuxHeight")') != 0
+      Vim.evaluate('g:VimuxHeight')
+    else
+      20
     end
   end
 
   def current_panes
-    `tmux list-panes`.split("\n").map do |line|
+    run('list-panes').split("\n").map do |line|
       line.split(':').first
     end
   end
 
   def active_pane_id
-    `tmux list-panes`.split("\n").map do |line|
+    run('list-panes').split("\n").map do |line|
       return line.split[-2] if line =~ /\(active\)/
     end
   end
@@ -47,18 +80,22 @@ class TmuxSession
 
   def runner_pane
     if @runner_pane.nil?
-      run("split-window -p 20")
+      run("split-window -p #{height}")
       @runner_pane = active_pane_id
       Vim.command("let g:_VimTmuxRunnerPane = '#{@runner_pane}'")
     end
 
-    `tmux list-panes`.split("\n").map do |line|
+    run('list-panes').split("\n").map do |line|
       return line.split(':').first if line =~ /#{@runner_pane}/
     end
+
+    @runner_pane = nil
+    clear_vim_cached_runner_pane
+    runner_pane
   end
 
   def run_shell_command(command)
-    send(command, target(:pane => runner_pane))
+    send_command(command, target(:pane => runner_pane))
     move_up_pane
   end
 
@@ -70,7 +107,7 @@ class TmuxSession
     run("select-pane -t #{target}")
   end
 
-  def send(command, target)
+  def send_command(command, target)
     run("send-keys -t #{target} '#{command.gsub("'", "\'")}'")
     run("send-keys -t #{target} Enter")
   end
