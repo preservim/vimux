@@ -60,6 +60,25 @@ Close all other tmux panes in the current window.
 map <Leader>rx :CloseVimTmuxWindows<CR>
 ```
 
+### Full Example Code
+
+```viml
+" Run the current file with rspec
+map <Leader>rb :call RunVimTmuxCommand("clear && rspec " . bufname("%"))<CR>
+
+" Prompt for a command to run
+map <Leader>rp :PromptVimTmuxCommand<CR>
+
+" Run last command executed by RunVimTmuxCommand
+map <Leader>rl :call RunLastVimTmuxCommand<CR>
+
+" Inspect runner pane
+map <Leader>ri :InspectVimTmuxRunner<CR>
+
+" Close all other tmux panes in current window
+map <Leader>rx :CloseVimTmuxWindows<CR>
+```
+
 ## Options
 
 ### VimuxHeight
