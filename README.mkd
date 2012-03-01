@@ -60,6 +60,16 @@ Close all other tmux panes in the current window.
 map <Leader>rx :CloseVimTmuxWindows<CR>
 ```
 
+### InterruptVimTmuxRunner
+Interrupt any command that is running inside the runner pane.
+
+*Example:*
+
+```viml
+" Interrupt any command running in the runner pane
+map <Leader>rs :InspectVimTmuxRunner<CR>
+```
+
 ### Full Example Code
 
 ```viml
@@ -77,6 +87,9 @@ map <Leader>ri :InspectVimTmuxRunner<CR>
 
 " Close all other tmux panes in current window
 map <Leader>rx :CloseVimTmuxWindows<CR>
+
+" Interrupt any command running in the runner pane
+map <Leader>rs :InspectVimTmuxRunner<CR>
 ```
 
 ## Options
@@ -94,5 +107,3 @@ let VimuxHeight = "50"
 The features I would like to add in the near future.
 
 * Add the ability to target any tmux session, window and pane
-* Implment an interupt command that stops the currently running command
-* Exit copy-mode before running a command

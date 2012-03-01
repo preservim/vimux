@@ -5,6 +5,7 @@ end
 command RunLastVimTmuxCommand :call RunLastVimTmuxCommand()
 command CloseVimTmuxWindows :call CloseVimTmuxWindows()
 command InspectVimTmuxRunner :call InspectVimTmuxRunner()
+command InterruptVimTmuxRunner :call InterruptVimTmuxRunner()
 command PromptVimTmuxCommand :call PromptVimTmuxCommand()
 
 function! RunVimTmuxCommand(command)
@@ -29,6 +30,10 @@ endfunction
 function! CloseVimTmuxWindows()
   ruby CurrentTmuxSession.new.close_other_panes
   call ClearVimTmuxWindow()
+endfunction
+
+function! InterruptVimTmuxRunner()
+  ruby CurrentTmuxSession.new.interrupt_runner
 endfunction
 
 function! InspectVimTmuxRunner()
@@ -108,6 +113,10 @@ class TmuxSession
     @runner_pane = nil
     clear_vim_cached_runner_pane
     runner_pane
+  end
+
+  def interrupt_runner
+    run("send-keys -t #{target(:pane => runner_pane)} ^c")
   end
 
   def run_shell_command(command)
