@@ -15,7 +15,7 @@ Run a system command in a small horizontal split bellow the current pane vim is 
 
 ```viml
 " Run the current file with rspec
-map <Leader>rb :call RunVimTmuxCommand("clear && rspec " . bufname("%"))<CR>
+map <Leader>rb :call RunVimTmuxCommand("clear; rspec " . bufname("%"))<CR>
 ```
 
 ### PromptVimTmuxCommand
@@ -62,7 +62,7 @@ map <Leader>rs :InterruptVimTmuxRunner<CR>
 
 ```viml
 " Run the current file with rspec
-map <Leader>rb :call RunVimTmuxCommand("clear && rspec " . bufname("%"))<CR>
+map <Leader>rb :call RunVimTmuxCommand("clear; rspec " . bufname("%"))<CR>
 
 " Prompt for a command to run
 map <Leader>rp :PromptVimTmuxCommand<CR>
