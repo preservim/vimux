@@ -37,7 +37,7 @@ Run the last command executed by `RunVimTmuxCommand`
 
 ```viml
 " Run last command executed by RunVimTmuxCommand
-map <Leader>rl :call RunLastVimTmuxCommand<CR>
+map <Leader>rl :RunLastVimTmuxCommand<CR>
 ```
 
 ### InspectVimTmuxRunner
@@ -74,7 +74,7 @@ map <Leader>rb :call RunVimTmuxCommand("clear; rspec " . bufname("%"))<CR>
 map <Leader>rp :PromptVimTmuxCommand<CR>
 
 " Run last command executed by RunVimTmuxCommand
-map <Leader>rl :call RunLastVimTmuxCommand<CR>
+map <Leader>rl :RunLastVimTmuxCommand<CR>
 
 " Inspect runner pane
 map <Leader>ri :InspectVimTmuxRunner<CR>
