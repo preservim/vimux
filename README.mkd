@@ -48,12 +48,12 @@ Move into the tmux runner pane created by `RunVimTmuxCommand` and enter copy mod
 map <Leader>ri :InspectVimTmuxRunner<CR>
 ```
 
-### CloseVimTmuxWindows
+### CloseVimTmuxPanes
 Close all other tmux panes in the current window.
 
 ```viml
 " Close all other tmux panes in current window
-map <Leader>rx :CloseVimTmuxWindows<CR>
+map <Leader>rx :CloseVimTmuxPanes<CR>
 ```
 
 ### InterruptVimTmuxRunner
@@ -80,7 +80,7 @@ map <Leader>rl :RunLastVimTmuxCommand<CR>
 map <Leader>ri :InspectVimTmuxRunner<CR>
 
 " Close all other tmux panes in current window
-map <Leader>rx :CloseVimTmuxWindows<CR>
+map <Leader>rx :CloseVimTmuxPanes<CR>
 
 " Interrupt any command running in the runner pane
 map <Leader>rs :InterruptVimTmuxRunner<CR>

@@ -3,6 +3,7 @@ if !has("ruby")
 end
 
 command RunLastVimTmuxCommand :call RunLastVimTmuxCommand()
+command CloseVimTmuxPanes :call CloseVimTmuxPanes()
 command CloseVimTmuxWindows :call CloseVimTmuxWindows()
 command InspectVimTmuxRunner :call InspectVimTmuxRunner()
 command InterruptVimTmuxRunner :call InterruptVimTmuxRunner()
@@ -28,6 +29,12 @@ function! ClearVimTmuxWindow()
 endfunction
 
 function! CloseVimTmuxWindows()
+  ruby CurrentTmuxSession.new.close_other_panes
+  call ClearVimTmuxWindow()
+  echoerr "CloseVimTmuxWindows is deprecated, use CloseVimTmuxPanes"
+endfunction
+
+function! CloseVimTmuxPanes()
   ruby CurrentTmuxSession.new.close_other_panes
   call ClearVimTmuxWindow()
 endfunction
@@ -125,7 +132,9 @@ class TmuxSession
   end
 
   def close_other_panes
-    run("kill-pane -a")
+    # if run("list-panes").split("\n").length > 1
+      run("kill-pane -a")
+    # end
   end
 
   def move_up_pane
