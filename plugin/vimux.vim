@@ -1,3 +1,8 @@
+if exists("g:loaded_vimux") || &cp
+  finish
+endif
+let g:loaded_vimux = 1
+
 if !has("ruby")
   finish
 end
@@ -9,12 +14,12 @@ command InspectVimTmuxRunner :call InspectVimTmuxRunner()
 command InterruptVimTmuxRunner :call InterruptVimTmuxRunner()
 command PromptVimTmuxCommand :call PromptVimTmuxCommand()
 
-function! RunVimTmuxCommand(command)
+function RunVimTmuxCommand(command)
   let g:_VimTmuxCmd = a:command
   ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
 endfunction
 
-function! RunLastVimTmuxCommand()
+function RunLastVimTmuxCommand()
   if exists("g:_VimTmuxCmd")
     ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
   else
@@ -22,32 +27,32 @@ function! RunLastVimTmuxCommand()
   endif
 endfunction
 
-function! ClearVimTmuxWindow()
+function ClearVimTmuxWindow()
   if exists("g:_VimTmuxRunnerPane")
     unlet g:_VimTmuxRunnerPane
   end
 endfunction
 
-function! CloseVimTmuxWindows()
+function CloseVimTmuxWindows()
   ruby CurrentTmuxSession.new.close_other_panes
   call ClearVimTmuxWindow()
   echoerr "CloseVimTmuxWindows is deprecated, use CloseVimTmuxPanes"
 endfunction
 
-function! CloseVimTmuxPanes()
+function CloseVimTmuxPanes()
   ruby CurrentTmuxSession.new.close_other_panes
   call ClearVimTmuxWindow()
 endfunction
 
-function! InterruptVimTmuxRunner()
+function InterruptVimTmuxRunner()
   ruby CurrentTmuxSession.new.interrupt_runner
 endfunction
 
-function! InspectVimTmuxRunner()
+function InspectVimTmuxRunner()
   ruby CurrentTmuxSession.new.inspect_runner
 endfunction
 
-function! PromptVimTmuxCommand()
+function PromptVimTmuxCommand()
   let l:command = input("Command? ")
   call RunVimTmuxCommand(l:command)
 endfunction

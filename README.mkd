@@ -86,6 +86,24 @@ map <Leader>rx :CloseVimTmuxPanes<CR>
 map <Leader>rs :InterruptVimTmuxRunner<CR>
 ```
 
+### tslime replacement
+
+Here is how to use vimux to send code to a REPL. This is similar to tslime. First, add some helpful mappings.
+
+```viml
+
+" Prompt for a command to run
+map <LocalLeader>vp :PromptVimTmuxCommand<CR>
+
+" If text is selected, save it in the v buffer and send that buffer it to tmux
+vmap <LocalLeader>vs "vy :call RunVimTmuxCommand(@v)<CR>
+
+" Select current paragraph and send it to tmux
+nmap <LocalLeader>vs vip<LocalLeader>vs<CR>
+```
+
+Now, open a clojure file. Let's say your leader is backslash (\). Type \vp, and then type lein repl at the prompt. This opens a tmux split running a REPL. Then, select text or put the cursor on a function and type \vs. This will send it to the REPL and evaluate it.
+
 ## Options
 
 ### VimuxHeight
