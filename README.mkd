@@ -88,14 +88,14 @@ map <Leader>rs :InterruptVimTmuxRunner<CR>
 
 ### tslime replacement
 
-Here is how to use vimux like tslime to send code to a REPL. First, add some helpful mappings.
+Here is how to use vimux to send code to a REPL. This is similar to tslime. First, add some helpful mappings.
 
 ```viml
 
 " Prompt for a command to run
 map <LocalLeader>vp :PromptVimTmuxCommand<CR>
 
-" If text is selected, send it to tmux
+" If text is selected, save it in the v buffer and send that buffer it to tmux
 vmap <LocalLeader>vs "vy :call RunVimTmuxCommand(@v)<CR>
 
 " Select current paragraph and send it to tmux
