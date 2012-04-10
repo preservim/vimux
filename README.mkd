@@ -118,8 +118,15 @@ Set the percent height of the runner pane opened by `RunVimTmuxCommand`.
 let VimuxHeight = "50"
 ```
 
-## Todo
+### VimuxOrientation
+Set the default position of the runner pane.
 
-The features I would like to add in the near future.
+**Acceptable Values:**
+`"v"` Vertical
+`"h"` Horizontal
 
-* Add the ability to target any tmux session, window and pane
+**Default: `"v"`**
+
+```viml
+let VimuxOrientation = "h"
+```

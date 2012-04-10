@@ -90,6 +90,14 @@ class TmuxSession
     end
   end
 
+  def orientation
+    if Vim.evaluate('exists("g:VimuxOrientation")') != 0 && ["h", "v"].include?(Vim.evaluate('g:VimuxOrientation'))
+      "-#{Vim.evaluate('g:VimuxOrientation')}"
+    else
+      "-v"
+    end
+  end
+
   def inspect_runner
     _run("select-pane -t #{target(:pane => runner_pane)}")
     _run("copy-mode")
@@ -121,7 +129,8 @@ class TmuxSession
 
   def runner_pane
     if @runner_pane.nil?
-      _run("split-window -p #{height}")
+      type = Vim.evaluate('exists("g:_VimTmuxInspecting")') != 0
+      _run("split-window -p #{height} #{orientation}")
       @runner_pane = active_pane_id
       Vim.command("let g:_VimTmuxRunnerPane = '#{@runner_pane}'")
     end
