@@ -1,0 +1,52 @@
+*vimux.txt*   easily interact with tmux
+
+                                  Vimux
+                   effortless vim and tmux interaction
+
+==============================================================================
+CONTENTS                                                      *vimux-contents*
+
+    1. Usage ........................... |VimuxUsage|
+    2. Configuration ................... |VimuxConfiguration|
+
+==============================================================================
+1. Usage                                                           *VimuxUsage*
+
+The function RunVimTmuxCommand(command) is the core of Vimux. It will
+create a split pane in the current window and run the passed command in it.
+
+    :call RunVimTmuxCommand("ls")
+
+This will run the command in a split pane without losing focus of vim. If the
+command takes a long time to return you can continue to use vim while the
+process finishes and will see the output in the pane when it's finished. Check
+out http://github.com/benmills/vimux for more information and updates.
+
+==============================================================================
+2. Configuration                                          *VimuxConfiguration*
+
+These are the available options for Vimux
+
+------------------------------------------------------------------------------
+2.1 g:VimuxHeight                                  *VimuxConfiguration_height*
+
+The percent of the screen the split pane Vimux will spawn should take up.
+
+  let g:VimuxHeight = "40"
+
+Default: "20"
+
+------------------------------------------------------------------------------
+2.2 g:VimuxOrientation                        *VimuxConfiguration_oriengation*
+
+The default orientation of the split tmux pane. This tells tmux to make the
+pane either vertically or horizontally, which is backward from how Vim handles
+creating splits.
+
+  let g:VimuxOrientation = "h"
+
+Options:
+  "v": vertical
+  "h": horizontal
+
+Default: "v"
