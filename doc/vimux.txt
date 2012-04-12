@@ -37,7 +37,7 @@ The percent of the screen the split pane Vimux will spawn should take up.
 Default: "20"
 
 ------------------------------------------------------------------------------
-2.2 g:VimuxOrientation                        *VimuxConfiguration_oriengation*
+2.2 g:VimuxOrientation                        *VimuxConfiguration_orientation*
 
 The default orientation of the split tmux pane. This tells tmux to make the
 pane either vertically or horizontally, which is backward from how Vim handles
@@ -50,3 +50,12 @@ Options:
   "h": horizontal
 
 Default: "v"
+
+------------------------------------------------------------------------------
+2.3 g:VimuxUseExistingPane              *VimuxConfiguration_use_existing_pane*
+
+Use exising pane (not used by vim) if found instead of running split-window.
+
+  let VimuxUseExistingPane = 1
+
+Default: 0

@@ -130,7 +130,12 @@ class TmuxSession
   def runner_pane
     if @runner_pane.nil?
       type = Vim.evaluate('exists("g:_VimTmuxInspecting")') != 0
-      _run("split-window -p #{height} #{orientation}")
+      use_existing_pane = Vim.evaluate('exists("g:VimuxUseExistingPane")') != 0
+      if use_existing_pane && existing_inactive_pane_id
+        _run("select-pane -t #{target(:pane => existing_inactive_pane_id)}")
+      else
+        _run("split-window -p #{height} #{orientation}")
+      end
       @runner_pane = active_pane_id
       Vim.command("let g:_VimTmuxRunnerPane = '#{@runner_pane}'")
     end
@@ -160,6 +165,12 @@ class TmuxSession
     if _run("list-panes").split("\n").length > 1
       _run("kill-pane -a")
     end
+  end
+
+  def existing_inactive_pane_id
+    panes = _run("list-pane").split("\n")
+    pane = panes.find { |p| p !~ /active/ }
+    pane ? pane.split(':').first : nil
   end
 
   def _move_up_pane
