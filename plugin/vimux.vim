@@ -192,7 +192,7 @@ class CurrentTmuxSession < TmuxSession
   end
 
   def get_session
-    _run("list-panes -F '\#\{session_name\}'").split("\n").first.strip
+    _run("display -p '#S'").strip
   end
 end
 EOF
