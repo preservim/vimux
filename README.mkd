@@ -17,6 +17,7 @@ Otherwise download the latest [tarball](https://github.com/benmills/vimux/tarbal
 ## Platform-specific Plugins
 
 * [vimux-ruby-test](https://github.com/pgr0ss/vimux-ruby-test) a set of commands to easily run ruby tests
+* [vimux-cucumber](https://github.com/cloud8421/vimux-cucumber) run Cucumber Features through Vimux
 
 ## Usage
 
