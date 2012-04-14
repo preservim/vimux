@@ -130,9 +130,9 @@ class TmuxSession
   def runner_pane
     if @runner_pane.nil?
       type = Vim.evaluate('exists("g:_VimTmuxInspecting")') != 0
-      use_existing_pane = Vim.evaluate('exists("g:VimuxUseExistingPane")') != 0
-      if use_existing_pane && existing_inactive_pane_id
-        _run("select-pane -t #{target(:pane => existing_inactive_pane_id)}")
+      use_nearest_pane = Vim.evaluate('exists("g:VimuxUseNearestPane")') != 0
+      if use_nearest_pane && nearest_inactive_pane_id
+        _run("select-pane -t #{target(:pane => nearest_inactive_pane_id)}")
       else
         _run("split-window -p #{height} #{orientation}")
       end
@@ -167,7 +167,7 @@ class TmuxSession
     end
   end
 
-  def existing_inactive_pane_id
+  def nearest_inactive_pane_id
     panes = _run("list-pane").split("\n")
     pane = panes.find { |p| p !~ /active/ }
     pane ? pane.split(':').first : nil

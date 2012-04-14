@@ -131,12 +131,12 @@ Set the default position of the runner pane.
 let VimuxOrientation = "h"
 ```
 
-### VimuxUseExistingPane
-Use exising pane (not used by vim) if found instead of running
+### VimuxUseNearestPane
+Use nearest pane (not used by vim) if found instead of running
 split-window.
 Useful if you always have two panes opened and you want Vimux to use the
 existing one.
 
 ```viml
-let VimuxUseExistingPane = 1
+let VimuxUseNearestPane = 1
 ```

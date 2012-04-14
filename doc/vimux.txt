@@ -52,10 +52,10 @@ Options:
 Default: "v"
 
 ------------------------------------------------------------------------------
-2.3 g:VimuxUseExistingPane              *VimuxConfiguration_use_existing_pane*
+2.3 g:VimuxUseNearestPane                *VimuxConfiguration_use_nearest_pane*
 
 Use exising pane (not used by vim) if found instead of running split-window.
 
-  let VimuxUseExistingPane = 1
+  let VimuxUseNearestPane = 1
 
 Default: 0
