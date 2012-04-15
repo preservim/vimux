@@ -137,6 +137,7 @@ class TmuxSession
         _run("split-window -p #{height} #{orientation}")
       end
       @runner_pane = active_pane_id
+      _send_command("cd #{`pwd`}", target(:pane => runner_pane))
       Vim.command("let g:_VimTmuxRunnerPane = '#{@runner_pane}'")
     end
 
