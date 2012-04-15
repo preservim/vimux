@@ -190,11 +190,15 @@ end
 
 class CurrentTmuxSession < TmuxSession
   def initialize
-    session = self.get_session
-    window = self.get_property(:active, :window)
-    pane = self.get_property(:active, :pane)
+    if tmux?
+      session = self.get_session
+      window = self.get_property(:active, :window)
+      pane = self.get_property(:active, :pane)
 
-    super(session, window, pane)
+      super(session, window, pane)
+    else
+      raise "You are not in a tmux session"
+    end
   end
 
   def get_property(match, type)
@@ -205,6 +209,10 @@ class CurrentTmuxSession < TmuxSession
 
   def get_session
     _run("display -p '#S'").strip
+  end
+
+  def tmux?
+    `echo $TMUX` =~ /.+/ ? true : false
   end
 end
 EOF
