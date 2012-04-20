@@ -22,11 +22,14 @@ Otherwise download the latest [tarball](https://github.com/benmills/vimux/tarbal
 ## Usage
 
 ### RunVimTmuxCommand
-Run a system command in a small horizontal split bellow the current pane vim is in.
+Run a system command in a small horizontal split bellow the current pane vim is in. You can optionally pass a second argument to stop vimux from automatically sending a return after the command.
 
 ```viml
 " Run the current file with rspec
 map <Leader>rb :call RunVimTmuxCommand("clear; rspec " . bufname("%"))<CR>
+
+" Run command without sending sending a return
+map <Leader>rq :call RunVimTmuxCommand("clear; rspec " . bufname("%"), 0)<CR>
 ```
 
 ### PromptVimTmuxCommand
@@ -101,13 +104,13 @@ Here is how to use vimux to send code to a REPL. This is similar to tslime. Firs
 map <LocalLeader>vp :PromptVimTmuxCommand<CR>
 
 " If text is selected, save it in the v buffer and send that buffer it to tmux
-vmap <LocalLeader>vs "vy :call RunVimTmuxCommand(@v)<CR>
+vmap <LocalLeader>vs "vy :call RunVimTmuxCommand(@v . "\n", 0)<CR>
 
 " Select current paragraph and send it to tmux
 nmap <LocalLeader>vs vip<LocalLeader>vs<CR>
 ```
 
-Now, open a clojure file. Let's say your leader is backslash (\). Type \vp, and then type lein repl at the prompt. This opens a tmux split running a REPL. Then, select text or put the cursor on a function and type \vs. This will send it to the REPL and evaluate it.
+Now, open a clojure file. Let's say your leader is backslash (\). Type \vp, and then type lein repl at the prompt. This opens a tmux split running a REPL. Then, select text or put the cursor on a function and type \vs. This will send it to the REPL and evaluate it. The reason we pass `0` to `RunVimTmuxCommand` is to stop the normal return that is sent to the runner pane and use our own new line so the clojure REPL will evaluate the selected text without adding an extra return. Thanks to @trptcolin for discovering this issue.
 
 ## Options
 

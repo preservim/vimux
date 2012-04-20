@@ -14,9 +14,20 @@ command InspectVimTmuxRunner :call InspectVimTmuxRunner()
 command InterruptVimTmuxRunner :call InterruptVimTmuxRunner()
 command PromptVimTmuxCommand :call PromptVimTmuxCommand()
 
-function RunVimTmuxCommand(command)
+function RunVimTmuxCommand(command, ...)
+  let l:autoreturn = 1
+
+  if exists("a:1")
+    let l:autoreturn = a:1
+  endif
+
   let g:_VimTmuxCmd = a:command
-  ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+
+  if l:autoreturn == 1
+    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+  else
+    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"), false)
+  endif
 endfunction
 
 function RunLastVimTmuxCommand()
@@ -152,9 +163,9 @@ class TmuxSession
     _run("send-keys -t #{target(:pane => runner_pane)} ^c")
   end
 
-  def run_shell_command(command)
+  def run_shell_command(command, auto_return = true)
     reset_shell
-    _send_command(command, target(:pane => runner_pane))
+    _send_command(command, target(:pane => runner_pane), auto_return)
     _move_up_pane
   end
 
@@ -178,9 +189,9 @@ class TmuxSession
     _run("select-pane -t #{target}")
   end
 
-  def _send_command(command, target)
+  def _send_command(command, target, auto_return = true)
     _run("send-keys -t #{target} \"#{command.gsub('"', '\"')}\"")
-    _run("send-keys -t #{target} Enter")
+    _run("send-keys -t #{target} Enter") if auto_return
   end
 
   def _run(command)
