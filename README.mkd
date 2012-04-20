@@ -133,11 +133,17 @@ let VimuxOrientation = "h"
 ```
 
 ### VimuxUseNearestPane
-Use nearest pane (not used by vim) if found instead of running
-split-window.
-Useful if you always have two panes opened and you want Vimux to use the
-existing one.
+Use nearest pane (not used by vim) if found instead of running split-window.  Useful if you always have two panes opened and you want Vimux to use the existing one.
 
 ```viml
 let VimuxUseNearestPane = 1
+```
+
+### VimuxResetSequence
+The keys sent to the runner pane before running a command. By default it sends `q` to make sure the pane is not in scroll-mode and `C-u` to clear the line.
+
+**Default: `"q C-u"`
+
+```viml
+let VimuxResetSequence = ""
 ```

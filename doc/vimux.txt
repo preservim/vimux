@@ -59,3 +59,13 @@ Use exising pane (not used by vim) if found instead of running split-window.
   let VimuxUseNearestPane = 1
 
 Default: 0
+
+------------------------------------------------------------------------------
+2.4 g:VimuxResetSequence                   *VimuxConfiguration_reset_sequence*
+
+The keys sent to the runner pane before running a command. By default it sends
+`q` to make sure the pane is not in scroll-mode and `C-u` to clear the line.
+
+  let VimuxUseNearestPane = ""
+
+Default: "q C-u"

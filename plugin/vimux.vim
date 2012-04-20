@@ -98,6 +98,14 @@ class TmuxSession
     end
   end
 
+  def reset_sequence
+    if Vim.evaluate('exists("g:VimuxResetSequence")') != 0
+      "#{Vim.evaluate('g:VimuxResetSequence')}"
+    else
+      "q C-u"
+    end
+  end
+
   def inspect_runner
     _run("select-pane -t #{target(:pane => runner_pane)}")
     _run("copy-mode")
@@ -145,7 +153,7 @@ class TmuxSession
   end
 
   def run_shell_command(command)
-    _run("send-keys -t #{target(:pane => runner_pane)} q C-u")
+    reset_shell
     _send_command(command, target(:pane => runner_pane))
     _move_up_pane
   end
@@ -154,6 +162,10 @@ class TmuxSession
     if _run("list-panes").split("\n").length > 1
       _run("kill-pane -a")
     end
+  end
+
+  def reset_shell
+    _run("send-keys -t #{target(:pane => runner_pane)} #{reset_sequence}")
   end
 
   def nearest_inactive_pane_id
