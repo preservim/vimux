@@ -179,7 +179,7 @@ class TmuxSession
   end
 
   def _send_command(command, target)
-    _run("send-keys -t #{target} '#{command.gsub("'", "\'")}'")
+    _run("send-keys -t #{target} \"#{command.gsub('"', '\"')}\"")
     _run("send-keys -t #{target} Enter")
   end
 
