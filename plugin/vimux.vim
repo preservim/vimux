@@ -101,14 +101,6 @@ class TmuxSession
   def inspect_runner
     _run("select-pane -t #{target(:pane => runner_pane)}")
     _run("copy-mode")
-    Vim.command("let g:_VimTmuxInspecting = 1")
-  end
-
-  def stop_inspecting_runner
-    if Vim.evaluate('exists("g:_VimTmuxInspecting")') != 0
-      _run("send-keys -t #{target(:pane => runner_pane)} q")
-      Vim.command("unlet g:_VimTmuxInspecting")
-    end
   end
 
   def current_panes
@@ -129,7 +121,6 @@ class TmuxSession
 
   def runner_pane
     if @runner_pane.nil?
-      type = Vim.evaluate('exists("g:_VimTmuxInspecting")') != 0
       use_nearest_pane = Vim.evaluate('exists("g:VimuxUseNearestPane")') != 0
       if use_nearest_pane && nearest_inactive_pane_id
         _run("select-pane -t #{target(:pane => nearest_inactive_pane_id)}")
@@ -146,23 +137,20 @@ class TmuxSession
     end
 
     @runner_pane = nil
-    clear_vim_cached_runner_pane
     runner_pane
   end
 
   def interrupt_runner
-    stop_inspecting_runner
     _run("send-keys -t #{target(:pane => runner_pane)} ^c")
   end
 
   def run_shell_command(command)
-    stop_inspecting_runner
+    _run("send-keys -t #{target(:pane => runner_pane)} q C-u")
     _send_command(command, target(:pane => runner_pane))
     _move_up_pane
   end
 
   def close_other_panes
-    stop_inspecting_runner
     if _run("list-panes").split("\n").length > 1
       _run("kill-pane -a")
     end
