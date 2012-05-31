@@ -15,6 +15,16 @@ command InspectVimTmuxRunner :call InspectVimTmuxRunner()
 command InterruptVimTmuxRunner :call InterruptVimTmuxRunner()
 command PromptVimTmuxCommand :call PromptVimTmuxCommand()
 
+
+command VimuxRunLastCommand :call RunLastVimTmuxCommand()
+command VimuxCloseRunner :call CloseVimTmuxRunner()
+command VimuxClosePanes :call CloseVimTmuxPanes()
+command VimuxCloseWindows :call CloseVimTmuxWindows()
+command VimuxInspectRunner :call InspectVimTmuxRunner()
+command VimuxInterruptRunner :call InterruptVimTmuxRunner()
+command VimuxPromptCommand :call PromptVimTmuxCommand()
+
+
 function RunVimTmuxCommand(command, ...)
   let l:autoreturn = 1
 
