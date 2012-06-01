@@ -25,8 +25,6 @@ ABOUT (1)                                                           *VimuxAbout*
 
 Vimux -- Easily interact with tmux from vim.
 
-This project is still in development, so some features are still missing.
-
 What inspired me to write vimux was tslime.vim [1], a plugin that lets you
 send input to tmux. While tslime.vim works well, I felt it wasn't optimized
 for my primary use case which was having a smaller tmux pane that I would use
@@ -40,7 +38,7 @@ without losing focus of vim. Once that pane exists whenever you call
 using vimux myself I wanted to rerun commands over and over. An example of
 this was running the current file through rspec. Rather than typing that over
 and over I wrote `RunLastVimTmuxCommand` that will execute the last command
-you called with `RunVimTmuxCommand`. 
+you called with `RunVimTmuxCommand`.
 
 Other auxiliary functions and the ones I talked about above can be found
 bellow with a full description and example key binds for your vimrc.
