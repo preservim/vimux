@@ -51,9 +51,9 @@ USAGE (2)                                                           *VimuxUsage*
 
 The function VimuxRunCommand(command) is the core of Vimux. It will
 create a split pane in the current window and run the passed command in it.
-
+>
     :call VimuxRunCommand("ls")
-
+<
 This will run the command in a split pane without losing focus of vim. If the
 command takes a long time to return you can continue to use vim while the
 process finishes and will see the output in the pane when it's finished.
