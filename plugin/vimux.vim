@@ -92,12 +92,6 @@ function ClearVimTmuxWindow()
 endfunction
 
 
-function VimuxCloseWindows()
-  ruby CurrentTmuxSession.new.close_other_panes
-  call VimuxClearWindow()
-  echoerr "CloseVimTmuxWindows is deprecated, use VimuxClosePanes instead."
-endfunction
-
 " deprecated!
 function CloseVimTmuxWindows()
   echoerr "ClearVimTmuxWindow is deprecated, use VimuxClosePanes instead."
