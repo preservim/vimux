@@ -8,12 +8,12 @@ CONTENTS                                                        *vimux-contents*
 
     1. About............................ |VimuxAbout|
     2. Usage ........................... |VimuxUsage|
-      2.1 .............................. |PromptVimTmuxCommand|
-      2.2 .............................. |RunLastVimTmuxCommand|
-      2.3 .............................. |InspectVimTmuxRunner|
-      2.4 .............................. |CloseVimTmuxRunner|
-      2.5 .............................. |CloseVimTmuxPanes|
-      2.6 .............................. |InterruptVimTmuxRunner|
+      2.1 .............................. |VimuxPromptCommand|
+      2.2 .............................. |VimuxRunLastCommand|
+      2.3 .............................. |VimuxInspectRunner|
+      2.4 .............................. |VimuxCloseRunner|
+      2.5 .............................. |VimuxClosePanes|
+      2.6 .............................. |VimuxInterruptRunner|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -31,14 +31,14 @@ for my primary use case which was having a smaller tmux pane that I would use
 to run tests or play with a REPL.
 
 My goal with vimux is to make interacting with tmux from vim effortless. By
-default when you call `RunVimTmuxCommand` vimux will create a 20% tall
+default when you call `VimuxRunCommand` vimux will create a 20% tall
 horizontal pane under your current tmux pane and execute a command in it
 without losing focus of vim. Once that pane exists whenever you call
-`RunVimTmuxCommand` again the command will be executed in that pane. As I was
+`VimuxRunCommand` again the command will be executed in that pane. As I was
 using vimux myself I wanted to rerun commands over and over. An example of
 this was running the current file through rspec. Rather than typing that over
-and over I wrote `RunLastVimTmuxCommand` that will execute the last command
-you called with `RunVimTmuxCommand`.
+and over I wrote `VimuxRunLastCommand` that will execute the last command
+you called with `VimuxRunCommand`.
 
 Other auxiliary functions and the ones I talked about above can be found
 bellow with a full description and example key binds for your vimrc.
@@ -49,17 +49,32 @@ bellow with a full description and example key binds for your vimrc.
 ==============================================================================
 USAGE (2)                                                           *VimuxUsage*
 
-The function RunVimTmuxCommand(command) is the core of Vimux. It will
+The function VimuxRunCommand(command) is the core of Vimux. It will
 create a split pane in the current window and run the passed command in it.
-
-    :call RunVimTmuxCommand("ls")
-
+>
+    :call VimuxRunCommand("ls")
+<
 This will run the command in a split pane without losing focus of vim. If the
 command takes a long time to return you can continue to use vim while the
 process finishes and will see the output in the pane when it's finished.
 
-Furthermore there are several handy commands:
+Furthermore there are several handy commands all starting with 'Vimux':
+  - |VimuxRunCommand|
+  - |VimuxRunLastCommand| 
+  - |VimuxCloseRunner|
+  - |VimuxClosePanes|
+  - |VimuxCloseWindows|
+  - |VimuxInspectRunner|
+  - |VimuxInterruptRunner|
+  - |VimuxPromptCommand|
 
+
+Note:
+Earlier the all commands had different names. There are still aliases for
+convenience. Please chang your configuration according to the new naming
+conventions!
+
+The DEPRECATED commands:
   - |PromptVimTmuxCommand|
   - |RunLastVimTmuxCommand|
   - |InspectVimTmuxRunner|
@@ -69,79 +84,86 @@ Furthermore there are several handy commands:
 
 ------------------------------------------------------------------------------
                                                              *RunVimTmuxCommand*
-RunVimTmuxCommand~
+                                                               *VimuxRunCommand*
+VimuxRunCommand~
 
 Run a system command in a small horizontal split bellow
 the current pane vim is in. You can optionally pass a second argument to stop
 vimux from automatically sending a return after the command.
 >
  " Run the current file with rspec
- map <Leader>rb :call RunVimTmuxCommand("clear; rspec " . bufname("%"))<CR>
+ map <Leader>rb :call VimuxRunCommand("clear; rspec " . bufname("%"))<CR>
  " Run command without sending sending a return
- map <Leader>rq :call RunVimTmuxCommand("clear; rspec " . bufname("%"), 0)<CR>
+ map <Leader>rq :call VimuxRunCommand("clear; rspec " . bufname("%"), 0)<CR>
 <
 
 ------------------------------------------------------------------------------
                                                           *PromptVimTmuxCommand*
-PromptVimTmuxCommand~
+                                                            *VimuxPromptCommand*
+VimuxPromptCommand~
 
 Prompt for a command and run it in a small horizontal split bellow the current
 pane.
 >
  " Prompt for a command to run map
- <Leader>rp :PromptVimTmuxCommand<CR>
+ <Leader>rp :VimuxPromptCommand<CR>
 <
 
 ------------------------------------------------------------------------------
                                                          *RunLastVimTmuxCommand*
-RunLastVimTmuxCommand~
+                                                           *VimuxRunLastCommand*
+VimuxRunLastCommand~
 
-Run the last command executed by `RunVimTmuxCommand`
+Run the last command executed by `VimuxRunCommand`
 >
- " Run last command executed by RunVimTmuxCommand
- map <Leader>rl :RunLastVimTmuxCommand<CR>
+ " Run last command executed by VimuxRunCommand
+ map <Leader>rl :VimuxRunLastCommand<CR>
 <
 
 ------------------------------------------------------------------------------
                                                           *InspectVimTmuxRunner*
-InspectVimTmuxRunner~
+                                                            *VimuxInspectRunner*
+VimuxInspectRunner~
 
-Move into the tmux runner pane created by `RunVimTmuxCommand` and enter copy
+Move into the tmux runner pane created by `VimuxRunCommand` and enter copy
 pmode (scroll mode).
 >
  " Inspect runner pane map
- <Leader>ri :InspectVimTmuxRunner<CR>
+ <Leader>ri :VimuxInspectRunner<CR>
 <
 
 ------------------------------------------------------------------------------
                                                             *CloseVimTmuxRunner*
-CloseVimTmuxRunner~
+                                                            *VimuxCloseRunner*
+VimuxCloseRunner~
 
-Close the tmux runner created by `RunVimTmuxCommand`
+Close the tmux runner created by `VimuxRunCommand`
 >
- " Close vim tmux runner opened by RunVimTmuxCommand
- map <Leader>rq :CloseVimTmuxRunner<CR>
+ " Close vim tmux runner opened by VimuxRunCommand
+ map <Leader>rq :VimuxCloseRunner<CR>
 <
 
 ------------------------------------------------------------------------------
                                                              *CloseVimTmuxPanes*
-CloseVimTmuxPanes~
+                                                               *VimuxClosePanes*
+VimuxClosePanes~
 
 Close all other tmux panes in the current window.
 >
  " Close all other tmux panes in current window
- map <Leader>rx :CloseVimTmuxPanes<CR>
+ map <Leader>rx :VimuxClosePanes<CR>
 >
 
 ------------------------------------------------------------------------------
                                                         *InterruptVimTmuxRunner*
-InterruptVimTmuxRunner~
+                                                          *VimuxInterruptRunner*
+VimuxInterruptRunner~
 
 Interrupt any command that is running inside the
 runner pane.
 >
  " Interrupt any command running in the runner pane map
- <Leader>rs :InterruptVimTmuxRunner<CR>
+ <Leader>rs :VimuxInterruptRunner<CR>
 <
 
 
@@ -154,25 +176,25 @@ Full Keybind Example~
 
 >
  " Run the current file with rspec
- map <Leader>rb :call RunVimTmuxCommand("clear; rspec " . bufname("%"))<CR>
+ map <Leader>rb :call VimuxRunCommand("clear; rspec " . bufname("%"))<CR>
 
  " Prompt for a command to run
- map <Leader>rp :PromptVimTmuxCommand<CR>
+ map <Leader>rp :VimuxPromptCommand<CR>
  
- " Run last command executed by RunVimTmuxCommand
- map <Leader>rl :RunLastVimTmuxCommand<CR>
+ " Run last command executed by VimuxRunCommand
+ map <Leader>rl :VimuxRunLastCommand<CR>
  
  " Inspect runner pane
- map <Leader>ri :InspectVimTmuxRunner<CR>
+ map <Leader>ri :VimuxInspectRunner<CR>
  
  " Close all other tmux panes in current window
- map <Leader>rx :CloseVimTmuxPanes<CR>
+ map <Leader>rx :VimuxClosePanes<CR>
  
- " Close vim tmux runner opened by RunVimTmuxCommand
- map <Leader>rq :CloseVimTmuxRunner<CR>
+ " Close vim tmux runner opened by VimuxRunCommand
+ map <Leader>rq :VimuxCloseRunner<CR>
  
  " Interrupt any command running in the runner pane
- map <Leader>rs :InterruptVimTmuxRunner<CR>
+ map <Leader>rs :VimuxInterruptRunner<CR>
 >
 
 ------------------------------------------------------------------------------
@@ -184,10 +206,10 @@ First, add some helpful mappings.
 
 >
  " Prompt for a command to run
- map <LocalLeader>vp :PromptVimTmuxCommand<CR>
+ map <LocalLeader>vp :VimuxPromptCommand<CR>
 
  " If text is selected, save it in the v buffer and send that buffer it to tmux
- vmap <LocalLeader>vs "vy :call RunVimTmuxCommand(@v . "\n", 0)<CR>
+ vmap <LocalLeader>vs "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
 
  " Select current paragraph and send it to tmux
  nmap <LocalLeader>vs vip<LocalLeader>vs<CR>
@@ -196,7 +218,7 @@ First, add some helpful mappings.
 Now, open a clojure file. Let's say your leader is backslash (\). Type \vp,
 and then type lein repl at the prompt. This opens a tmux split running a REPL.
 Then, select text or put the cursor on a function and type \vs. This will send
-it to the REPL and evaluate it. The reason we pass `0` to `RunVimTmuxCommand`
+it to the REPL and evaluate it. The reason we pass `0` to `VimuxRunCommand`
 is to stop the normal return that is sent to the runner pane and use our own
 new line so the clojure REPL will evaluate the selected text without adding an
 extra return. Thanks to @trptcolin for discovering this issue.

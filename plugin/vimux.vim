@@ -7,15 +7,28 @@ if !has("ruby")
   finish
 end
 
-command RunLastVimTmuxCommand :call RunLastVimTmuxCommand()
-command CloseVimTmuxRunner :call CloseVimTmuxRunner()
-command CloseVimTmuxPanes :call CloseVimTmuxPanes()
-command CloseVimTmuxWindows :call CloseVimTmuxWindows()
-command InspectVimTmuxRunner :call InspectVimTmuxRunner()
-command InterruptVimTmuxRunner :call InterruptVimTmuxRunner()
-command PromptVimTmuxCommand :call PromptVimTmuxCommand()
 
-function RunVimTmuxCommand(command, ...)
+" New style commands with 'normalized' names
+command VimuxRunLastCommand :call VimuxRunLastCommand()
+command VimuxCloseRunner :call VimuxCloseRunner()
+command VimuxClosePanes :call VimuxClosePanes()
+command VimuxCloseWindows :call VimuxCloseWindows()
+command VimuxInspectRunner :call VimuxInspectRunner()
+command VimuxInterruptRunner :call VimuxInterruptRunner()
+command VimuxPromptCommand :call VimuxPromptCommand()
+
+" DEPRECATED
+command RunLastVimTmuxCommand :call VimuxRunLastCommand()
+command CloseVimTmuxRunner :call VimuxCloseRunner()
+command CloseVimTmuxPanes :call VimuxClosePanes()
+command CloseVimTmuxWindows :call VimuxCloseWindows()
+command InspectVimTmuxRunner :call VimuxInspectRunner()
+command InterruptVimTmuxRunner :call VimuxInterruptRunner()
+command PromptVimTmuxCommand :call VimuxPromptCommand()
+
+
+" new style functions
+function VimuxRunCommand(command, ...)
   let l:autoreturn = 1
 
   if exists("a:1")
@@ -31,7 +44,27 @@ function RunVimTmuxCommand(command, ...)
   endif
 endfunction
 
-function RunLastVimTmuxCommand()
+" deprecated!
+function RunVimTmuxCommand(command, ...)
+  " TODO replace me with the direct function call!
+  echoerr "RunVimTmuxCommand is deprecated, use VimuxRunCommand instead."
+  let l:autoreturn = 1
+
+  if exists("a:1")
+    let l:autoreturn = a:1
+  endif
+
+  let g:_VimTmuxCmd = a:command
+
+  if l:autoreturn == 1
+    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+  else
+    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"), false)
+  endif
+endfunction
+
+
+function VimuxRunLastCommand()
   if exists("g:_VimTmuxCmd")
     ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
   else
@@ -39,40 +72,90 @@ function RunLastVimTmuxCommand()
   endif
 endfunction
 
-function ClearVimTmuxWindow()
+" deprecated!
+function RunLastVimTmuxCommand()
+  echoerr "RunLastVimTmuxCommand is deprecated, use VimuxRunLastCommand instead."
+  call VimuxRunLastCommand()
+endfunction
+
+
+function VimuxClearWindow()
   if exists("g:_VimTmuxRunnerPane")
     unlet g:_VimTmuxRunnerPane
   end
 endfunction
 
+" deprecated!
+function ClearVimTmuxWindow()
+  echoerr "ClearVimTmuxWindow is deprecated, use VimuxClearWindow instead."
+  call VimuxClearWindow()
+endfunction
+
+
+" deprecated!
 function CloseVimTmuxWindows()
-  ruby CurrentTmuxSession.new.close_other_panes
-  call ClearVimTmuxWindow()
-  echoerr "CloseVimTmuxWindows is deprecated, use CloseVimTmuxPanes"
+  echoerr "ClearVimTmuxWindow is deprecated, use VimuxClosePanes instead."
+  call VimuxCloseWindows()
 endfunction
 
-function CloseVimTmuxRunner()
+
+function VimuxCloseRunner()
   ruby CurrentTmuxSession.new.close_runner_pane
-  call ClearVimTmuxWindow()
+  call VimuxClearWindow()
 endfunction
 
-function CloseVimTmuxPanes()
+" deprecated!
+function CloseVimTmuxRunner()
+  echoerr "CloseVimTmuxRunner is deprecated, use VimuxCloseRunner instead."
+  call VimuxCloseRunner()
+endfunction
+
+
+function VimuxClosePanes()
   ruby CurrentTmuxSession.new.close_other_panes
-  call ClearVimTmuxWindow()
+  call VimuxClearWindow()
 endfunction
 
-function InterruptVimTmuxRunner()
+" deprecated!
+function CloseVimTmuxPanes()
+  echoerr "CloseVimTmuxPanes is deprecated, use VimuxClosePanes instead."
+  call VimuxClosePanes()
+endfunction
+
+
+function VimuxInterruptRunner()
   ruby CurrentTmuxSession.new.interrupt_runner
 endfunction
 
-function InspectVimTmuxRunner()
+" deprecated!
+function InterruptVimTmuxRunner()
+  echoerr "InterruptVimTmuxRunner is deprecated, use VimuxInterruptRunner instead."
+  call VimuxInterruptRunner()
+endfunction
+
+
+function VimuxInspectRunner()
   ruby CurrentTmuxSession.new.inspect_runner
 endfunction
 
-function PromptVimTmuxCommand()
-  let l:command = input("Command? ")
-  call RunVimTmuxCommand(l:command)
+" deprecated!
+function InspectVimTmuxRunner()
+  echoerr "InspectVimTmuxRunner is deprecated, use VimuxInspectRunner instead."
+  call VimuxInspectRunner()
 endfunction
+
+
+function VimuxPromptCommand()
+  let l:command = input("Command? ")
+  call VimuxRunCommand(l:command)
+endfunction
+
+" deprecated!
+function PromptVimTmuxCommand()
+  echoerr "PromptVimTmuxCommand is deprecated, use VimuxPromptCommand instead."
+  call VimuxPromptCommand()
+endfunction
+
 
 ruby << EOF
 class TmuxSession
