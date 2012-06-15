@@ -14,6 +14,7 @@ CONTENTS                                                        *vimux-contents*
       2.4 .............................. |VimuxCloseRunner|
       2.5 .............................. |VimuxClosePanes|
       2.6 .............................. |VimuxInterruptRunner|
+      2.7 .............................. |VimuxClearRunnerHistory|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -67,6 +68,7 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxInspectRunner|
   - |VimuxInterruptRunner|
   - |VimuxPromptCommand|
+  - |VimuxClearRunnerHistory|
 
 
 Note:
@@ -106,7 +108,7 @@ Prompt for a command and run it in a small horizontal split bellow the current
 pane.
 >
  " Prompt for a command to run map
- <Leader>rp :VimuxPromptCommand<CR>
+ <Leader>vp :VimuxPromptCommand<CR>
 <
 
 ------------------------------------------------------------------------------
@@ -117,7 +119,7 @@ VimuxRunLastCommand~
 Run the last command executed by `VimuxRunCommand`
 >
  " Run last command executed by VimuxRunCommand
- map <Leader>rl :VimuxRunLastCommand<CR>
+ map <Leader>vl :VimuxRunLastCommand<CR>
 <
 
 ------------------------------------------------------------------------------
@@ -129,7 +131,7 @@ Move into the tmux runner pane created by `VimuxRunCommand` and enter copy
 pmode (scroll mode).
 >
  " Inspect runner pane map
- <Leader>ri :VimuxInspectRunner<CR>
+ <Leader>vi :VimuxInspectRunner<CR>
 <
 
 ------------------------------------------------------------------------------
@@ -140,7 +142,7 @@ VimuxCloseRunner~
 Close the tmux runner created by `VimuxRunCommand`
 >
  " Close vim tmux runner opened by VimuxRunCommand
- map <Leader>rq :VimuxCloseRunner<CR>
+ map <Leader>vq :VimuxCloseRunner<CR>
 <
 
 ------------------------------------------------------------------------------
@@ -151,7 +153,7 @@ VimuxClosePanes~
 Close all other tmux panes in the current window.
 >
  " Close all other tmux panes in current window
- map <Leader>rx :VimuxClosePanes<CR>
+ map <Leader>vx :VimuxClosePanes<CR>
 >
 
 ------------------------------------------------------------------------------
@@ -163,7 +165,20 @@ Interrupt any command that is running inside the
 runner pane.
 >
  " Interrupt any command running in the runner pane map
- <Leader>rs :VimuxInterruptRunner<CR>
+ <Leader>vs :VimuxInterruptRunner<CR>
+<
+
+
+
+------------------------------------------------------------------------------
+                                                          *VimuxClearRunnerHistory*
+VimuxClearRunnerHistory~
+
+Clear ths tmux history of the runner pane for when
+you enter tmux scroll mode inside the runner pane.
+>
+ " Clear the tmux history of the runner pane
+ <Leader>vc :VimuxClearRunnerHistory<CR>
 <
 
 
