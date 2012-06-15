@@ -47,7 +47,6 @@ endfunction
 " deprecated!
 function RunVimTmuxCommand(command, ...)
   " TODO replace me with the direct function call!
-  echoerr "RunVimTmuxCommand is deprecated, use VimuxRunCommand instead."
   let l:autoreturn = 1
 
   if exists("a:1")
@@ -74,7 +73,6 @@ endfunction
 
 " deprecated!
 function RunLastVimTmuxCommand()
-  echoerr "RunLastVimTmuxCommand is deprecated, use VimuxRunLastCommand instead."
   call VimuxRunLastCommand()
 endfunction
 
@@ -87,14 +85,12 @@ endfunction
 
 " deprecated!
 function ClearVimTmuxWindow()
-  echoerr "ClearVimTmuxWindow is deprecated, use VimuxClearWindow instead."
   call VimuxClearWindow()
 endfunction
 
 
 " deprecated!
 function CloseVimTmuxWindows()
-  echoerr "ClearVimTmuxWindow is deprecated, use VimuxClosePanes instead."
   call VimuxCloseWindows()
 endfunction
 
@@ -106,7 +102,6 @@ endfunction
 
 " deprecated!
 function CloseVimTmuxRunner()
-  echoerr "CloseVimTmuxRunner is deprecated, use VimuxCloseRunner instead."
   call VimuxCloseRunner()
 endfunction
 
@@ -118,7 +113,6 @@ endfunction
 
 " deprecated!
 function CloseVimTmuxPanes()
-  echoerr "CloseVimTmuxPanes is deprecated, use VimuxClosePanes instead."
   call VimuxClosePanes()
 endfunction
 
@@ -129,7 +123,6 @@ endfunction
 
 " deprecated!
 function InterruptVimTmuxRunner()
-  echoerr "InterruptVimTmuxRunner is deprecated, use VimuxInterruptRunner instead."
   call VimuxInterruptRunner()
 endfunction
 
@@ -140,7 +133,6 @@ endfunction
 
 " deprecated!
 function InspectVimTmuxRunner()
-  echoerr "InspectVimTmuxRunner is deprecated, use VimuxInspectRunner instead."
   call VimuxInspectRunner()
 endfunction
 
@@ -152,7 +144,6 @@ endfunction
 
 " deprecated!
 function PromptVimTmuxCommand()
-  echoerr "PromptVimTmuxCommand is deprecated, use VimuxPromptCommand instead."
   call VimuxPromptCommand()
 endfunction
 
