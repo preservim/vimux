@@ -16,6 +16,7 @@ command VimuxCloseWindows :call VimuxCloseWindows()
 command VimuxInspectRunner :call VimuxInspectRunner()
 command VimuxInterruptRunner :call VimuxInterruptRunner()
 command VimuxPromptCommand :call VimuxPromptCommand()
+command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 
 " DEPRECATED
 command RunLastVimTmuxCommand :call VimuxRunLastCommand()
@@ -148,6 +149,10 @@ function PromptVimTmuxCommand()
 endfunction
 
 
+function VimuxClearRunnerHistory()
+  ruby CurrentTmuxSession.new.clear_runner_history
+endfunction
+
 ruby << EOF
 class TmuxSession
   def initialize(session, window, pane)
@@ -171,6 +176,10 @@ class TmuxSession
 
   def clear_vim_cached_runner_pane
     Vim.command("unlet g:_VimTmuxRunnerPane")
+  end
+
+  def clear_runner_history
+    _run("clear-history -t #{target(:pane => runner_pane)}")
   end
 
   def height
