@@ -14,6 +14,8 @@ command VimuxCloseRunner :call VimuxCloseRunner()
 command VimuxClosePanes :call VimuxClosePanes()
 command VimuxCloseWindows :call VimuxCloseWindows()
 command VimuxInspectRunner :call VimuxInspectRunner()
+command VimuxScrollUpInspect :call VimuxScrollUpInspect()
+command VimuxScrollDownInspect :call VimuxScrollDownInspect()
 command VimuxInterruptRunner :call VimuxInterruptRunner()
 command VimuxPromptCommand :call VimuxPromptCommand()
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
@@ -127,6 +129,13 @@ function InterruptVimTmuxRunner()
   call VimuxInterruptRunner()
 endfunction
 
+function VimuxScrollDownInspect()
+  ruby CurrentTmuxSession.new.inspect_scroll_down
+endfunction
+
+function VimuxScrollUpInspect()
+  ruby CurrentTmuxSession.new.inspect_scroll_up
+endfunction
 
 function VimuxInspectRunner()
   ruby CurrentTmuxSession.new.inspect_runner
@@ -209,6 +218,23 @@ class TmuxSession
   def inspect_runner
     _run("select-pane -t #{target(:pane => runner_pane)}")
     _run("copy-mode")
+    _move_up_pane
+  end
+
+  def inspect_send_command(cmd)
+    t = target(:pane => runner_pane)
+    _run("select-pane -t #{t}")
+    _run("copy-mode")
+    _send_command(cmd, t, false)
+    _move_up_pane
+  end
+
+  def inspect_scroll_up
+    inspect_send_command("C-u")
+  end
+
+  def inspect_scroll_down
+    inspect_send_command("C-d")
   end
 
   def current_panes
