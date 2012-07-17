@@ -1,0 +1,296 @@
+*vimux.txt*   easily interact with tmux
+
+                                  Vimux
+                   effortless vim and tmux interaction
+
+==============================================================================
+CONTENTS                                                        *vimux-contents*
+
+    1. About............................ |VimuxAbout|
+    2. Usage ........................... |VimuxUsage|
+      2.1 .............................. |VimuxPromptCommand|
+      2.2 .............................. |VimuxRunLastCommand|
+      2.3 .............................. |VimuxInspectRunner|
+      2.4 .............................. |VimuxCloseRunner|
+      2.5 .............................. |VimuxClosePanes|
+      2.6 .............................. |VimuxInterruptRunner|
+      2.7 .............................. |VimuxClearRunnerHistory|
+    3. Misc ............................ |VimuxMisc|
+      3.1 Example Keybinding............ |VimuxExampleKeybinding|
+      3.2 Tslime Replacement............ |VimuxTslimeReplacement|
+    4. Configuration ................... |VimuxConfiguration|
+
+
+==============================================================================
+ABOUT (1)                                                           *VimuxAbout*
+
+Vimux -- Easily interact with tmux from vim.
+
+What inspired me to write vimux was tslime.vim [1], a plugin that lets you
+send input to tmux. While tslime.vim works well, I felt it wasn't optimized
+for my primary use case which was having a smaller tmux pane that I would use
+to run tests or play with a REPL.
+
+My goal with vimux is to make interacting with tmux from vim effortless. By
+default when you call `VimuxRunCommand` vimux will create a 20% tall
+horizontal pane under your current tmux pane and execute a command in it
+without losing focus of vim. Once that pane exists whenever you call
+`VimuxRunCommand` again the command will be executed in that pane. As I was
+using vimux myself I wanted to rerun commands over and over. An example of
+this was running the current file through rspec. Rather than typing that over
+and over I wrote `VimuxRunLastCommand` that will execute the last command
+you called with `VimuxRunCommand`.
+
+Other auxiliary functions and the ones I talked about above can be found
+bellow with a full description and example key binds for your vimrc.
+
+[1] https://github.com/kikijump/tslime.vim
+
+
+==============================================================================
+USAGE (2)                                                           *VimuxUsage*
+
+The function VimuxRunCommand(command) is the core of Vimux. It will
+create a split pane in the current window and run the passed command in it.
+>
+    :call VimuxRunCommand("ls")
+<
+This will run the command in a split pane without losing focus of vim. If the
+command takes a long time to return you can continue to use vim while the
+process finishes and will see the output in the pane when it's finished.
+
+Furthermore there are several handy commands all starting with 'Vimux':
+  - |VimuxRunCommand|
+  - |VimuxRunLastCommand| 
+  - |VimuxCloseRunner|
+  - |VimuxClosePanes|
+  - |VimuxCloseWindows|
+  - |VimuxInspectRunner|
+  - |VimuxInterruptRunner|
+  - |VimuxPromptCommand|
+  - |VimuxClearRunnerHistory|
+
+
+Note:
+Earlier the all commands had different names. There are still aliases for
+convenience. Please chang your configuration according to the new naming
+conventions!
+
+The DEPRECATED commands:
+  - |PromptVimTmuxCommand|
+  - |RunLastVimTmuxCommand|
+  - |InspectVimTmuxRunner|
+  - |CloseVimTmuxRunner|
+  - |CloseVimTmuxPanes|
+  - |InterruptVimTmuxRunner|
+
+------------------------------------------------------------------------------
+                                                             *RunVimTmuxCommand*
+                                                               *VimuxRunCommand*
+VimuxRunCommand~
+
+Run a system command in a small horizontal split bellow
+the current pane vim is in. You can optionally pass a second argument to stop
+vimux from automatically sending a return after the command.
+>
+ " Run the current file with rspec
+ map <Leader>rb :call VimuxRunCommand("clear; rspec " . bufname("%"))<CR>
+ " Run command without sending sending a return
+ map <Leader>rq :call VimuxRunCommand("clear; rspec " . bufname("%"), 0)<CR>
+<
+
+------------------------------------------------------------------------------
+                                                          *PromptVimTmuxCommand*
+                                                            *VimuxPromptCommand*
+VimuxPromptCommand~
+
+Prompt for a command and run it in a small horizontal split bellow the current
+pane.
+>
+ " Prompt for a command to run map
+ <Leader>vp :VimuxPromptCommand<CR>
+<
+
+------------------------------------------------------------------------------
+                                                         *RunLastVimTmuxCommand*
+                                                           *VimuxRunLastCommand*
+VimuxRunLastCommand~
+
+Run the last command executed by `VimuxRunCommand`
+>
+ " Run last command executed by VimuxRunCommand
+ map <Leader>vl :VimuxRunLastCommand<CR>
+<
+
+------------------------------------------------------------------------------
+                                                          *InspectVimTmuxRunner*
+                                                            *VimuxInspectRunner*
+VimuxInspectRunner~
+
+Move into the tmux runner pane created by `VimuxRunCommand` and enter copy
+pmode (scroll mode).
+>
+ " Inspect runner pane map
+ <Leader>vi :VimuxInspectRunner<CR>
+<
+
+------------------------------------------------------------------------------
+                                                            *CloseVimTmuxRunner*
+                                                            *VimuxCloseRunner*
+VimuxCloseRunner~
+
+Close the tmux runner created by `VimuxRunCommand`
+>
+ " Close vim tmux runner opened by VimuxRunCommand
+ map <Leader>vq :VimuxCloseRunner<CR>
+<
+
+------------------------------------------------------------------------------
+                                                             *CloseVimTmuxPanes*
+                                                               *VimuxClosePanes*
+VimuxClosePanes~
+
+Close all other tmux panes in the current window.
+>
+ " Close all other tmux panes in current window
+ map <Leader>vx :VimuxClosePanes<CR>
+>
+
+------------------------------------------------------------------------------
+                                                        *InterruptVimTmuxRunner*
+                                                          *VimuxInterruptRunner*
+VimuxInterruptRunner~
+
+Interrupt any command that is running inside the
+runner pane.
+>
+ " Interrupt any command running in the runner pane map
+ <Leader>vs :VimuxInterruptRunner<CR>
+<
+
+
+
+------------------------------------------------------------------------------
+                                                          *VimuxClearRunnerHistory*
+VimuxClearRunnerHistory~
+
+Clear ths tmux history of the runner pane for when
+you enter tmux scroll mode inside the runner pane.
+>
+ " Clear the tmux history of the runner pane
+ <Leader>vc :VimuxClearRunnerHistory<CR>
+<
+
+
+==============================================================================
+MISC (3)                                                             *VimuxMisc*
+
+------------------------------------------------------------------------------
+                                                        *VimuxExampleKeybinding*
+Full Keybind Example~
+
+>
+ " Run the current file with rspec
+ map <Leader>rb :call VimuxRunCommand("clear; rspec " . bufname("%"))<CR>
+
+ " Prompt for a command to run
+ map <Leader>rp :VimuxPromptCommand<CR>
+ 
+ " Run last command executed by VimuxRunCommand
+ map <Leader>rl :VimuxRunLastCommand<CR>
+ 
+ " Inspect runner pane
+ map <Leader>ri :VimuxInspectRunner<CR>
+ 
+ " Close all other tmux panes in current window
+ map <Leader>rx :VimuxClosePanes<CR>
+ 
+ " Close vim tmux runner opened by VimuxRunCommand
+ map <Leader>rq :VimuxCloseRunner<CR>
+ 
+ " Interrupt any command running in the runner pane
+ map <Leader>rs :VimuxInterruptRunner<CR>
+>
+
+------------------------------------------------------------------------------
+                                                        *VimuxTslimeReplacement*
+Vimux as tslime replacement~
+
+Here is how to use vimux to send code to a REPL. This is similar to tslime.
+First, add some helpful mappings.
+
+>
+ " Prompt for a command to run
+ map <LocalLeader>vp :VimuxPromptCommand<CR>
+
+ " If text is selected, save it in the v buffer and send that buffer it to tmux
+ vmap <LocalLeader>vs "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
+
+ " Select current paragraph and send it to tmux
+ nmap <LocalLeader>vs vip<LocalLeader>vs<CR>
+<
+
+Now, open a clojure file. Let's say your leader is backslash (\). Type \vp,
+and then type lein repl at the prompt. This opens a tmux split running a REPL.
+Then, select text or put the cursor on a function and type \vs. This will send
+it to the REPL and evaluate it. The reason we pass `0` to `VimuxRunCommand`
+is to stop the normal return that is sent to the runner pane and use our own
+new line so the clojure REPL will evaluate the selected text without adding an
+extra return. Thanks to @trptcolin for discovering this issue.
+
+
+==============================================================================
+CONFIGURATION (4)                                           *VimuxConfiguration*
+
+You can configure Vimux like this:
+
+------------------------------------------------------------------------------
+                                                     *VimuxConfiguration_height*
+2.1 g:VimuxHeight~
+
+The percent of the screen the split pane Vimux will spawn should take up.
+
+  let g:VimuxHeight = "40"
+
+Default: "20"
+
+------------------------------------------------------------------------------
+                                                *VimuxConfiguration_orientation*
+2.2 g:VimuxOrientation~
+
+The default orientation of the split tmux pane. This tells tmux to make the
+pane either vertically or horizontally, which is backward from how Vim handles
+creating splits.
+
+  let g:VimuxOrientation = "h"
+
+Options:
+  "v": vertical
+  "h": horizontal
+
+Default: "v"
+
+------------------------------------------------------------------------------
+                                           *VimuxConfiguration_use_nearest_pane*
+2.3 g:VimuxUseNearestPane~
+
+Use exising pane (not used by vim) if found instead of running split-window.
+
+  let VimuxUseNearestPane = 1
+
+Default: 0
+
+------------------------------------------------------------------------------
+                                             *VimuxConfiguration_reset_sequence*
+2.4 g:VimuxResetSequence~
+
+The keys sent to the runner pane before running a command. By default it sends
+`q` to make sure the pane is not in scroll-mode and `C-u` to clear the line.
+
+  let VimuxUseNearestPane = ""
+
+Default: "q C-u"
+
+
+==============================================================================
+vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
