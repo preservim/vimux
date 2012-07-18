@@ -22,6 +22,8 @@ _Note:_ Vimux requires vim with compiled ruby support. You can confirm you have 
 
 * [vimux-ruby-test](https://github.com/pgr0ss/vimux-ruby-test) a set of commands to easily run ruby tests
 * [vimux-cucumber](https://github.com/cloud8421/vimux-cucumber) run Cucumber Features through Vimux
+* [vim-turbux](https://github.com/jgdavey/vim-turbux) Turbo Ruby testing with tmux
+* [vimux-pyutils](https://github.com/julienr/vimux-pyutils) A set of functions for vimux that allow to run code blocks in ipython
 
 ## Usage
 
