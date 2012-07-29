@@ -287,7 +287,7 @@ Default: 0
 The keys sent to the runner pane before running a command. By default it sends
 `q` to make sure the pane is not in scroll-mode and `C-u` to clear the line.
 
-  let VimuxUseNearestPane = ""
+  let VimuxResetSequence = ""
 
 Default: "q C-u"
 
