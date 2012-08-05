@@ -39,6 +39,7 @@ function VimuxRunCommand(command, ...)
   endif
 
   let g:_VimTmuxCmd = a:command
+  let g:_VimTmuxCmdAutoreturn = l:autoreturn
 
   if l:autoreturn == 1
     ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
@@ -57,6 +58,7 @@ function RunVimTmuxCommand(command, ...)
   endif
 
   let g:_VimTmuxCmd = a:command
+  let g:_VimTmuxCmdAutoreturn = l:autoreturn
 
   if l:autoreturn == 1
     ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
@@ -68,7 +70,11 @@ endfunction
 
 function VimuxRunLastCommand()
   if exists("g:_VimTmuxCmd")
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+    if g:_VimTmuxCmdAutoreturn == 1
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+    else
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"), false)
+    endif
   else
     echo "No last command"
   endif
