@@ -82,6 +82,70 @@ function s:TmuxTargetPane(args)
   get(a:args, 'session', g:VimuxCurrentTmuxSession).':'.get(a:args, 'window', g:VimuxCurrentTmuxWindow).'.'.get(a:args, 'pane', g:VimuxCurrentTmuxPane)
 endfunction
 
+" old method:  TmuxSession#active_pane_id
+function s:TmuxActivePaneId()
+  "for line in split(s:TmuxRun('list-panes'), '\n')
+    "if line =~ '\(active\)'
+      "return split(line)[-2]
+    "endif
+  "endfor
+  "return split(s:TmuxRun('list-panes | grep "\(active\)"'), ':')[0]
+  return split(s:TmuxRun('list-panes | grep "\(active\)"'))[-2]
+endfunction
+
+" old method:  TmuxSession#nearest_inactive_pane_id
+function s:TmuxNearestInactivePaneId()
+  "let panes = split(s:TmuxRun('list-panes'), '\n')
+  "for pane in panes
+    "if !(pane =~ '\(active\)')
+      "return split(pane, ':')[0]
+    "endif
+  "endfor
+  let panes = split(s:TmuxRun('list-panes | grep "^.*[^(active)]$"'), '\n')
+  return len(panes) > 0 ? split(panes[0], ':')[0] : 0
+endfunction
+
+" old method: TmuxSession#height
+function s:TmuxRunnerPaneHeight()
+  if exists("g:VimuxHeight")
+    return g:VimuxHeight
+  else
+    return 20
+  endif
+endfunction
+
+" old method: TmuxSession#orientation
+function s:TmuxRunnerPaneOrientation()
+  if exists("g:VimuxOrientation") && (g:VimuxOrientation == 'v' || g:VimuxOrientation == 'h')
+    return '-'.g:VimuxOrientation
+  else
+    return '-v'
+  endif
+endfunction
+
+" old method:  TmuxSession#runner_pane
+function s:VimuxRunnerPane()
+  if !exists(g:_VimTmuxRunnerPane)
+    let use_nearest_pane = exists("g:VimuxUseNearestPane")
+    if use_nearest_pane && s:NearestInactivePaneId()
+      s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:NearestInactivePaneId()}))
+    else
+      s:TmuxRun('split-window -p '.s:TmuxRunnerPaneHeight().' '.s:TmuxRunnerPaneOrientation)
+    endif
+    let g:_VimTmuxRunnerPane = s:TmuxActivePaneId()
+    s:SendCommandToTmux('cd '.system('pwd'), s:TmuxTargetPane({'pane': g:_VimTmuxRunnerPane))
+  endif
+
+  for line in split(s:TmuxRun('list-panes'), '\n')
+    if line =~ g:_VimTmuxRunnerPane
+      return split(line, ':')[0]
+    endif
+  endfor
+
+  VimuxClearWindow()
+  return s:VimuxRunnerPane()
+endfunction
+
 " old method:  TmuxSession#reset_sequence
 function s:TmuxResetSequence()
   if exists('g:VimuxResetSequence')
