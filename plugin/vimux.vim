@@ -145,7 +145,7 @@ function s:VimuxRunnerPane()
       call s:TmuxRun('split-window -p '.s:TmuxRunnerPaneHeight().' '.s:TmuxRunnerPaneOrientation())
     endif
     let g:_VimTmuxRunnerPane = s:TmuxActivePaneId()
-    call s:SendCommandToTmux('cd '.system('pwd'), s:TmuxTargetPane({'pane': g:_VimTmuxRunnerPane), 1)
+    call s:SendCommandToTmux('cd '.system('pwd'), s:TmuxTargetPane({'pane': g:_VimTmuxRunnerPane}), 1)
   endif
 
   for line in split(s:TmuxRun('list-panes'), '\n')
@@ -174,7 +174,7 @@ endfunction
 
 " old method:  TmuxSession#_move_up_pane
 function s:TmuxReturnToVim()
-  call s:TmuxRun('select-pane -t '.s:TmuxTargetPane)
+  call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({}))
 endfunction
 
 " old method:  TmuxSession#run_shell_command
