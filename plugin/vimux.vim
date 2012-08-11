@@ -215,6 +215,7 @@ function VimuxRunCommand(command, ...)
 
   let g:_VimTmuxCmd = a:command
 
+  call s:Initialize()
   if l:autoreturn == 1
     call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
   else
@@ -233,6 +234,7 @@ function RunVimTmuxCommand(command, ...)
 
   let g:_VimTmuxCmd = a:command
 
+  call s:Initialize()
   if l:autoreturn == 1
     call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
   else
@@ -243,6 +245,7 @@ endfunction
 
 function VimuxRunLastCommand()
   if exists("g:_VimTmuxCmd")
+    call s:Initialize()
     call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
   else
     echo "No last command"
@@ -274,7 +277,8 @@ endfunction
 
 
 function VimuxCloseRunner()
-  s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
+  call s:Initialize()
+  call s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
   call VimuxClearWindow()
 endfunction
 
@@ -288,7 +292,8 @@ endfunction
 " the one you are in... probably not what you want...
 function VimuxClosePanes()
   if len(split(s:TmuxRun('list-panes'), '\n')) > 1
-    s:TmuxRun('kill-pane -a')
+    call s:Initialize()
+    call s:TmuxRun('kill-pane -a')
   endif
   call VimuxClearWindow()
 endfunction
@@ -300,7 +305,8 @@ endfunction
 
 
 function VimuxInterruptRunner()
-  s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}).' ^c')
+  call s:Initialize()
+  call s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}).' ^c')
 endfunction
 
 " deprecated!
@@ -309,17 +315,20 @@ function InterruptVimTmuxRunner()
 endfunction
 
 function VimuxScrollDownInspect()
-  s:TmuxInspectSendCommand('C-d')
+  call s:Initialize()
+  call s:TmuxInspectSendCommand('C-d')
 endfunction
 
 function VimuxScrollUpInspect()
-  s:TmuxInspectSendCommand('C-u')
+  call s:Initialize()
+  call s:TmuxInspectSendCommand('C-u')
 endfunction
 
 function VimuxInspectRunner()
-  s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
-  s:TmuxRun('copy-mode')
-  s:TmuxReturnToVim()
+  call s:Initialize()
+  call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
+  call s:TmuxRun('copy-mode')
+  call s:TmuxReturnToVim()
 endfunction
 
 " deprecated!
@@ -340,7 +349,8 @@ endfunction
 
 
 function VimuxClearRunnerHistory()
-  s:TmuxRun('clear-history -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
+  call s:Initialize()
+  call s:TmuxRun('clear-history -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
 endfunction
 
 
