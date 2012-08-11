@@ -142,7 +142,7 @@ function s:VimuxRunnerPane()
     if use_nearest_pane && s:NearestInactivePaneId()
       call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:NearestInactivePaneId()}))
     else
-      call s:TmuxRun('split-window -p '.s:TmuxRunnerPaneHeight().' '.s:TmuxRunnerPaneOrientation)
+      call s:TmuxRun('split-window -p '.s:TmuxRunnerPaneHeight().' '.s:TmuxRunnerPaneOrientation())
     endif
     let g:_VimTmuxRunnerPane = s:TmuxActivePaneId()
     call s:SendCommandToTmux('cd '.system('pwd'), s:TmuxTargetPane({'pane': g:_VimTmuxRunnerPane), 1)
