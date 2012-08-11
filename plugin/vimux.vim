@@ -184,13 +184,6 @@ function s:TmuxRunShellCommand(command, auto_return)
   s:TmuxReturnToVim()
 endfunction
 
-" old method:  TmuxSession#inspect_runner
-function s:TmuxInspectRunner()
-  s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
-  s:TmuxRun('copy-mode')
-  s:TmuxReturnToVim()
-endfunction
-
 " old method:  TmuxSession#inspect_send_command
 function s:TmuxInspectSendCommand(command)
   let target_pane = s:TmuxTargetPane({'pane': s:VimuxRunnerPane})
@@ -200,31 +193,6 @@ function s:TmuxInspectSendCommand(command)
   s:TmuxReturnToVim()
 endfunction
 
-" old method:  TmuxSession#inspect_scroll_up
-function s:TmuxInspectScrollUp()
-  s:TmuxInspectSendCommand('C-u')
-endfunction
-
-" old method:  TmuxSession#inspect_scroll_down
-function s:TmuxInspectScrollDown()
-  s:TmuxInspectSendCommand('C-d')
-endfunction
-
-" old method:  TmuxSession#clear_runner_history
-function s:TmuxClearRunnerHistory()
-  s:TmuxRun('clear-history -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
-endfunction
-
-" old method:  TmuxSession#interrupt_runner
-function s:TmuxInterruptRunner()
-  s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}).' ^c')
-endfunction
-
-" old method:  TmuxSession#close_runner_pane
-function s:TmuxCloseRunnerPane()
-  s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
-endfunction
-
 " old method:  TmuxSession#current_panes    NOT IN USE
 function s:TmuxCurrentPanes()
   result = []
@@ -232,15 +200,6 @@ function s:TmuxCurrentPanes()
     add(result, split(line, ':')[0])
   endfor
   return result
-endfunction
-
-" old method:  TmuxSession#close_other_panes
-" This function needs some work... it kills every pane including the one you
-" are in... probably not what you want...
-function s:TmuxCloseOtherPanes()
-  if len(split(s:TmuxRun('list-panes'), '\n')) > 1
-    s:TmuxRun('kill-pane -a')
-  endif
 endfunction
 
 " -----------------
@@ -315,7 +274,7 @@ endfunction
 
 
 function VimuxCloseRunner()
-  call s:TmuxCloseRunnerPane()
+  s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
   call VimuxClearWindow()
 endfunction
 
@@ -325,9 +284,12 @@ function CloseVimTmuxRunner()
 endfunction
 
 
+" This function probabably needs some work... it kills every pane including
+" the one you are in... probably not what you want...
 function VimuxClosePanes()
-  ruby CurrentTmuxSession.new.close_other_panes
-  call s:TmuxCloseOtherPanes()
+  if len(split(s:TmuxRun('list-panes'), '\n')) > 1
+    s:TmuxRun('kill-pane -a')
+  endif
   call VimuxClearWindow()
 endfunction
 
@@ -338,7 +300,7 @@ endfunction
 
 
 function VimuxInterruptRunner()
-  call s:TmuxInterruptRunner
+  s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}).' ^c')
 endfunction
 
 " deprecated!
@@ -347,15 +309,17 @@ function InterruptVimTmuxRunner()
 endfunction
 
 function VimuxScrollDownInspect()
-  call s:TmuxInspectScrollDown()
+  s:TmuxInspectSendCommand('C-d')
 endfunction
 
 function VimuxScrollUpInspect()
-  call s:TmuxInspectScrollUp()
+  s:TmuxInspectSendCommand('C-u')
 endfunction
 
 function VimuxInspectRunner()
-  call s:TmuxInspectRunner()
+  s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
+  s:TmuxRun('copy-mode')
+  s:TmuxReturnToVim()
 endfunction
 
 " deprecated!
@@ -376,7 +340,7 @@ endfunction
 
 
 function VimuxClearRunnerHistory()
-  call s:TmuxClearRunnerHistory()
+  s:TmuxRun('clear-history -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
 endfunction
 
 
