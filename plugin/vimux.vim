@@ -172,6 +172,32 @@ function s:TmuxRunShellCommand(command, auto_return)
   s:TmuxReturnToVim()
 endfunction
 
+" old method:  TmuxSession#inspect_runner
+function s:TmuxInspectRunner()
+  s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
+  s:TmuxRun('copy-mode')
+  s:TmuxReturnToVim()
+endfunction
+
+" old method:  TmuxSession#inspect_send_command
+function s:TmuxInspectSendCommand(command)
+  let target_pane = s:TmuxTargetPane({'pane': s:VimuxRunnerPane})
+  s:TmuxRun('select-pane -t '.target_pane)
+  s:TmuxRun('copy-mode')
+  s:SendCommandToTmux(a:command, target_pane, 0)
+  s:TmuxReturnToVim()
+endfunction
+
+" old method:  TmuxSession#inspect_scroll_up
+function s:TmuxInspectScrollUp()
+  s:TmuxInspectSendCommand('C-u')
+endfunction
+
+" old method:  TmuxSession#inspect_scroll_down
+function s:TmuxInspectScrollDown()
+  s:TmuxInspectSendCommand('C-d')
+endfunction
+
 " old method:  TmuxSession#interrupt_runner
 function s:TmuxInterruptRunner()
   s:TmuxRun('send-keys -t '.TmuxTargetPane({'pane': s:VimuxRunnerPane}).' ^c')
