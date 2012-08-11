@@ -29,6 +29,7 @@ command PromptVimTmuxCommand :call VimuxPromptCommand()
 " Utility Functions
 " -----------------
 
+" NOT WORKING CURRENTLY
 function s:StripStr(string)
   let new_string = substitute(substitute(a:string, '\A\s\+', '', 'g'), '\s\+\z', '', 'g')
   return new_string
@@ -52,7 +53,7 @@ endfunction
 
 " old method:  CurrentTmuxSession#get_session
 function s:GetSession()
-  return s:StripStr(s:TmuxRun("display -p '#S'"))
+  return substitute(substitute(s:TmuxRun("display -p '#S'"), '\n', '', 'g'), '\s', '', 'g')
 endfunction
 
 " old method:  CurrentTmuxSession#get_property
