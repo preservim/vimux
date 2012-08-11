@@ -57,6 +57,15 @@ function s:GetTmuxProperty(type, match)
   return split(s:TmuxRun('list-'.a:type.' | grep '.a:match), ':')[0]
 endfunction
 
+" old method:  TmuxSession#vim_cached_runner_pane
+function s:VimCachedRunnerPane()
+  if exists("g:_VimTmuxRunnerPane") && type(g:_VimTmuxRunnerPane) == type('')
+    return g:_VimTmuxRunnerPane
+  else
+    return 0
+  endif
+endfunction
+
 " old method:  CurrentTmuxSession#initialize
 function s:Initialize()
   if s:IsInTmux()
@@ -228,15 +237,6 @@ endfunction
 function s:TmuxCloseRunnerPane()
   if len(split(s:TmuxRun('list-panes'), '\n')) > 1
     s:TmuxRun('kill-pane -a')
-  endif
-endfunction
-
-" old method:  TmuxSession#vim_cached_runner_pane
-function s:VimCachedRunnerPane()
-  if exists("g:_VimTmuxRunnerPane") && type(g:_VimTmuxRunnerPane) == type('')
-    return g:_VimTmuxRunnerPane
-  else
-    return 0
   endif
 endfunction
 
