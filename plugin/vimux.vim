@@ -71,6 +71,10 @@ function s:GetTmuxProperty(type, match)
   return split(s:TmuxRun('list-'.a:type.' | grep '.a:match), ':')[0]
 endfunction
 
+function s:Target(args)
+  get(a:args, 'session', g:VimuxCurrentTmuxSession).':'.get(a:args, 'window', g:VimuxCurrentTmuxWindow).'.'.get(a:args, 'pane', g:VimuxCurrentTmuxPane)
+endfunction
+
 " new style functions
 function VimuxRunCommand(command, ...)
   let l:autoreturn = 1
