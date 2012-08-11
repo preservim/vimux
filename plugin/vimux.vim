@@ -91,7 +91,7 @@ endfunction
 
 " old method:  TmuxSession#target
 function s:TmuxTargetPane(args)
-  get(a:args, 'session', g:VimuxCurrentTmuxSession).':'.get(a:args, 'window', g:VimuxCurrentTmuxWindow).'.'.get(a:args, 'pane', g:VimuxCurrentTmuxPane)
+  ''.get(a:args, 'session', g:VimuxCurrentTmuxSession).':'.get(a:args, 'window', g:VimuxCurrentTmuxWindow).'.'.get(a:args, 'pane', g:VimuxCurrentTmuxPane)
 endfunction
 
 " old method:  TmuxSession#active_pane_id
