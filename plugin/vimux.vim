@@ -83,15 +83,15 @@ endfunction
 
 " old method:  TmuxSession#_send_command
 function s:SendCommandToTmux(command, target, auto_return)
-  call s:TmuxRun('send-keys -t '.a:target.' "'.substitute(a:command, '"', '\\"', 'g').'"'
+  call s:TmuxRun('send-keys -t '.a:target.' "'.substitute(a:command, '"', '\\"', 'g').'"')
   if a:auto_return == 1
-    call s:TmuxRun('send-keys -t '.a:target.' Enter'
+    call s:TmuxRun('send-keys -t '.a:target.' Enter')
   endif
 endfunction
 
 " old method:  TmuxSession#target
 function s:TmuxTargetPane(args)
-  ''.get(a:args, 'session', g:VimuxCurrentTmuxSession).':'.get(a:args, 'window', g:VimuxCurrentTmuxWindow).'.'.get(a:args, 'pane', g:VimuxCurrentTmuxPane)
+  return ''.get(a:args, 'session', g:VimuxCurrentTmuxSession).':'.get(a:args, 'window', g:VimuxCurrentTmuxWindow).'.'.get(a:args, 'pane', g:VimuxCurrentTmuxPane)
 endfunction
 
 " old method:  TmuxSession#active_pane_id
