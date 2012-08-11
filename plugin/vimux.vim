@@ -29,6 +29,38 @@ command InspectVimTmuxRunner :call VimuxInspectRunner()
 command InterruptVimTmuxRunner :call VimuxInterruptRunner()
 command PromptVimTmuxCommand :call VimuxPromptCommand()
 
+" utility functions
+function s:StripStr(string)
+  let new_string = substitute(substitute(a:string, '\A\s\+', '', 'g'), '\s\+\z', '', 'g')
+  return new_string
+endfunction
+
+" private functions
+function s:TmuxRun(command)
+  system('tmux '.a:command)
+endfunction
+
+function s:Initialize()
+  if s:IsInTmux()
+    let g:VimuxCurrentTmuxSession = s:GetSession()
+    let g:VimuxCurrentTmuxWindow = s:GetTmuxProperty('window', 'active')
+    let g:VimuxCurrentTmuxPane = s:GetTmuxProperty('pane', 'active')
+  elseif
+    echo 'You are not in a tmux session'
+  endif
+endfunction
+
+function s:IsInTmux()
+  return system('echo $TMUX') =~ '\a\+'
+endfunction
+
+function s:GetSession()
+  return s:StripStr(s:TmuxRun("display -p '#S'"))
+endfunction
+
+function s:GetTmuxProperty(type, match)
+  return split(s:TmuxRun('list-'.a:type.' | grep '.a:match), ':')[0]
+endfunction
 
 " new style functions
 function VimuxRunCommand(command, ...)
