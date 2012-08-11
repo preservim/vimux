@@ -3,10 +3,6 @@ if exists("g:loaded_vimux") || &cp
 endif
 let g:loaded_vimux = 1
 
-if !has("ruby")
-  finish
-end
-
 
 " New style commands with 'normalized' names
 command VimuxRunLastCommand :call VimuxRunLastCommand()
@@ -30,6 +26,186 @@ command InterruptVimTmuxRunner :call VimuxInterruptRunner()
 command PromptVimTmuxCommand :call VimuxPromptCommand()
 
 
+" Utility Functions
+" -----------------
+
+" NOT WORKING CURRENTLY
+function s:StripStr(string)
+  let new_string = substitute(substitute(a:string, '\A\s\+', '', 'g'), '\s\+\z', '', 'g')
+  return new_string
+endfunction
+
+" -----------------
+
+
+" Private Functions
+" -----------------
+
+" old method:  TmuxSession#tmux?
+function s:IsInTmux()
+  return system('echo $TMUX') =~ '\a\+'
+endfunction
+
+" old method:  TmuxSession#_run
+function s:TmuxRun(command)
+  return system('tmux '.a:command)
+endfunction
+
+" old method:  CurrentTmuxSession#get_session
+function s:GetSession()
+  return substitute(substitute(s:TmuxRun("display -p '#S'"), '\n', '', 'g'), '\s', '', 'g')
+endfunction
+
+" old method:  CurrentTmuxSession#get_property
+function s:GetTmuxProperty(type, match)
+  return split(s:TmuxRun('list-'.a:type.' | grep '.a:match), ':')[0]
+endfunction
+
+" old method:  TmuxSession#vim_cached_runner_pane
+function s:VimCachedRunnerPane()
+  if exists("g:_VimTmuxRunnerPane") && type(g:_VimTmuxRunnerPane) == type('')
+    return g:_VimTmuxRunnerPane
+  else
+    return 0
+  endif
+endfunction
+
+" old method:  CurrentTmuxSession#initialize
+function s:Initialize()
+  if s:IsInTmux()
+    let g:VimuxCurrentTmuxSession = s:GetSession()
+    let g:VimuxCurrentTmuxWindow = s:GetTmuxProperty('window', 'active')
+    let g:VimuxCurrentTmuxPane = s:GetTmuxProperty('pane', 'active')
+    let g:VimuxCurrentRunnerPane = s:VimCachedRunnerPane()
+  elseif
+    echo 'You are not in a tmux session'
+  endif
+endfunction
+
+" old method:  TmuxSession#_send_command
+function s:SendCommandToTmux(command, target, auto_return)
+  call s:TmuxRun('send-keys -t '.a:target.' "'.substitute(a:command, '"', '\\"', 'g').'"')
+  if a:auto_return == 1
+    call s:TmuxRun('send-keys -t '.a:target.' Enter')
+  endif
+endfunction
+
+" old method:  TmuxSession#target
+function s:TmuxTargetPane(args)
+  return ''.get(a:args, 'session', g:VimuxCurrentTmuxSession).':'.get(a:args, 'window', g:VimuxCurrentTmuxWindow).'.'.get(a:args, 'pane', g:VimuxCurrentTmuxPane)
+endfunction
+
+" old method:  TmuxSession#active_pane_id
+function s:TmuxActivePaneId()
+  "for line in split(s:TmuxRun('list-panes'), '\n')
+    "if line =~ '\(active\)'
+      "return split(line)[-2]
+    "endif
+  "endfor
+  "return split(s:TmuxRun('list-panes | grep "\(active\)"'), ':')[0]
+  return split(s:TmuxRun('list-panes | grep "\(active\)"'))[-2]
+endfunction
+
+" old method:  TmuxSession#nearest_inactive_pane_id
+function s:TmuxNearestInactivePaneId()
+  "let panes = split(s:TmuxRun('list-panes'), '\n')
+  "for pane in panes
+    "if !(pane =~ '\(active\)')
+      "return split(pane, ':')[0]
+    "endif
+  "endfor
+  let panes = split(s:TmuxRun('list-panes | grep "^.*[^(active)]$"'), '\n')
+  return len(panes) > 0 ? split(panes[0], ':')[0] : 0
+endfunction
+
+" old method: TmuxSession#height
+function s:TmuxRunnerPaneHeight()
+  if exists("g:VimuxHeight")
+    return g:VimuxHeight
+  else
+    return 20
+  endif
+endfunction
+
+" old method: TmuxSession#orientation
+function s:TmuxRunnerPaneOrientation()
+  if exists("g:VimuxOrientation") && (g:VimuxOrientation == 'v' || g:VimuxOrientation == 'h')
+    return '-'.g:VimuxOrientation
+  else
+    return '-v'
+  endif
+endfunction
+
+" old method:  TmuxSession#runner_pane
+function s:VimuxRunnerPane()
+  if !exists('g:_VimTmuxRunnerPane')
+    let use_nearest_pane = exists("g:VimuxUseNearestPane")
+    if use_nearest_pane && s:TmuxNearestInactivePaneId()
+      call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:NearestInactivePaneId()}))
+    else
+      call s:TmuxRun('split-window -p '.s:TmuxRunnerPaneHeight().' '.s:TmuxRunnerPaneOrientation())
+    endif
+    let g:_VimTmuxRunnerPane = s:TmuxActivePaneId()
+    call s:SendCommandToTmux('cd '.system('pwd'), s:TmuxTargetPane({'pane': g:_VimTmuxRunnerPane}), 1)
+  endif
+
+  for line in split(s:TmuxRun('list-panes'), '\n')
+    if line =~ g:_VimTmuxRunnerPane
+      return split(line, ':')[0]
+    endif
+  endfor
+
+  call VimuxClearWindow()
+  return s:VimuxRunnerPane()
+endfunction
+
+" old method:  TmuxSession#reset_sequence
+function s:TmuxResetSequence()
+  if exists('g:VimuxResetSequence')
+    return g:VimuxResetSequence
+  else
+    return 'q C-u'
+  endif
+endfunction
+
+" old method:  TmuxSession#reset_shell
+function s:TmuxResetRunnerPane()
+  call s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}).' '.s:TmuxResetSequence())
+endfunction
+
+" old method:  TmuxSession#_move_up_pane
+function s:TmuxReturnToVim()
+  call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({}))
+endfunction
+
+" old method:  TmuxSession#run_shell_command
+function s:TmuxRunShellCommand(command, auto_return)
+  call s:TmuxResetRunnerPane()
+  call s:SendCommandToTmux(a:command, s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}), a:auto_return)
+  call s:TmuxReturnToVim()
+endfunction
+
+" old method:  TmuxSession#inspect_send_command
+function s:TmuxInspectSendCommand(command)
+  let target_pane = s:TmuxTargetPane({'pane': s:VimuxRunnerPane()})
+  call s:TmuxRun('select-pane -t '.target_pane)
+  call s:TmuxRun('copy-mode')
+  call s:SendCommandToTmux(a:command, target_pane, 0)
+  call s:TmuxReturnToVim()
+endfunction
+
+" old method:  TmuxSession#current_panes    NOT IN USE
+function s:TmuxCurrentPanes()
+  result = []
+  for line in split(s:TmuxRun('list-panes'), '\n')
+    add(result, split(line, ':')[0])
+  endfor
+  return result
+endfunction
+
+" -----------------
+
+
 " new style functions
 function VimuxRunCommand(command, ...)
   let l:autoreturn = 1
@@ -40,10 +216,11 @@ function VimuxRunCommand(command, ...)
 
   let g:_VimTmuxCmd = a:command
 
+  call s:Initialize()
   if l:autoreturn == 1
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
   else
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"), false)
+    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 0)
   endif
 endfunction
 
@@ -58,17 +235,19 @@ function RunVimTmuxCommand(command, ...)
 
   let g:_VimTmuxCmd = a:command
 
+  call s:Initialize()
   if l:autoreturn == 1
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
   else
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"), false)
+    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 0)
   endif
 endfunction
 
 
 function VimuxRunLastCommand()
   if exists("g:_VimTmuxCmd")
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+    call s:Initialize()
+    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
   else
     echo "No last command"
   endif
@@ -99,7 +278,8 @@ endfunction
 
 
 function VimuxCloseRunner()
-  ruby CurrentTmuxSession.new.close_runner_pane
+  call s:Initialize()
+  call s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
   call VimuxClearWindow()
 endfunction
 
@@ -109,8 +289,13 @@ function CloseVimTmuxRunner()
 endfunction
 
 
+" This function probabably needs some work... it kills every pane including
+" the one you are in... probably not what you want...
 function VimuxClosePanes()
-  ruby CurrentTmuxSession.new.close_other_panes
+  if len(split(s:TmuxRun('list-panes'), '\n')) > 1
+    call s:Initialize()
+    call s:TmuxRun('kill-pane -a')
+  endif
   call VimuxClearWindow()
 endfunction
 
@@ -121,7 +306,8 @@ endfunction
 
 
 function VimuxInterruptRunner()
-  ruby CurrentTmuxSession.new.interrupt_runner
+  call s:Initialize()
+  call s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}).' ^c')
 endfunction
 
 " deprecated!
@@ -130,15 +316,20 @@ function InterruptVimTmuxRunner()
 endfunction
 
 function VimuxScrollDownInspect()
-  ruby CurrentTmuxSession.new.inspect_scroll_down
+  call s:Initialize()
+  call s:TmuxInspectSendCommand('C-d')
 endfunction
 
 function VimuxScrollUpInspect()
-  ruby CurrentTmuxSession.new.inspect_scroll_up
+  call s:Initialize()
+  call s:TmuxInspectSendCommand('C-u')
 endfunction
 
 function VimuxInspectRunner()
-  ruby CurrentTmuxSession.new.inspect_runner
+  call s:Initialize()
+  call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
+  call s:TmuxRun('copy-mode')
+  call s:TmuxReturnToVim()
 endfunction
 
 " deprecated!
@@ -159,190 +350,9 @@ endfunction
 
 
 function VimuxClearRunnerHistory()
-  ruby CurrentTmuxSession.new.clear_runner_history
+  call s:Initialize()
+  call s:TmuxRun('clear-history -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
 endfunction
 
-ruby << EOF
-class TmuxSession
-  def initialize(session, window, pane)
-    @session = session
-    @window = window
-    @pane = pane
-    @runner_pane = vim_cached_runner_pane
-  end
 
-  def vim_cached_runner_pane
-    if Vim.evaluate('exists("g:_VimTmuxRunnerPane")') != 0
-      Vim.evaluate('g:_VimTmuxRunnerPane')
-    else
-      nil
-    end
-  end
-
-  def vim_cached_runner_pane=(runner_pane)
-    Vim.command("let g:_VimTmuxRunnerPane = '#{runner_pane}'")
-  end
-
-  def clear_vim_cached_runner_pane
-    Vim.command("unlet g:_VimTmuxRunnerPane")
-  end
-
-  def clear_runner_history
-    _run("clear-history -t #{target(:pane => runner_pane)}")
-  end
-
-  def height
-    if Vim.evaluate('exists("g:VimuxHeight")') != 0
-      Vim.evaluate('g:VimuxHeight')
-    else
-      20
-    end
-  end
-
-  def orientation
-    if Vim.evaluate('exists("g:VimuxOrientation")') != 0 && ["h", "v"].include?(Vim.evaluate('g:VimuxOrientation'))
-      "-#{Vim.evaluate('g:VimuxOrientation')}"
-    else
-      "-v"
-    end
-  end
-
-  def reset_sequence
-    if Vim.evaluate('exists("g:VimuxResetSequence")') != 0
-      "#{Vim.evaluate('g:VimuxResetSequence')}"
-    else
-      "q C-u"
-    end
-  end
-
-  def inspect_runner
-    _run("select-pane -t #{target(:pane => runner_pane)}")
-    _run("copy-mode")
-    _move_up_pane
-  end
-
-  def inspect_send_command(cmd)
-    t = target(:pane => runner_pane)
-    _run("select-pane -t #{t}")
-    _run("copy-mode")
-    _send_command(cmd, t, false)
-    _move_up_pane
-  end
-
-  def inspect_scroll_up
-    inspect_send_command("C-u")
-  end
-
-  def inspect_scroll_down
-    inspect_send_command("C-d")
-  end
-
-  def current_panes
-    _run('list-panes').split("\n").map do |line|
-      line.split(':').first
-    end
-  end
-
-  def active_pane_id
-    _run('list-panes').split("\n").map do |line|
-      return line.split[-2] if line =~ /\(active\)/
-    end
-  end
-
-  def target(args={})
-    "#{args.fetch(:session, @session)}:#{args.fetch(:window, @window)}.#{args.fetch(:pane, @pane)}"
-  end
-
-  def runner_pane
-    if @runner_pane.nil?
-      use_nearest_pane = Vim.evaluate('exists("g:VimuxUseNearestPane")') != 0
-      if use_nearest_pane && nearest_inactive_pane_id
-        _run("select-pane -t #{target(:pane => nearest_inactive_pane_id)}")
-      else
-        _run("split-window -p #{height} #{orientation}")
-      end
-      @runner_pane = active_pane_id
-      _send_command("cd #{`pwd`}", target(:pane => runner_pane))
-      Vim.command("let g:_VimTmuxRunnerPane = '#{@runner_pane}'")
-    end
-
-    _run('list-panes').split("\n").map do |line|
-      return line.split(':').first if line =~ /#{@runner_pane}/
-    end
-
-    @runner_pane = nil
-    runner_pane
-  end
-
-  def interrupt_runner
-    _run("send-keys -t #{target(:pane => runner_pane)} ^c")
-  end
-
-  def run_shell_command(command, auto_return = true)
-    reset_shell
-    _send_command(command, target(:pane => runner_pane), auto_return)
-    _move_up_pane
-  end
-
-  def close_runner_pane
-    _run("kill-pane -t #{target(:pane => runner_pane)}")
-  end
-
-  def close_other_panes
-    if _run("list-panes").split("\n").length > 1
-      _run("kill-pane -a")
-    end
-  end
-
-  def reset_shell
-    _run("send-keys -t #{target(:pane => runner_pane)} #{reset_sequence}")
-  end
-
-  def nearest_inactive_pane_id
-    panes = _run("list-pane").split("\n")
-    pane = panes.find { |p| p !~ /active/ }
-    pane ? pane.split(':').first : nil
-  end
-
-  def _move_up_pane
-    _run("select-pane -t #{target}")
-  end
-
-  def _send_command(command, target, auto_return = true)
-    _run("send-keys -t #{target} \"#{command.gsub('"', '\"')}\"")
-    _run("send-keys -t #{target} Enter") if auto_return
-  end
-
-  def _run(command)
-    `tmux #{command}`
-  end
-end
-
-class CurrentTmuxSession < TmuxSession
-  def initialize
-    if tmux?
-      session = self.get_session
-      window = self.get_property(:active, :window)
-      pane = self.get_property(:active, :pane)
-
-      super(session, window, pane)
-    else
-      raise "You are not in a tmux session"
-    end
-  end
-
-  def get_property(match, type)
-    _run("list-#{type.to_s}").split("\n").each do |line|
-      return line.split(':').first if line =~ /\(#{match.to_s}\)/
-    end
-  end
-
-  def get_session
-    _run("display -p '#S'").strip
-  end
-
-  def tmux?
-    `echo $TMUX` =~ /.+/ ? true : false
-  end
-end
-EOF
+" vim:set ft=vim ff=unix ts=4 sw=2 sts=2:
