@@ -70,7 +70,7 @@ function s:SendCommandToTmux(command, target, auto_return)
   endif
 endfunction
 
-function s:Target(args)
+function s:TmuxTargetPane(args)
   get(a:args, 'session', g:VimuxCurrentTmuxSession).':'.get(a:args, 'window', g:VimuxCurrentTmuxWindow).'.'.get(a:args, 'pane', g:VimuxCurrentTmuxPane)
 endfunction
 
