@@ -160,6 +160,18 @@ function s:TmuxResetRunnerPane()
   s:TmuxRun('send-keys -t '.TmuxTargetPane({'pane': s:VimuxRunnerPane}).' '.s:TmuxResetSequence)
 endfunction
 
+" old method:  TmuxSession#_move_up_pane
+function s:TmuxReturnToVim()
+  s:TmuxRun('select-pane -t '.s:TmuxTargetPane)
+endfunction
+
+" old method:  TmuxSession#run_shell_command
+function s:TmuxRunShellCommand(command, auto_return)
+  s:TmuxResetRunnerPane()
+  s:SendCommandToTmux(a:command, s:TmuxTargetPane({'pane': s:VimuxRunnerPane}), a:auto_return)
+  s:TmuxReturnToVim()
+endfunction
+
 " old method:  TmuxSession#interrupt_runner
 function s:TmuxInterruptRunner()
   s:TmuxRun('send-keys -t '.TmuxTargetPane({'pane': s:VimuxRunnerPane}).' ^c')
