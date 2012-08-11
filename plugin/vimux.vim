@@ -237,7 +237,7 @@ endfunction
 " old method:  TmuxSession#close_other_panes
 " This function needs some work... it kills every pane including the one you
 " are in... probably not what you want...
-function s:TmuxCloseRunnerPane()
+function s:TmuxCloseOtherPanes()
   if len(split(s:TmuxRun('list-panes'), '\n')) > 1
     s:TmuxRun('kill-pane -a')
   endif
