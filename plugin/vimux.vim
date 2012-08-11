@@ -157,7 +157,7 @@ endfunction
 
 " old method:  TmuxSession#reset_shell
 function s:TmuxResetRunnerPane()
-  s:TmuxRun('send-keys -t '.TmuxTargetPane({'pane': s:VimuxRunnerPane}).' '.s:TmuxResetSequence)
+  s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}).' '.s:TmuxResetSequence)
 endfunction
 
 " old method:  TmuxSession#_move_up_pane
@@ -200,12 +200,12 @@ endfunction
 
 " old method:  TmuxSession#interrupt_runner
 function s:TmuxInterruptRunner()
-  s:TmuxRun('send-keys -t '.TmuxTargetPane({'pane': s:VimuxRunnerPane}).' ^c')
+  s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}).' ^c')
 endfunction
 
 " old method:  TmuxSession#close_runner_pane
 function s:TmuxCloseRunnerPane()
-  s:TmuxRun('kill-pane -t '.TmuxTargetPane({'pane': s:VimuxRunnerPane}))
+  s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
 endfunction
 
 " old method:  TmuxSession#close_other_panes
