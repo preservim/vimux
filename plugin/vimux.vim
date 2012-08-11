@@ -133,7 +133,7 @@ function s:VimuxRunnerPane()
       s:TmuxRun('split-window -p '.s:TmuxRunnerPaneHeight().' '.s:TmuxRunnerPaneOrientation)
     endif
     let g:_VimTmuxRunnerPane = s:TmuxActivePaneId()
-    s:SendCommandToTmux('cd '.system('pwd'), s:TmuxTargetPane({'pane': g:_VimTmuxRunnerPane))
+    s:SendCommandToTmux('cd '.system('pwd'), s:TmuxTargetPane({'pane': g:_VimTmuxRunnerPane), 1)
   endif
 
   for line in split(s:TmuxRun('list-panes'), '\n')
