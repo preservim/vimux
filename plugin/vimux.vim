@@ -36,16 +36,20 @@ function s:StripStr(string)
 endfunction
 
 " private functions
+function s:IsInTmux()
+  return system('echo $TMUX') =~ '\a\+'
+endfunction
+
 function s:TmuxRun(command)
   system('tmux '.a:command)
 endfunction
 
-function s:VimCachedRunnerPane()
-  if exists("g:_VimTmuxRunnerPane") && type(g:_VimTmuxRunnerPane) == type('')
-    return g:_VimTmuxRunnerPane
-  else
-    return 0
-  endif
+function s:GetSession()
+  return s:StripStr(s:TmuxRun("display -p '#S'"))
+endfunction
+
+function s:GetTmuxProperty(type, match)
+  return split(s:TmuxRun('list-'.a:type.' | grep '.a:match), ':')[0]
 endfunction
 
 function s:Initialize()
@@ -59,20 +63,23 @@ function s:Initialize()
   endif
 endfunction
 
-function s:IsInTmux()
-  return system('echo $TMUX') =~ '\a\+'
-endfunction
-
-function s:GetSession()
-  return s:StripStr(s:TmuxRun("display -p '#S'"))
-endfunction
-
-function s:GetTmuxProperty(type, match)
-  return split(s:TmuxRun('list-'.a:type.' | grep '.a:match), ':')[0]
+function s:SendCommandToTmux(command, target, auto_return)
+  s:TmuxRun('send-keys -t '.target.' "'.substitute(a:command, '"', '\\"', 'g').'"'
+  if a:auto_return == 1
+    s:TmuxRun('send-keys -t '.target.' Enter'
+  endif
 endfunction
 
 function s:Target(args)
   get(a:args, 'session', g:VimuxCurrentTmuxSession).':'.get(a:args, 'window', g:VimuxCurrentTmuxWindow).'.'.get(a:args, 'pane', g:VimuxCurrentTmuxPane)
+endfunction
+
+function s:VimCachedRunnerPane()
+  if exists("g:_VimTmuxRunnerPane") && type(g:_VimTmuxRunnerPane) == type('')
+    return g:_VimTmuxRunnerPane
+  else
+    return 0
+  endif
 endfunction
 
 " new style functions
