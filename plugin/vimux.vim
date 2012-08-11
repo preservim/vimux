@@ -169,7 +169,7 @@ endfunction
 
 " old method:  TmuxSession#reset_shell
 function s:TmuxResetRunnerPane()
-  call s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}).' '.s:TmuxResetSequence)
+  call s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}).' '.s:TmuxResetSequence)
 endfunction
 
 " old method:  TmuxSession#_move_up_pane
@@ -180,13 +180,13 @@ endfunction
 " old method:  TmuxSession#run_shell_command
 function s:TmuxRunShellCommand(command, auto_return)
   call s:TmuxResetRunnerPane()
-  call s:SendCommandToTmux(a:command, s:TmuxTargetPane({'pane': s:VimuxRunnerPane}), a:auto_return)
+  call s:SendCommandToTmux(a:command, s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}), a:auto_return)
   call s:TmuxReturnToVim()
 endfunction
 
 " old method:  TmuxSession#inspect_send_command
 function s:TmuxInspectSendCommand(command)
-  let target_pane = s:TmuxTargetPane({'pane': s:VimuxRunnerPane})
+  let target_pane = s:TmuxTargetPane({'pane': s:VimuxRunnerPane()})
   call s:TmuxRun('select-pane -t '.target_pane)
   call s:TmuxRun('copy-mode')
   call s:SendCommandToTmux(a:command, target_pane, 0)
@@ -274,7 +274,7 @@ endfunction
 
 
 function VimuxCloseRunner()
-  s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
+  s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
   call VimuxClearWindow()
 endfunction
 
@@ -300,7 +300,7 @@ endfunction
 
 
 function VimuxInterruptRunner()
-  s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}).' ^c')
+  s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}).' ^c')
 endfunction
 
 " deprecated!
@@ -317,7 +317,7 @@ function VimuxScrollUpInspect()
 endfunction
 
 function VimuxInspectRunner()
-  s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
+  s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
   s:TmuxRun('copy-mode')
   s:TmuxReturnToVim()
 endfunction
@@ -340,7 +340,7 @@ endfunction
 
 
 function VimuxClearRunnerHistory()
-  s:TmuxRun('clear-history -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
+  s:TmuxRun('clear-history -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
 endfunction
 
 
