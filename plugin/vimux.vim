@@ -139,7 +139,7 @@ endfunction
 function s:VimuxRunnerPane()
   if !exists('g:_VimTmuxRunnerPane')
     let use_nearest_pane = exists("g:VimuxUseNearestPane")
-    if use_nearest_pane && s:NearestInactivePaneId()
+    if use_nearest_pane && s:TmuxNearestInactivePaneId()
       call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:NearestInactivePaneId()}))
     else
       call s:TmuxRun('split-window -p '.s:TmuxRunnerPaneHeight().' '.s:TmuxRunnerPaneOrientation())
@@ -169,7 +169,7 @@ endfunction
 
 " old method:  TmuxSession#reset_shell
 function s:TmuxResetRunnerPane()
-  call s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}).' '.s:TmuxResetSequence)
+  call s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}).' '.s:TmuxResetSequence())
 endfunction
 
 " old method:  TmuxSession#_move_up_pane
