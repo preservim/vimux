@@ -83,9 +83,9 @@ endfunction
 
 " old method:  TmuxSession#_send_command
 function s:SendCommandToTmux(command, target, auto_return)
-  call s:TmuxRun('send-keys -t '.target.' "'.substitute(a:command, '"', '\\"', 'g').'"'
+  call s:TmuxRun('send-keys -t '.a:target.' "'.substitute(a:command, '"', '\\"', 'g').'"'
   if a:auto_return == 1
-    call s:TmuxRun('send-keys -t '.target.' Enter'
+    call s:TmuxRun('send-keys -t '.a:target.' Enter'
   endif
 endfunction
 
