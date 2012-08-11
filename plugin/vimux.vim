@@ -47,7 +47,7 @@ endfunction
 
 " old method:  TmuxSession#_run
 function s:TmuxRun(command)
-  system('tmux '.a:command)
+  return system('tmux '.a:command)
 endfunction
 
 " old method:  CurrentTmuxSession#get_session
