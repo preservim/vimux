@@ -30,28 +30,34 @@ command InterruptVimTmuxRunner :call VimuxInterruptRunner()
 command PromptVimTmuxCommand :call VimuxPromptCommand()
 
 " utility functions
+" -----------------
 function s:StripStr(string)
   let new_string = substitute(substitute(a:string, '\A\s\+', '', 'g'), '\s\+\z', '', 'g')
   return new_string
 endfunction
 
 " private functions
+" -----------------
 function s:IsInTmux()
   return system('echo $TMUX') =~ '\a\+'
 endfunction
 
+" old method:  TmuxSession#_run
 function s:TmuxRun(command)
   system('tmux '.a:command)
 endfunction
 
+" old method:  CurrentTmuxSession#get_session
 function s:GetSession()
   return s:StripStr(s:TmuxRun("display -p '#S'"))
 endfunction
 
+" old method:  CurrentTmuxSession#get_property
 function s:GetTmuxProperty(type, match)
   return split(s:TmuxRun('list-'.a:type.' | grep '.a:match), ':')[0]
 endfunction
 
+" old method:  CurrentTmuxSession#initialize
 function s:Initialize()
   if s:IsInTmux()
     let g:VimuxCurrentTmuxSession = s:GetSession()
@@ -63,6 +69,7 @@ function s:Initialize()
   endif
 endfunction
 
+" old method:  TmuxSession#_send_command
 function s:SendCommandToTmux(command, target, auto_return)
   s:TmuxRun('send-keys -t '.target.' "'.substitute(a:command, '"', '\\"', 'g').'"'
   if a:auto_return == 1
@@ -70,10 +77,45 @@ function s:SendCommandToTmux(command, target, auto_return)
   endif
 endfunction
 
+" old method:  TmuxSession#target
 function s:TmuxTargetPane(args)
   get(a:args, 'session', g:VimuxCurrentTmuxSession).':'.get(a:args, 'window', g:VimuxCurrentTmuxWindow).'.'.get(a:args, 'pane', g:VimuxCurrentTmuxPane)
 endfunction
 
+" old method:  TmuxSession#reset_sequence
+function s:TmuxResetSequence()
+  if exists('g:VimuxResetSequence')
+    return g:VimuxResetSequence
+  else
+    return 'q C-u'
+  endif
+endfunction
+
+" old method:  TmuxSession#reset_shell
+function s:TmuxResetRunnerPane()
+  s:TmuxRun('send-keys -t '.TmuxTargetPane({'pane': s:VimuxRunnerPane}).' '.s:TmuxResetSequence)
+endfunction
+
+" old method:  TmuxSession#interrupt_runner
+function s:TmuxInterruptRunner()
+  s:TmuxRun('send-keys -t '.TmuxTargetPane({'pane': s:VimuxRunnerPane}).' ^c')
+endfunction
+
+" old method:  TmuxSession#close_runner_pane
+function s:TmuxCloseRunnerPane()
+  s:TmuxRun('kill-pane -t '.TmuxTargetPane({'pane': s:VimuxRunnerPane}))
+endfunction
+
+" old method:  TmuxSession#close_other_panes
+" This function needs some work... it kills every pane including the one you
+" are in... probably not what you want...
+function s:TmuxCloseRunnerPane()
+  if len(split(s:TmuxRun('list-panes'), '\n')) > 1
+    s:TmuxRun('kill-pane -a')
+  endif
+endfunction
+
+" old method:  TmuxSession#vim_cached_runner_pane
 function s:VimCachedRunnerPane()
   if exists("g:_VimTmuxRunnerPane") && type(g:_VimTmuxRunnerPane) == type('')
     return g:_VimTmuxRunnerPane
