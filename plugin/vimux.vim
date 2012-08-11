@@ -137,7 +137,7 @@ endfunction
 
 " old method:  TmuxSession#runner_pane
 function s:VimuxRunnerPane()
-  if !exists(g:_VimTmuxRunnerPane)
+  if !exists('g:_VimTmuxRunnerPane')
     let use_nearest_pane = exists("g:VimuxUseNearestPane")
     if use_nearest_pane && s:NearestInactivePaneId()
       call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:NearestInactivePaneId()}))
