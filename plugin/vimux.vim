@@ -40,11 +40,20 @@ function s:TmuxRun(command)
   system('tmux '.a:command)
 endfunction
 
+function s:VimCachedRunnerPane()
+  if exists("g:_VimTmuxRunnerPane") && type(g:_VimTmuxRunnerPane) == type('')
+    return g:_VimTmuxRunnerPane
+  else
+    return 0
+  endif
+endfunction
+
 function s:Initialize()
   if s:IsInTmux()
     let g:VimuxCurrentTmuxSession = s:GetSession()
     let g:VimuxCurrentTmuxWindow = s:GetTmuxProperty('window', 'active')
     let g:VimuxCurrentTmuxPane = s:GetTmuxProperty('pane', 'active')
+    let g:VimuxCurrentRunnerPane = s:VimCachedRunnerPane()
   elseif
     echo 'You are not in a tmux session'
   endif
