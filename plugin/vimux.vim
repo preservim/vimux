@@ -198,6 +198,11 @@ function s:TmuxInspectScrollDown()
   s:TmuxInspectSendCommand('C-d')
 endfunction
 
+" old method:  TmuxSession#clear_runner_history
+function s:TmuxClearRunnerHistory()
+  s:TmuxRun('clear-history -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
+endfunction
+
 " old method:  TmuxSession#interrupt_runner
 function s:TmuxInterruptRunner()
   s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}).' ^c')
@@ -206,6 +211,15 @@ endfunction
 " old method:  TmuxSession#close_runner_pane
 function s:TmuxCloseRunnerPane()
   s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}))
+endfunction
+
+" old method:  TmuxSession#current_panes    NOT IN USE
+function s:TmuxCurrentPanes()
+  result = []
+  for line in split(s:TmuxRun('list-panes'), '\n')
+    add(result, split(line, ':')[0])
+  endfor
+  return result
 endfunction
 
 " old method:  TmuxSession#close_other_panes
