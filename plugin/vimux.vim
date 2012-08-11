@@ -257,9 +257,9 @@ function VimuxRunCommand(command, ...)
   let g:_VimTmuxCmd = a:command
 
   if l:autoreturn == 1
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
   else
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"), false)
+    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 0)
   endif
 endfunction
 
@@ -275,16 +275,16 @@ function RunVimTmuxCommand(command, ...)
   let g:_VimTmuxCmd = a:command
 
   if l:autoreturn == 1
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
   else
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"), false)
+    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 0)
   endif
 endfunction
 
 
 function VimuxRunLastCommand()
   if exists("g:_VimTmuxCmd")
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
   else
     echo "No last command"
   endif
@@ -315,7 +315,7 @@ endfunction
 
 
 function VimuxCloseRunner()
-  ruby CurrentTmuxSession.new.close_runner_pane
+  call s:TmuxCloseRunnerPane()
   call VimuxClearWindow()
 endfunction
 
@@ -327,6 +327,7 @@ endfunction
 
 function VimuxClosePanes()
   ruby CurrentTmuxSession.new.close_other_panes
+  call s:TmuxCloseOtherPanes()
   call VimuxClearWindow()
 endfunction
 
@@ -337,7 +338,7 @@ endfunction
 
 
 function VimuxInterruptRunner()
-  ruby CurrentTmuxSession.new.interrupt_runner
+  call s:TmuxInterruptRunner
 endfunction
 
 " deprecated!
@@ -346,15 +347,15 @@ function InterruptVimTmuxRunner()
 endfunction
 
 function VimuxScrollDownInspect()
-  ruby CurrentTmuxSession.new.inspect_scroll_down
+  call s:TmuxInspectScrollDown()
 endfunction
 
 function VimuxScrollUpInspect()
-  ruby CurrentTmuxSession.new.inspect_scroll_up
+  call s:TmuxInspectScrollUp()
 endfunction
 
 function VimuxInspectRunner()
-  ruby CurrentTmuxSession.new.inspect_runner
+  call s:TmuxInspectRunner()
 endfunction
 
 " deprecated!
@@ -375,7 +376,7 @@ endfunction
 
 
 function VimuxClearRunnerHistory()
-  ruby CurrentTmuxSession.new.clear_runner_history
+  call s:TmuxClearRunnerHistory()
 endfunction
 
 
