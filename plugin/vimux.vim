@@ -83,9 +83,9 @@ endfunction
 
 " old method:  TmuxSession#_send_command
 function s:SendCommandToTmux(command, target, auto_return)
-  s:TmuxRun('send-keys -t '.target.' "'.substitute(a:command, '"', '\\"', 'g').'"'
+  call s:TmuxRun('send-keys -t '.target.' "'.substitute(a:command, '"', '\\"', 'g').'"'
   if a:auto_return == 1
-    s:TmuxRun('send-keys -t '.target.' Enter'
+    call s:TmuxRun('send-keys -t '.target.' Enter'
   endif
 endfunction
 
@@ -140,12 +140,12 @@ function s:VimuxRunnerPane()
   if !exists(g:_VimTmuxRunnerPane)
     let use_nearest_pane = exists("g:VimuxUseNearestPane")
     if use_nearest_pane && s:NearestInactivePaneId()
-      s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:NearestInactivePaneId()}))
+      call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:NearestInactivePaneId()}))
     else
-      s:TmuxRun('split-window -p '.s:TmuxRunnerPaneHeight().' '.s:TmuxRunnerPaneOrientation)
+      call s:TmuxRun('split-window -p '.s:TmuxRunnerPaneHeight().' '.s:TmuxRunnerPaneOrientation)
     endif
     let g:_VimTmuxRunnerPane = s:TmuxActivePaneId()
-    s:SendCommandToTmux('cd '.system('pwd'), s:TmuxTargetPane({'pane': g:_VimTmuxRunnerPane), 1)
+    call s:SendCommandToTmux('cd '.system('pwd'), s:TmuxTargetPane({'pane': g:_VimTmuxRunnerPane), 1)
   endif
 
   for line in split(s:TmuxRun('list-panes'), '\n')
@@ -154,7 +154,7 @@ function s:VimuxRunnerPane()
     endif
   endfor
 
-  VimuxClearWindow()
+  call VimuxClearWindow()
   return s:VimuxRunnerPane()
 endfunction
 
@@ -169,28 +169,28 @@ endfunction
 
 " old method:  TmuxSession#reset_shell
 function s:TmuxResetRunnerPane()
-  s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}).' '.s:TmuxResetSequence)
+  call s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane}).' '.s:TmuxResetSequence)
 endfunction
 
 " old method:  TmuxSession#_move_up_pane
 function s:TmuxReturnToVim()
-  s:TmuxRun('select-pane -t '.s:TmuxTargetPane)
+  call s:TmuxRun('select-pane -t '.s:TmuxTargetPane)
 endfunction
 
 " old method:  TmuxSession#run_shell_command
 function s:TmuxRunShellCommand(command, auto_return)
-  s:TmuxResetRunnerPane()
-  s:SendCommandToTmux(a:command, s:TmuxTargetPane({'pane': s:VimuxRunnerPane}), a:auto_return)
-  s:TmuxReturnToVim()
+  call s:TmuxResetRunnerPane()
+  call s:SendCommandToTmux(a:command, s:TmuxTargetPane({'pane': s:VimuxRunnerPane}), a:auto_return)
+  call s:TmuxReturnToVim()
 endfunction
 
 " old method:  TmuxSession#inspect_send_command
 function s:TmuxInspectSendCommand(command)
   let target_pane = s:TmuxTargetPane({'pane': s:VimuxRunnerPane})
-  s:TmuxRun('select-pane -t '.target_pane)
-  s:TmuxRun('copy-mode')
-  s:SendCommandToTmux(a:command, target_pane, 0)
-  s:TmuxReturnToVim()
+  call s:TmuxRun('select-pane -t '.target_pane)
+  call s:TmuxRun('copy-mode')
+  call s:SendCommandToTmux(a:command, target_pane, 0)
+  call s:TmuxReturnToVim()
 endfunction
 
 " old method:  TmuxSession#current_panes    NOT IN USE
