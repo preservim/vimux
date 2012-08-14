@@ -77,7 +77,7 @@ function s:Initialize()
     let g:VimuxCurrentRunnerPane = s:VimCachedRunnerPane()
     return 1
   else
-    echo 'You are not in a tmux session'
+    exec ":redraw | echo 'Error:  You are not in a tmux session'"
     return 0
   endif
 endfunction
@@ -252,7 +252,7 @@ function VimuxRunLastCommand()
       call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
     endif
   else
-    echo "No last command"
+    exec ':redraw | echo "No last command"'
   endif
 endfunction
 
