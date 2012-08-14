@@ -75,8 +75,10 @@ function s:Initialize()
     let g:VimuxCurrentTmuxWindow = s:GetTmuxProperty('window', 'active')
     let g:VimuxCurrentTmuxPane = s:GetTmuxProperty('pane', 'active')
     let g:VimuxCurrentRunnerPane = s:VimCachedRunnerPane()
+    return 1
   else
     echo 'You are not in a tmux session'
+    return 0
   endif
 endfunction
 
@@ -214,11 +216,12 @@ function VimuxRunCommand(command, ...)
 
   let g:_VimTmuxCmd = a:command
 
-  call s:Initialize()
-  if l:autoreturn == 1
-    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
-  else
-    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 0)
+  if s:Initialize()
+    if l:autoreturn == 1
+      call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
+    else
+      call s:TmuxRunShellCommand(g:_VimTmuxCmd, 0)
+    endif
   endif
 endfunction
 
@@ -233,19 +236,21 @@ function RunVimTmuxCommand(command, ...)
 
   let g:_VimTmuxCmd = a:command
 
-  call s:Initialize()
-  if l:autoreturn == 1
-    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
-  else
-    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 0)
+  if s:Initialize()
+    if l:autoreturn == 1
+      call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
+    else
+      call s:TmuxRunShellCommand(g:_VimTmuxCmd, 0)
+    endif
   endif
 endfunction
 
 
 function VimuxRunLastCommand()
   if exists("g:_VimTmuxCmd")
-    call s:Initialize()
-    call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
+    if s:Initialize()
+      call s:TmuxRunShellCommand(g:_VimTmuxCmd, 1)
+    endif
   else
     echo "No last command"
   endif
@@ -276,9 +281,10 @@ endfunction
 
 
 function VimuxCloseRunner()
-  call s:Initialize()
-  call s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
-  call VimuxClearWindow()
+  if s:Initialize()
+    call s:TmuxRun('kill-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
+    call VimuxClearWindow()
+  endif
 endfunction
 
 " deprecated!
@@ -290,11 +296,12 @@ endfunction
 " This function probabably needs some work... it kills every pane including
 " the one you are in... probably not what you want...
 function VimuxClosePanes()
-  if len(split(s:TmuxRun('list-panes'), '\n')) > 1
-    call s:Initialize()
-    call s:TmuxRun('kill-pane -a')
+  if s:Initialize()
+    if len(split(s:TmuxRun('list-panes'), '\n')) > 1
+      call s:TmuxRun('kill-pane -a')
+    endif
+    call VimuxClearWindow()
   endif
-  call VimuxClearWindow()
 endfunction
 
 " deprecated!
@@ -304,8 +311,9 @@ endfunction
 
 
 function VimuxInterruptRunner()
-  call s:Initialize()
-  call s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}).' ^c')
+  if s:Initialize()
+    call s:TmuxRun('send-keys -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}).' ^c')
+  endif
 endfunction
 
 " deprecated!
@@ -314,20 +322,23 @@ function InterruptVimTmuxRunner()
 endfunction
 
 function VimuxScrollDownInspect()
-  call s:Initialize()
-  call s:TmuxInspectSendCommand('C-d')
+  if s:Initialize()
+    call s:TmuxInspectSendCommand('C-d')
+  endif
 endfunction
 
 function VimuxScrollUpInspect()
-  call s:Initialize()
-  call s:TmuxInspectSendCommand('C-u')
+  if s:Initialize()
+    call s:TmuxInspectSendCommand('C-u')
+  endif
 endfunction
 
 function VimuxInspectRunner()
-  call s:Initialize()
-  call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
-  call s:TmuxRun('copy-mode')
-  call s:TmuxReturnToVim()
+  if s:Initialize()
+    call s:TmuxRun('select-pane -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
+    call s:TmuxRun('copy-mode')
+    call s:TmuxReturnToVim()
+  endif
 endfunction
 
 " deprecated!
@@ -348,8 +359,9 @@ endfunction
 
 
 function VimuxClearRunnerHistory()
-  call s:Initialize()
-  call s:TmuxRun('clear-history -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
+  if s:Initialize()
+    call s:TmuxRun('clear-history -t '.s:TmuxTargetPane({'pane': s:VimuxRunnerPane()}))
+  endif
 endfunction
 
 
