@@ -30,8 +30,7 @@ command PromptVimTmuxCommand :call VimuxPromptCommand()
 " -----------------
 
 function s:StripStr(string)
-  let new_string = substitute(substitute(a:string, '\n', '', 'g'), '\(^\s*\|\s*$\)', '', 'g')
-  return new_string
+  return substitute(substitute(a:string, '\n', '', 'g'), '\(^\s*\|\s*$\)', '', 'g')
 endfunction
 
 " -----------------
