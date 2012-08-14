@@ -75,7 +75,7 @@ function s:Initialize()
     let g:VimuxCurrentTmuxWindow = s:GetTmuxProperty('window', 'active')
     let g:VimuxCurrentTmuxPane = s:GetTmuxProperty('pane', 'active')
     let g:VimuxCurrentRunnerPane = s:VimCachedRunnerPane()
-  elseif
+  else
     echo 'You are not in a tmux session'
   endif
 endfunction
