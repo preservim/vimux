@@ -16,7 +16,10 @@ With **[vim-bundle](https://github.com/benmills/vim-bundle)**: `vim-bundle insta
 
 Otherwise download the latest [tarball](https://github.com/benmills/vimux/tarball/master), extract it and move `plugin/vimux.vim` inside `~/.vim/plugin`. If you're using [pathogen](https://github.com/tpope/vim-pathogen), then move the entire folder extracted from the tarball into `~/.vim/bundle`.
 
-_Note:_ Vimux requires vim with compiled ruby support. You can confirm you have ruby support by running `vim --version | grep +ruby`.
+_Notes:_ 
+
+* Vimux requires vim with compiled ruby support. You can confirm you have ruby support by running `vim --version | grep +ruby`.
+* Vimux assumes a tmux version >= 1.5. Some older versions might work but it is recommeded to use at least version 1.5.
 
 ## Platform-specific Plugins
 
