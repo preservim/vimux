@@ -256,7 +256,7 @@ class TmuxSession
   end
 
   def target(args={})
-    "#{args.fetch(:session, @session)}:#{args.fetch(:window, @window)}.#{args.fetch(:pane, @pane)}"
+    "'#{args.fetch(:session, @session)}':'#{args.fetch(:window, @window)}'.#{args.fetch(:pane, @pane)}"
   end
 
   def runner_pane
