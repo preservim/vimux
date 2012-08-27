@@ -23,6 +23,7 @@ _Notes:_
 
 ## Platform-specific Plugins
 
+* [vim-vroom](https://github.com/skalnik/vim-vroom) runner for rspec, cucumber and test/unit; vimux support via `g:vroom_use_vimux`
 * [vimux-ruby-test](https://github.com/pgr0ss/vimux-ruby-test) a set of commands to easily run ruby tests
 * [vimux-cucumber](https://github.com/cloud8421/vimux-cucumber) run Cucumber Features through Vimux
 * [vim-turbux](https://github.com/jgdavey/vim-turbux) Turbo Ruby testing with tmux
