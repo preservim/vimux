@@ -154,7 +154,7 @@ endfunction
 
 
 function VimuxPromptCommand()
-  let l:command = input("Command? ")
+  let l:command = input("Command? ", "", "file")
   call VimuxRunCommand(l:command)
 endfunction
 
