@@ -315,8 +315,12 @@ class TmuxSession
   end
 
   def _send_command(command, target, auto_return = true)
-    _run("send-keys -t #{target} \"#{command.gsub('"', '\"')}\"")
+    _run("send-keys -t #{target} \"#{_escape_command(command)}\"")
     _run("send-keys -t #{target} Enter") if auto_return
+  end
+
+  def _escape_command(command)
+    command.gsub('"', '\"').gsub('$', '\$')
   end
 
   def _run(command)
