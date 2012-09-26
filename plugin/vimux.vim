@@ -85,6 +85,17 @@ function RunLastVimTmuxCommand()
   call VimuxRunLastCommand()
 endfunction
 
+function VimuxRunCommandOrFallback(command, ...)
+  if VimuxInTmux()
+    let l:autoreturn = 1
+    if exists("a:1")
+      let l:autoreturn = a:1
+    endif
+    call VimuxRunCommand(a:command, l:autoreturn)
+  else
+    exec "!" . a:command
+  endif
+endfunction
 
 function VimuxClearWindow()
   if exists("g:_VimTmuxRunnerPane")
@@ -163,9 +174,12 @@ function PromptVimTmuxCommand()
   call VimuxPromptCommand()
 endfunction
 
-
 function VimuxClearRunnerHistory()
   ruby CurrentTmuxSession.new.clear_runner_history
+endfunction
+
+function VimuxInTmux()
+  return system("echo $TMUX") =~ "\\w\\+"
 endfunction
 
 ruby << EOF

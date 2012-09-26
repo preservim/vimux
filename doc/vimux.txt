@@ -10,11 +10,12 @@ CONTENTS                                                        *vimux-contents*
     2. Usage ........................... |VimuxUsage|
       2.1 .............................. |VimuxPromptCommand|
       2.2 .............................. |VimuxRunLastCommand|
-      2.3 .............................. |VimuxInspectRunner|
-      2.4 .............................. |VimuxCloseRunner|
-      2.5 .............................. |VimuxClosePanes|
-      2.6 .............................. |VimuxInterruptRunner|
-      2.7 .............................. |VimuxClearRunnerHistory|
+      2.3 .............................. |VimuxRunCommandOrFallback|
+      2.4 .............................. |VimuxInspectRunner|
+      2.5 .............................. |VimuxCloseRunner|
+      2.6 .............................. |VimuxClosePanes|
+      2.7 .............................. |VimuxInterruptRunner|
+      2.8 .............................. |VimuxClearRunnerHistory|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -62,6 +63,7 @@ process finishes and will see the output in the pane when it's finished.
 Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxRunCommand|
   - |VimuxRunLastCommand| 
+  - VimuxRunCommandOrFallback
   - |VimuxCloseRunner|
   - |VimuxClosePanes|
   - |VimuxCloseWindows|
@@ -120,6 +122,19 @@ Run the last command executed by `VimuxRunCommand`
 >
  " Run last command executed by VimuxRunCommand
  map <Leader>vl :VimuxRunLastCommand<CR>
+<
+
+------------------------------------------------------------------------------
+                                                   *VimuxRunCommandOrFallback*
+VimuxRunCommandOrFallback~
+
+Runs the specified command in similar fashion to VimuxRunCommand. However, if
+you are not currently operating inside of a tmux session, this command will
+fall back on simple shell execution (using the ! command) to ensure that the
+command gets run.
+>
+ " Execute `git status` in a vimux window if we can, otherwise run it using !
+ map <Leader>gs :call VimuxRunCommandOrFallback("git status")<CR>
 <
 
 ------------------------------------------------------------------------------
