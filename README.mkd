@@ -28,6 +28,7 @@ _Notes:_
 * [vimux-cucumber](https://github.com/cloud8421/vimux-cucumber) run Cucumber Features through Vimux
 * [vim-turbux](https://github.com/jgdavey/vim-turbux) Turbo Ruby testing with tmux
 * [vimux-pyutils](https://github.com/julienr/vimux-pyutils) A set of functions for vimux that allow to run code blocks in ipython
+* [vimux-nose-test](https://github.com/pitluga/vimux-nose-test) Run nose tests in vimux
 
 ## Usage
 
