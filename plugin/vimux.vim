@@ -154,7 +154,11 @@ endfunction
 
 
 function VimuxPromptCommand()
-  let l:command = input("Command? ")
+  if exists("g:VimuxPromptString")
+    let l:command = input(g:VimuxPromptString)
+  elseif
+    let l:command = input("Command? ")
+  endif
   call VimuxRunCommand(l:command)
 endfunction
 
@@ -315,12 +319,8 @@ class TmuxSession
   end
 
   def _send_command(command, target, auto_return = true)
-    _run("send-keys -t #{target} \"#{_escape_command(command)}\"")
+    _run("send-keys -t #{target} \"#{command.gsub('"', '\"')}\"")
     _run("send-keys -t #{target} Enter") if auto_return
-  end
-
-  def _escape_command(command)
-    command.gsub('"', '\"').gsub('$', '\$')
   end
 
   def _run(command)
