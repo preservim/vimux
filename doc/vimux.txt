@@ -291,6 +291,17 @@ The keys sent to the runner pane before running a command. By default it sends
 
 Default: "q C-u"
 
+------------------------------------------------------------------------------
+                                                             *VimuxPromptString*
+2.5 g:VimuxPromptString~
+
+The string presented in the vim command line when Vimux is invoked. Be sure
+to put a space at the end of the string to allow for distinction between
+the prompt and your input.
+
+  let g:VimuxPromptString = ""
+
+Default: "Command? "
 
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
