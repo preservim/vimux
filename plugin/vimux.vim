@@ -154,10 +154,9 @@ endfunction
 
 
 function VimuxPromptCommand()
+  let l:command = input("Command? ")
   if exists("g:VimuxPromptString")
     let l:command = input(g:VimuxPromptString)
-  elseif
-    let l:command = input("Command? ")
   endif
   call VimuxRunCommand(l:command)
 endfunction
