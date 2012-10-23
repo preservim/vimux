@@ -227,7 +227,6 @@ class TmuxSession
   def inspect_runner
     _run("select-pane -t #{target(:pane => runner_pane)}")
     _run("copy-mode")
-    _move_up_pane
   end
 
   def inspect_send_command(cmd)
