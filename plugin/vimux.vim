@@ -293,7 +293,7 @@ class TmuxSession
   end
 
   def close_runner_pane
-    _run("kill-pane -t #{target(:pane => runner_pane)}")
+    _run("kill-pane -t #{target(:pane => runner_pane)}") unless @runner_pane.nil?
   end
 
   def close_other_panes
