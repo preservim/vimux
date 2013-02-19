@@ -95,7 +95,7 @@ vimux from automatically sending a return after the command.
 >
  " Run the current file with rspec
  map <Leader>rb :call VimuxRunCommand("clear; rspec " . bufname("%"))<CR>
- " Run command without sending sending a return
+ " Run command without sending a return
  map <Leader>rq :call VimuxRunCommand("clear; rspec " . bufname("%"), 0)<CR>
 <
 
