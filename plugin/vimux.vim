@@ -38,13 +38,13 @@ function VimuxRunCommand(command, ...)
     let l:autoreturn = a:1
   endif
 
-  let g:_VimTmuxCmd = a:command
-  let g:_VimTmuxCmdAutoreturn = l:autoreturn
+  let s:_VimTmuxCmd = a:command
+  let s:_VimTmuxCmdAutoreturn = l:autoreturn
 
   if l:autoreturn == 1
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"))
   else
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"), false)
+    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false)
   endif
 endfunction
 
@@ -57,23 +57,23 @@ function RunVimTmuxCommand(command, ...)
     let l:autoreturn = a:1
   endif
 
-  let g:_VimTmuxCmd = a:command
-  let g:_VimTmuxCmdAutoreturn = l:autoreturn
+  let s:_VimTmuxCmd = a:command
+  let s:_VimTmuxCmdAutoreturn = l:autoreturn
 
   if l:autoreturn == 1
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"))
   else
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"), false)
+    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false)
   endif
 endfunction
 
 
 function VimuxRunLastCommand()
-  if exists("g:_VimTmuxCmd")
-    if g:_VimTmuxCmdAutoreturn == 1
-      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"))
+  if exists("s:_VimTmuxCmd")
+    if s:_VimTmuxCmdAutoreturn == 1
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"))
     else
-      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("g:_VimTmuxCmd"), false)
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false)
     endif
   else
     echo "No last command"
@@ -87,8 +87,8 @@ endfunction
 
 
 function VimuxClearWindow()
-  if exists("g:_VimTmuxRunnerPane")
-    unlet g:_VimTmuxRunnerPane
+  if exists("s:_VimTmuxRunnerPane")
+    unlet s:_VimTmuxRunnerPane
   end
 endfunction
 
@@ -181,19 +181,19 @@ class TmuxSession
   end
 
   def vim_cached_runner_pane
-    if Vim.evaluate('exists("g:_VimTmuxRunnerPane")') != 0
-      Vim.evaluate('g:_VimTmuxRunnerPane')
+    if Vim.evaluate('exists("s:_VimTmuxRunnerPane")') != 0
+      Vim.evaluate('s:_VimTmuxRunnerPane')
     else
       nil
     end
   end
 
   def vim_cached_runner_pane=(runner_pane)
-    Vim.command("let g:_VimTmuxRunnerPane = '#{runner_pane}'")
+    Vim.command("let s:_VimTmuxRunnerPane = '#{runner_pane}'")
   end
 
   def clear_vim_cached_runner_pane
-    Vim.command("unlet g:_VimTmuxRunnerPane")
+    Vim.command("unlet s:_VimTmuxRunnerPane")
   end
 
   def clear_runner_history
@@ -271,7 +271,7 @@ class TmuxSession
       end
       @runner_pane = active_pane_id
       _send_command("cd #{`pwd`}", target(:pane => runner_pane))
-      Vim.command("let g:_VimTmuxRunnerPane = '#{@runner_pane}'")
+      Vim.command("let s:_VimTmuxRunnerPane = '#{@runner_pane}'")
     end
 
     _run('list-panes').split("\n").map do |line|
