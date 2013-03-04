@@ -38,7 +38,7 @@ function VimuxRunCommand(command, ...)
     let l:autoreturn = a:1
   endif
 
-  let s:_VimTmuxCmd = a:command
+  let s:_VimTmuxCmd = substitute(a:command, '`', '\\`', 'g')
   let s:_VimTmuxCmdAutoreturn = l:autoreturn
 
   if l:autoreturn == 1
@@ -57,7 +57,7 @@ function RunVimTmuxCommand(command, ...)
     let l:autoreturn = a:1
   endif
 
-  let s:_VimTmuxCmd = a:command
+  let s:_VimTmuxCmd = substitute(a:command, '`', '\\`', 'g')
   let s:_VimTmuxCmdAutoreturn = l:autoreturn
 
   if l:autoreturn == 1
