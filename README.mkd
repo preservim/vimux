@@ -30,6 +30,7 @@ _Notes:_
 * [vimux-pyutils](https://github.com/julienr/vimux-pyutils) A set of functions for vimux that allow to run code blocks in ipython
 * [vimux-nose-test](https://github.com/pitluga/vimux-nose-test) Run nose tests in vimux
 * [vimux-golang](https://github.com/benmills/vimux-golang) Run go tests in vimux
+* [vimux-zeus](https://github.com/jingweno/vimux-zeus) Run zeus commands in vimux
 
 ## Usage
 
