@@ -322,7 +322,7 @@ class TmuxSession
   end
 
   def _escape_command(command)
-    command.gsub('"', '\"').gsub('$', '\$')
+    command.gsub('"', '\"').gsub('$', '\$').sub(/;\z/, '\;')
   end
 
   def _run(command)
