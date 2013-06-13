@@ -10,6 +10,7 @@ end
 
 " New style commands with 'normalized' names
 command VimuxRunLastCommand :call VimuxRunLastCommand()
+command VimuxRunLastCommandForced :call VimuxRunLastCommandForced()
 command VimuxCloseRunner :call VimuxCloseRunner()
 command VimuxClosePanes :call VimuxClosePanes()
 command VimuxCloseWindows :call VimuxCloseWindows()
@@ -82,6 +83,12 @@ endfunction
 
 " deprecated!
 function RunLastVimTmuxCommand()
+  call VimuxRunLastCommand()
+endfunction
+
+
+function VimuxRunLastCommandForced()
+  call VimuxInterruptRunner()
   call VimuxRunLastCommand()
 endfunction
 
