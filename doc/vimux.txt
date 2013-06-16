@@ -61,7 +61,10 @@ process finishes and will see the output in the pane when it's finished.
 
 Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxRunCommand|
-  - |VimuxRunLastCommand| 
+  - |VimuxSendText|
+  - |VimuxSendKeys|
+  - |VimuxOpenPane|
+  - |VimuxRunLastCommand|
   - |VimuxCloseRunner|
   - |VimuxClosePanes|
   - |VimuxCloseWindows|
@@ -70,22 +73,7 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxPromptCommand|
   - |VimuxClearRunnerHistory|
 
-
-Note:
-Earlier the all commands had different names. There are still aliases for
-convenience. Please chang your configuration according to the new naming
-conventions!
-
-The DEPRECATED commands:
-  - |PromptVimTmuxCommand|
-  - |RunLastVimTmuxCommand|
-  - |InspectVimTmuxRunner|
-  - |CloseVimTmuxRunner|
-  - |CloseVimTmuxPanes|
-  - |InterruptVimTmuxRunner|
-
 ------------------------------------------------------------------------------
-                                                             *RunVimTmuxCommand*
                                                                *VimuxRunCommand*
 VimuxRunCommand~
 
@@ -100,7 +88,32 @@ vimux from automatically sending a return after the command.
 <
 
 ------------------------------------------------------------------------------
-                                                          *PromptVimTmuxCommand*
+                                                               *VimuxSendText*
+VimuxSendText~
+
+Send raw text to the runer pane. This command will not open a new pane if one
+does not already exist. You will need to use VimuxOpenPane to do this. This
+command can be used to interact with REPLs or other interactive terminal
+programs that are not shells.
+
+
+------------------------------------------------------------------------------
+                                                               *VimuxSendKeys*
+VimuxSendKeys~
+
+Send keys to the runner pane. This command will not open a new pane if one
+does not already exist. You will need to use VimuxOpenPane to do this. You can
+use this command to send keys such as "Enter" or "C-c" to the runner pane.
+
+------------------------------------------------------------------------------
+                                                               *VimuxOpenPane*
+VimuxOpenPane~
+
+This will either opne a new pane or use the nearest pane and set it as the
+vimux runner pane for the other vimux commands. You can control if this command
+uses the nearest pane or always creates a new one with g:VimuxUseNearestPane
+
+------------------------------------------------------------------------------
                                                             *VimuxPromptCommand*
 VimuxPromptCommand~
 
@@ -112,7 +125,6 @@ pane.
 <
 
 ------------------------------------------------------------------------------
-                                                         *RunLastVimTmuxCommand*
                                                            *VimuxRunLastCommand*
 VimuxRunLastCommand~
 
@@ -123,7 +135,6 @@ Run the last command executed by `VimuxRunCommand`
 <
 
 ------------------------------------------------------------------------------
-                                                          *InspectVimTmuxRunner*
                                                             *VimuxInspectRunner*
 VimuxInspectRunner~
 
@@ -135,7 +146,6 @@ pmode (scroll mode).
 <
 
 ------------------------------------------------------------------------------
-                                                            *CloseVimTmuxRunner*
                                                             *VimuxCloseRunner*
 VimuxCloseRunner~
 
@@ -146,18 +156,6 @@ Close the tmux runner created by `VimuxRunCommand`
 <
 
 ------------------------------------------------------------------------------
-                                                             *CloseVimTmuxPanes*
-                                                               *VimuxClosePanes*
-VimuxClosePanes~
-
-Close all other tmux panes in the current window.
->
- " Close all other tmux panes in current window
- map <Leader>vx :VimuxClosePanes<CR>
->
-
-------------------------------------------------------------------------------
-                                                        *InterruptVimTmuxRunner*
                                                           *VimuxInterruptRunner*
 VimuxInterruptRunner~
 
@@ -194,22 +192,19 @@ Full Keybind Example~
  map <Leader>rb :call VimuxRunCommand("clear; rspec " . bufname("%"))<CR>
 
  " Prompt for a command to run
- map <Leader>rp :VimuxPromptCommand<CR>
+ map <Leader>vp :VimuxPromptCommand<CR>
  
  " Run last command executed by VimuxRunCommand
- map <Leader>rl :VimuxRunLastCommand<CR>
+ map <Leader>vl :VimuxRunLastCommand<CR>
  
  " Inspect runner pane
- map <Leader>ri :VimuxInspectRunner<CR>
- 
- " Close all other tmux panes in current window
- map <Leader>rx :VimuxClosePanes<CR>
+ map <Leader>vi :VimuxInspectRunner<CR>
  
  " Close vim tmux runner opened by VimuxRunCommand
- map <Leader>rq :VimuxCloseRunner<CR>
+ map <Leader>vq :VimuxCloseRunner<CR>
  
  " Interrupt any command running in the runner pane
- map <Leader>rs :VimuxInterruptRunner<CR>
+ map <Leader>vx :VimuxInterruptRunner<CR>
 >
 
 ------------------------------------------------------------------------------
@@ -220,11 +215,13 @@ Here is how to use vimux to send code to a REPL. This is similar to tslime.
 First, add some helpful mappings.
 
 >
- " Prompt for a command to run
- map <LocalLeader>vp :VimuxPromptCommand<CR>
+ function! VimuxSlime()
+  call VimuxSendText(@v)
+  call VimuxSendKeys("Enter")
+ endfunction
 
  " If text is selected, save it in the v buffer and send that buffer it to tmux
- vmap <LocalLeader>vs "vy :call VimuxRunCommand(@v . "\n", 0)<CR>
+ vmap <LocalLeader>vs "vy :call VimuxSlime()<CR>
 
  " Select current paragraph and send it to tmux
  nmap <LocalLeader>vs vip<LocalLeader>vs<CR>
