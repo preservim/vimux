@@ -33,18 +33,31 @@ command PromptVimTmuxCommand :call VimuxPromptCommand()
 " new style functions
 function VimuxRunCommand(command, ...)
   let l:autoreturn = 1
+  let l:reselectpane = 1
 
   if exists("a:1")
     let l:autoreturn = a:1
   endif
+  if exists("a:2")
+    let l:reselectpane = a:2
+  endif
 
   let s:_VimTmuxCmd = substitute(a:command, '`', '\\`', 'g')
   let s:_VimTmuxCmdAutoreturn = l:autoreturn
+  let s:_VimTmuxCmdReselectpane = l:reselectpane
 
   if l:autoreturn == 1
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"))
+    if l:reselectpane == 1
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), true, true)
+    else
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), true, false)
+    endif
   else
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false)
+    if l:reselectpane == 1
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false, true)
+    else
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false, false)
+    endif
   endif
 endfunction
 
@@ -52,18 +65,31 @@ endfunction
 function RunVimTmuxCommand(command, ...)
   " TODO replace me with the direct function call!
   let l:autoreturn = 1
+  let l:reselectpane = 1
 
   if exists("a:1")
     let l:autoreturn = a:1
   endif
+  if exists("a:2")
+    let l:reselectpane = a:2
+  endif
 
   let s:_VimTmuxCmd = substitute(a:command, '`', '\\`', 'g')
   let s:_VimTmuxCmdAutoreturn = l:autoreturn
+  let s:_VimTmuxCmdReselectpane = l:reselectpane
 
   if l:autoreturn == 1
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"))
+    if l:reselectpane == 1
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), true, true)
+    else
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), true, false)
+    endif
   else
-    ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false)
+    if l:reselectpane == 1
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false, true)
+    else
+      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false, false)
+    endif
   endif
 endfunction
 
@@ -71,9 +97,17 @@ endfunction
 function VimuxRunLastCommand()
   if exists("s:_VimTmuxCmd")
     if s:_VimTmuxCmdAutoreturn == 1
-      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"))
+      if s:_VimTmuxCmdReselectpane == 1
+        ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), true, true)
+      else
+        ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), true, false)
+      endif
     else
-      ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false)
+      if s:_VimTmuxCmdReselectpane == 1
+        ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false, true)
+      else
+        ruby CurrentTmuxSession.new.run_shell_command(Vim.evaluate("s:_VimTmuxCmd"), false, false)
+      endif
     endif
   else
     echo "No last command"
@@ -286,10 +320,10 @@ class TmuxSession
     _run("send-keys -t #{target(:pane => runner_pane)} ^c")
   end
 
-  def run_shell_command(command, auto_return = true)
+  def run_shell_command(command, auto_return = true, reselect_target_pane = true)
     reset_shell
     _send_command(command, target(:pane => runner_pane), auto_return)
-    _move_up_pane
+    _move_up_pane if reselect_target_pane
   end
 
   def close_runner_pane
@@ -313,7 +347,11 @@ class TmuxSession
   end
 
   def _move_up_pane
-    _run("select-pane -t #{target}")
+    _switch_to_pane(target)
+  end
+
+  def _switch_to_pane(pane)
+    _run("select-pane -t #{pane}")
   end
 
   def _send_command(command, target, auto_return = true)
