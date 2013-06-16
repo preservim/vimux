@@ -80,6 +80,41 @@ function VimuxRunLastCommand()
   endif
 endfunction
 
+function VimuxRunCommandWin(command, ...)
+  let l:window = 1
+  let l:autoreturn = 1
+
+  if exists("a:1")
+    let l:window = a:1
+  endif
+
+  if exists("a:2")
+    let l:autoreturn = a:2
+  endif
+
+  let g:_VimTmuxCmdWin = a:command
+  let g:_VimTmuxCmdWinWindow = l:window
+  let g:_VimTmuxCmdWinAutoreturn = l:autoreturn
+
+  if l:autoreturn == 1
+    ruby CurrentTmuxSession.new.run_shell_command_win(Vim.evaluate("g:_VimTmuxCmdWin"), Vim.evaluate("g:_VimTmuxCmdWinWindow"))
+  else
+    ruby CurrentTmuxSession.new.run_shell_command_win(Vim.evaluate("g:_VimTmuxCmdWin"), Vim.evaluate("g:_VimTmuxCmdWinWindow"), false)
+  endif
+endfunction
+
+function VimuxRunLastCommandWin()
+  if exists("g:_VimTmuxCmdWin")
+    if g:_VimTmuxCmdWinAutoreturn == 1
+      ruby CurrentTmuxSession.new.run_shell_command_win(Vim.evaluate("g:_VimTmuxCmdWin"), Vim.evaluate("g:_VimTmuxCmdWinWindow"))
+    else
+      ruby CurrentTmuxSession.new.run_shell_command_win(Vim.evaluate("g:_VimTmuxCmdWin"), Vim.evaluate("g:_VimTmuxCmdWinWindow"), false)
+    endif
+  else
+    echo "No last command"
+  endif
+endfunction
+
 " deprecated!
 function RunLastVimTmuxCommand()
   call VimuxRunLastCommand()
@@ -290,6 +325,10 @@ class TmuxSession
     reset_shell
     _send_command(command, target(:pane => runner_pane), auto_return)
     _move_up_pane
+  end
+
+  def run_shell_command_win(command, window = 1, auto_return = true)
+    _send_command(command, target(:window => window), auto_return)
   end
 
   def close_runner_pane

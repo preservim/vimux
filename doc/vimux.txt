@@ -181,6 +181,29 @@ you enter tmux scroll mode inside the runner pane.
  <Leader>vc :VimuxClearRunnerHistory<CR>
 <
 
+------------------------------------------------------------------------------
+                                                            *VimuxRunCommandWin*
+VimuxRunCommandWin~
+
+Run a system command in another window. The optional second argument specifies
+which window (defaults to 1). The optional third argument stops vimux from
+automatically sending a return after the command.
+>
+ " Run ls in another window
+ :call VimuxRunCommand("ls")<CR>
+ " Run ls in the third window without a carriage return
+ :call VimuxRunCommand("ls", 3, 0)<CR>
+<
+
+------------------------------------------------------------------------------
+                                                        *VimuxRunLastCommandWin*
+VimuxRunLastCommandWin~
+
+Run the last command executed by `VimuxRunCommandWin`
+>
+ " Run last command executed by VimuxRunCommand
+ map <Leader>vl :VimuxRunLastCommandWin<CR>
+<
 
 ==============================================================================
 MISC (3)                                                             *VimuxMisc*
