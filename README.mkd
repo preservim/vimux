@@ -18,7 +18,6 @@ Otherwise download the latest [tarball](https://github.com/benmills/vimux/tarbal
 
 _Notes:_ 
 
-* Vimux requires vim with compiled ruby support. You can confirm you have ruby support by running `vim --version | grep +ruby`.
 * Vimux assumes a tmux version >= 1.5. Some older versions might work but it is recommeded to use at least version 1.5.
 
 ## Platform-specific Plugins
