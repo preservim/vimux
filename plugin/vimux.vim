@@ -42,7 +42,7 @@ function! VimuxRunCommand(command, ...)
 endfunction
 
 function! VimuxSendText(text)
-  call VimuxSendKeys('"'.escape(a:text, '"').'"')
+  call VimuxSendKeys(shellescape(substitute(a:text, "\n$", " ", "")))
 endfunction
 
 function! VimuxSendKeys(keys)
@@ -122,8 +122,8 @@ function! _VimuxNearestPaneIndex()
   let panes = split(system("tmux list-panes"), "\n")
 
   for i in panes
-    if match(panes[i], "(active)") == -1
-      return split(panes[i], ":")[0]
+    if match(i, "(active)") == -1
+      return split(i, ":")[0]
     endif
   endfor
 
