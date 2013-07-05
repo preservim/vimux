@@ -109,7 +109,7 @@ use this command to send keys such as "Enter" or "C-c" to the runner pane.
                                                                *VimuxOpenPane*
 VimuxOpenPane~
 
-This will either opne a new pane or use the nearest pane and set it as the
+This will either open a new pane or use the nearest pane and set it as the
 vimux runner pane for the other vimux commands. You can control if this command
 uses the nearest pane or always creates a new one with g:VimuxUseNearestPane
 
