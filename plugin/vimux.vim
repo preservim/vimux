@@ -5,6 +5,7 @@ let g:loaded_vimux = 1
 
 command VimuxRunLastCommand :call VimuxRunLastCommand()
 command VimuxCloseRunner :call VimuxCloseRunner()
+command VimuxZoomRunner :call VimuxZoomRunner()
 command VimuxInspectRunner :call VimuxInspectRunner()
 command VimuxScrollUpInspect :call VimuxScrollUpInspect()
 command VimuxScrollDownInspect :call VimuxScrollDownInspect()
@@ -70,6 +71,13 @@ endfunction
 function! VimuxCloseRunner()
   if exists("g:VimuxRunnerPaneIndex")
     call system("tmux kill-pane -t ".g:VimuxRunnerPaneIndex)
+    unlet g:VimuxRunnerPaneIndex
+  endif
+endfunction
+
+function! VimuxZoomRunner()
+  if exists("g:VimuxRunnerPaneIndex")
+    call system("tmux resize-pane -Z -t ".g:VimuxRunnerPaneIndex)
     unlet g:VimuxRunnerPaneIndex
   endif
 endfunction

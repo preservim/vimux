@@ -15,6 +15,7 @@ CONTENTS                                                        *vimux-contents*
       2.5 .............................. |VimuxClosePanes|
       2.6 .............................. |VimuxInterruptRunner|
       2.7 .............................. |VimuxClearRunnerHistory|
+      2.8 .............................. |VimuxZoomRunner|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -72,6 +73,7 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxInterruptRunner|
   - |VimuxPromptCommand|
   - |VimuxClearRunnerHistory|
+  - |VimuxZoomRunner|
 
 ------------------------------------------------------------------------------
                                                                *VimuxRunCommand*
@@ -179,6 +181,18 @@ you enter tmux scroll mode inside the runner pane.
  <Leader>vc :VimuxClearRunnerHistory<CR>
 <
 
+------------------------------------------------------------------------------
+                                                          *VimuxZoomRunner*
+VimuxZoomRunner~
+
+Zoom the runner pane. Once its zoomed, you will need
+to use tmux "<bind-key> z" to restore the runner pane.
+Zoom requires tmux version >= 1.8
+>
+
+ " Zoom the tmux runner page
+ <Leader>vz :VimuxZoomRunner<CR>
+<
 
 ==============================================================================
 MISC (3)                                                             *VimuxMisc*
@@ -193,18 +207,21 @@ Full Keybind Example~
 
  " Prompt for a command to run
  map <Leader>vp :VimuxPromptCommand<CR>
- 
+
  " Run last command executed by VimuxRunCommand
  map <Leader>vl :VimuxRunLastCommand<CR>
- 
+
  " Inspect runner pane
  map <Leader>vi :VimuxInspectRunner<CR>
- 
+
  " Close vim tmux runner opened by VimuxRunCommand
  map <Leader>vq :VimuxCloseRunner<CR>
- 
+
  " Interrupt any command running in the runner pane
  map <Leader>vx :VimuxInterruptRunner<CR>
+
+ " Zoom the runner pane (use <bind-key> z to restore runner pane)
+ map <Leader>vz :call VimuxZoomRunner()<CR>
 >
 
 ------------------------------------------------------------------------------
