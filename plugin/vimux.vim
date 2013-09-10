@@ -13,7 +13,7 @@ command VimuxPromptCommand :call VimuxPromptCommand()
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 
 function! VimuxRunLastCommand()
-  if exists("g:VimuxRunnerPaneIndex")
+  if exists("g:VimuxRunnerPaneId")
     call VimuxRunCommand(g:VimuxLastCommand)
   else
     echo "No last vimux command."
@@ -21,7 +21,7 @@ function! VimuxRunLastCommand()
 endfunction
 
 function! VimuxRunCommand(command, ...)
-  if !exists("g:VimuxRunnerPaneIndex") || _VimuxHasPane(g:VimuxRunnerPaneIndex) == -1
+  if !exists("g:VimuxRunnerPaneId") || _VimuxHasPane(g:VimuxRunnerPaneId) == -1
     call VimuxOpenPane()
   endif
 
@@ -46,8 +46,8 @@ function! VimuxSendText(text)
 endfunction
 
 function! VimuxSendKeys(keys)
-  if exists("g:VimuxRunnerPaneIndex")
-    call system("tmux send-keys -t ".g:VimuxRunnerPaneIndex." ".a:keys)
+  if exists("g:VimuxRunnerPaneId")
+    call system("tmux send-keys -t ".g:VimuxRunnerPaneId." ".a:keys)
   else
     echo "No vimux runner pane. Create one with VimuxOpenPane"
   endif
@@ -56,26 +56,25 @@ endfunction
 function! VimuxOpenPane()
   let height = _VimuxOption("g:VimuxHeight", 20)
   let orientation = _VimuxOption("g:VimuxOrientation", "v")
-  let nearestIndex = _VimuxNearestPaneIndex()
+  let nearestId = _VimuxNearestPaneId()
 
-  if _VimuxOption("g:VimuxUseNearestPane", 1) == 1 && nearestIndex != -1
-    let g:VimuxRunnerPaneIndex = nearestIndex
+  if _VimuxOption("g:VimuxUseNearestPane", -1) == 1 && nearestId != -1
+    let g:VimuxRunnerPaneId = nearestId
   else
-    call system("tmux split-window -p ".height." -".orientation)
-    let g:VimuxRunnerPaneIndex = _VimuxTmuxPaneIndex()
+    let g:VimuxRunnerPaneId = substitute(system('tmux split-window -P -F "#{pane_id}" -p '.height." -".orientation), "\\n$", "", "")
     call system("tmux last-pane")
   endif
 endfunction
 
 function! VimuxCloseRunner()
-  if exists("g:VimuxRunnerPaneIndex")
-    call system("tmux kill-pane -t ".g:VimuxRunnerPaneIndex)
-    unlet g:VimuxRunnerPaneIndex
+  if exists("g:VimuxRunnerPaneId")
+    call system("tmux kill-pane -t ".g:VimuxRunnerPaneId)
+    unlet g:VimuxRunnerPaneId
   endif
 endfunction
 
 function! VimuxInspectRunner()
-  call system("tmux select-pane -t ".g:VimuxRunnerPaneIndex)
+  call system("tmux select-pane -t ".g:VimuxRunnerPaneId)
   call system("tmux copy-mode")
 endfunction
 
@@ -96,8 +95,8 @@ function! VimuxInterruptRunner()
 endfunction
 
 function! VimuxClearRunnerHistory()
-  if exists("g:VimuxRunnerPaneIndex")
-    call system("tmux clear-history -t ".g:VimuxRunnerPaneIndex)
+  if exists("g:VimuxRunnerPaneId")
+    call system("tmux clear-history -t ".g:VimuxRunnerPaneId)
   endif
 endfunction
 
@@ -110,20 +109,20 @@ function! _VimuxTmuxSession()
   return _VimuxTmuxProperty("S")
 endfunction
 
-function! _VimuxTmuxPaneIndex()
-  return _VimuxTmuxProperty("P")
+function! _VimuxTmuxPaneId()
+  return _VimuxTmuxProperty("{pane_id}")
 endfunction
 
 function! _VimuxTmuxWindowIndex()
   return _VimuxTmuxProperty("I")
 endfunction
 
-function! _VimuxNearestPaneIndex()
-  let panes = split(system("tmux list-panes"), "\n")
+function! _VimuxNearestPaneId()
+  let panes = split(system('tmux list-panes -F "#{pane_active}:#{pane_id}"'), "\n")
 
   for pane in panes
-    if match(pane, "(active)") == -1
-      return split(pane, ":")[0]
+    if match(pane, "1:") == -1
+      return split(pane, ":")[1]
     endif
   endfor
 
@@ -143,5 +142,5 @@ function! _VimuxTmuxProperty(property)
 endfunction
 
 function! _VimuxHasPane(index)
-  return match(system("tmux list-panes"), a:index.":")
+  return match(system('tmux list-panes -F "#{pane_id}"'), a:index)
 endfunction
