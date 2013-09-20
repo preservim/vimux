@@ -58,7 +58,7 @@ function! VimuxOpenPane()
   let orientation = _VimuxOption("g:VimuxOrientation", "v")
   let nearestIndex = _VimuxNearestPaneIndex()
 
-  if _VimuxOption("g:VimuxUseNearestPane", 1) == 1 && nearestIndex != -1
+  if _VimuxOption("g:VimuxUseNearestPane", 0) == 1 && nearestIndex != -1
     let g:VimuxRunnerPaneIndex = nearestIndex
   else
     call system("tmux split-window -p ".height." -".orientation)
