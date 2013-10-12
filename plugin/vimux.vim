@@ -57,11 +57,18 @@ function! VimuxOpenPane()
   let height = _VimuxOption("g:VimuxHeight", 20)
   let orientation = _VimuxOption("g:VimuxOrientation", "v")
   let nearestIndex = _VimuxNearestPaneIndex()
+  let set_start_directory = ''
+  if exists('*g:ProjectRoot')
+    let project_root = g:ProjectRoot()
+    if project_root != ''
+      let set_start_directory = "-c ".project_root
+    endif
+  endif
 
   if _VimuxOption("g:VimuxUseNearestPane", 1) == 1 && nearestIndex != -1
     let g:VimuxRunnerPaneIndex = nearestIndex
   else
-    call system("tmux split-window -p ".height." -".orientation)
+    call system("tmux split-window ".set_start_directory." -p ".height." -".orientation)
     let g:VimuxRunnerPaneIndex = _VimuxTmuxPaneIndex()
     call system("tmux last-pane")
   endif

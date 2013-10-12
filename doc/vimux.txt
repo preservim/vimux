@@ -113,6 +113,10 @@ This will either open a new pane or use the nearest pane and set it as the
 vimux runner pane for the other vimux commands. You can control if this command
 uses the nearest pane or always creates a new one with g:VimuxUseNearestPane
 
+If you have a g:ProjectRoot() function defined, it will call this function and
+set the working directory of newly created pane to the result, otherwise the
+working directory will default to current directory of vim.
+
 ------------------------------------------------------------------------------
                                                             *VimuxPromptCommand*
 VimuxPromptCommand~
