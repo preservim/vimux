@@ -172,7 +172,7 @@ runner pane.
                                                           *VimuxClearRunnerHistory*
 VimuxClearRunnerHistory~
 
-Clear ths tmux history of the runner pane for when
+Clear the tmux history of the runner pane for when
 you enter tmux scroll mode inside the runner pane.
 >
  " Clear the tmux history of the runner pane
