@@ -3,6 +3,7 @@ if exists("g:loaded_vimux") || &cp
 endif
 let g:loaded_vimux = 1
 
+" Commands
 command VimuxRunLastCommand :call VimuxRunLastCommand()
 command VimuxCloseRunner :call VimuxCloseRunner()
 command VimuxInspectRunner :call VimuxInspectRunner()
@@ -12,6 +13,10 @@ command VimuxInterruptRunner :call VimuxInterruptRunner()
 command VimuxPromptCommand :call VimuxPromptCommand()
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 
+" Defaults
+let g:VimuxUseExistingPaneWithIndex = 0
+
+" Functions
 function! VimuxRunLastCommand()
   if exists("g:VimuxRunnerPaneIndex")
     call VimuxRunCommand(g:VimuxLastCommand)
@@ -58,9 +63,12 @@ function! VimuxOpenPane()
   let orientation = _VimuxOption("g:VimuxOrientation", "v")
   let nearestIndex = _VimuxNearestPaneIndex()
 
-  if _VimuxOption("g:VimuxUseNearestPane", 1) == 1 && nearestIndex != -1
+  if _VimuxOption("g:VimuxUseExistingPaneWithIndex", 0) != 0
+    let g:VimuxRunnerPaneIndex = g:VimuxUseExistingPaneWithIndex
+  elseif _VimuxOption("g:VimuxUseNearestPane", 1) == 1 && nearestIndex != -1
     let g:VimuxRunnerPaneIndex = nearestIndex
   else
+    echo 'Using defined pane index'
     call system("tmux split-window -p ".height." -".orientation)
     let g:VimuxRunnerPaneIndex = _VimuxTmuxPaneIndex()
     call system("tmux last-pane")

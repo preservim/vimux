@@ -278,8 +278,20 @@ Use exising pane (not used by vim) if found instead of running split-window.
 Default: 0
 
 ------------------------------------------------------------------------------
+                                           *VimuxConfiguration_use_existing_pane*
+2.4 g:VimuxUseExistingPaneWithIndex
+
+Uses already exising pane (identified by pane index) in the current active
+tmux session. Use `tmux display-panes` to display pane indexes.
+
+  let VimuxUseExistingPaneWithIndex = 1
+
+Default: 0
+
+
+------------------------------------------------------------------------------
                                              *VimuxConfiguration_reset_sequence*
-2.4 g:VimuxResetSequence~
+2.5 g:VimuxResetSequence~
 
 The keys sent to the runner pane before running a command. By default it sends
 `q` to make sure the pane is not in scroll-mode and `C-u` to clear the line.
@@ -290,7 +302,7 @@ Default: "q C-u"
 
 ------------------------------------------------------------------------------
                                                              *VimuxPromptString*
-2.5 g:VimuxPromptString~
+2.6 g:VimuxPromptString~
 
 The string presented in the vim command line when Vimux is invoked. Be sure
 to put a space at the end of the string to allow for distinction between
