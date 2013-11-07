@@ -275,7 +275,7 @@ Use exising pane (not used by vim) if found instead of running split-window.
 
   let VimuxUseNearestPane = 1
 
-Default: 0
+Default: 1
 
 ------------------------------------------------------------------------------
                                              *VimuxConfiguration_reset_sequence*
