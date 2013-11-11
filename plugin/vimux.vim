@@ -14,7 +14,9 @@ command VimuxPromptCommand :call VimuxPromptCommand()
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 
 " Defaults
-let g:VimuxUseExistingPaneWithIndex = 0
+if !exists("g:VimuxUseExistingPaneWithIndex")
+  let g:VimuxUseExistingPaneWithIndex = 0
+end
 
 " Functions
 function! VimuxRunLastCommand()
