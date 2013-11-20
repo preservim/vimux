@@ -11,7 +11,9 @@ command VimuxScrollUpInspect :call VimuxScrollUpInspect()
 command VimuxScrollDownInspect :call VimuxScrollDownInspect()
 command VimuxInterruptRunner :call VimuxInterruptRunner()
 command VimuxPromptCommand :call VimuxPromptCommand()
+command VimuxPromptForPaneIndex :call VimuxPromptForPaneIndex()
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
+command VimuxDisplayPaneIndexes :call VimuxDisplayPaneIndexes()
 
 " Defaults
 if !exists("g:VimuxUseExistingPaneWithIndex")
@@ -58,6 +60,14 @@ function! VimuxSendKeys(keys)
   else
     echo "No vimux runner pane. Create one with VimuxOpenPane"
   endif
+endfunction
+
+function! VimuxPromptForPaneIndex()
+  let g:VimuxUseExistingPaneWithIndex = input("Pane Id? ")
+endfunction
+
+function! VimuxDisplayPaneIndexes()
+  call system("tmux display-panes")
 endfunction
 
 function! VimuxOpenPane()
