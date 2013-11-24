@@ -63,7 +63,7 @@ function! VimuxSendKeys(keys)
 endfunction
 
 function! VimuxPromptForPaneIndex()
-  let g:VimuxUseExistingPaneWithIndex = input("Pane Id? ")
+  let g:VimuxRunnerPaneIndex = input("Pane Id? ")
 endfunction
 
 function! VimuxDisplayPaneIndexes()
