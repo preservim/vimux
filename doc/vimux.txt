@@ -121,7 +121,7 @@ Prompt for a command and run it in a small horizontal split bellow the current
 pane.
 >
  " Prompt for a command to run map
- <Leader>vp :VimuxPromptCommand<CR>
+ map <Leader>vp :VimuxPromptCommand<CR>
 <
 
 ------------------------------------------------------------------------------
@@ -142,7 +142,7 @@ Move into the tmux runner pane created by `VimuxRunCommand` and enter copy
 pmode (scroll mode).
 >
  " Inspect runner pane map
- <Leader>vi :VimuxInspectRunner<CR>
+ map <Leader>vi :VimuxInspectRunner<CR>
 <
 
 ------------------------------------------------------------------------------
@@ -163,7 +163,7 @@ Interrupt any command that is running inside the
 runner pane.
 >
  " Interrupt any command running in the runner pane map
- <Leader>vs :VimuxInterruptRunner<CR>
+ map <Leader>vs :VimuxInterruptRunner<CR>
 <
 
 
@@ -176,7 +176,7 @@ Clear the tmux history of the runner pane for when
 you enter tmux scroll mode inside the runner pane.
 >
  " Clear the tmux history of the runner pane
- <Leader>vc :VimuxClearRunnerHistory<CR>
+ map <Leader>vc :VimuxClearRunnerHistory<CR>
 <
 
 
