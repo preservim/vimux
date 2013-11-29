@@ -12,10 +12,9 @@ CONTENTS                                                        *vimux-contents*
       2.2 .............................. |VimuxRunLastCommand|
       2.3 .............................. |VimuxInspectRunner|
       2.4 .............................. |VimuxCloseRunner|
-      2.5 .............................. |VimuxClosePanes|
-      2.6 .............................. |VimuxInterruptRunner|
-      2.7 .............................. |VimuxClearRunnerHistory|
-      2.8 .............................. |VimuxZoomRunner|
+      2.5 .............................. |VimuxInterruptRunner|
+      2.6 .............................. |VimuxClearRunnerHistory|
+      2.7 .............................. |VimuxZoomRunner|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -67,8 +66,6 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxOpenPane|
   - |VimuxRunLastCommand|
   - |VimuxCloseRunner|
-  - |VimuxClosePanes|
-  - |VimuxCloseWindows|
   - |VimuxInspectRunner|
   - |VimuxInterruptRunner|
   - |VimuxPromptCommand|
