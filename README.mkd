@@ -30,6 +30,7 @@ _Notes:_
 * [vimux-nose-test](https://github.com/pitluga/vimux-nose-test) Run nose tests in vimux
 * [vimux-golang](https://github.com/benmills/vimux-golang) Run go tests in vimux
 * [vimux-zeus](https://github.com/jingweno/vimux-zeus) Run zeus commands in vimux
+* [vimix](https://github.com/spiegela/vimix) Run Elixir mix commands in vimux
 
 ## Usage
 
