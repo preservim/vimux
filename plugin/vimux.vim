@@ -124,7 +124,7 @@ function! _VimuxTmuxSession()
 endfunction
 
 function! _VimuxTmuxIndex()
-  if _VimuxRunnerType == "pane"
+  if _VimuxRunnerType() == "pane"
     return _VimuxTmuxPaneIndex()
   else
     return _VimuxTmuxWindowIndex()
