@@ -314,5 +314,20 @@ the prompt and your input.
 
 Default: "Command? "
 
+------------------------------------------------------------------------------
+                                                              VimuxRunnerType
+2.5 g:VimuxRunnerType
+
+Deciedes what type of runner will be used by vimux when VimuxOpenPane is
+launched. When "panel" is selected tmux window will be split and created pane
+wil be used. If "window" is selected vimux will use whole open window - can be
+useful if you dont want any splits and are ready to dedicate whole window to
+vimux.
+
+  let g:VimuxRunnerType = "pane"
+
+Available: "pane", "window"
+Default: "pane"
+
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:

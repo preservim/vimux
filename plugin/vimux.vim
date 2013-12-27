@@ -64,12 +64,12 @@ function! VimuxOpenRunner()
       let height = _VimuxOption("g:VimuxHeight", 20)
       let orientation = _VimuxOption("g:VimuxOrientation", "v")
       call system("tmux split-window -p ".height." -".orientation)
+      call system("tmux last-"._VimuxRunnerType())
     elseif _VimuxRunnerType() == "window"
       call system("tmux new-window")
     endif
 
     let g:VimuxRunnerIndex = _VimuxTmuxIndex()
-    call system("tmux last-"._VimuxRunnerType())
   endif
 endfunction
 
