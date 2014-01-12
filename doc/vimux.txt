@@ -314,5 +314,20 @@ the prompt and your input.
 
 Default: "Command? "
 
+------------------------------------------------------------------------------
+                                                             *VimuxRunnerType*
+2.6 g:VimuxRunnerType~
+
+The type of view object Vimux should use for the runner. For reference, a
+tmux session is a group of windows, and a window is a layout of panes.
+
+  let g:VimuxRunnerType = "window"
+  
+Options:
+  "pane": for panes
+  "window": for windows
+
+Default: "pane"
+
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
