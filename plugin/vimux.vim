@@ -143,7 +143,7 @@ function! _VimuxNearestIndex()
   let views = split(system("tmux list-"._VimuxRunnerType()."s"), "\n")
 
   for view in views
-    if match(view, "(active)") == -1
+    if match(view, "(active)") != -1
       return split(view, ":")[0]
     endif
   endfor
