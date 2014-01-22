@@ -81,9 +81,12 @@ function! VimuxCloseRunner()
 endfunction
 
 function! VimuxZoomRunner()
-  if exists("g:VimuxRunnerPaneIndex")
-    call system("tmux resize-pane -Z -t ".g:VimuxRunnerPaneIndex)
-    unlet g:VimuxRunnerPaneIndex
+  if exists("g:VimuxRunnerIndex")
+    if _VimuxRunnerType() == "pane"
+      call system("tmux resize-pane -Z -t ".g:VimuxRunnerIndex)
+    elseif _VimuxRunnerType() == "window"
+      call system("tmux select-window -t ".g:VimuxRunnerIndex)
+    endif
   endif
 endfunction
 
