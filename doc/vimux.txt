@@ -188,7 +188,7 @@ Zoom requires tmux version >= 1.8
 >
 
  " Zoom the tmux runner page
- <Leader>vz :VimuxZoomRunner<CR>
+ map <Leader>vz :VimuxZoomRunner<CR>
 <
 
 ==============================================================================
