@@ -123,7 +123,7 @@ function! VimuxPromptCommand()
 endfunction
 
 function! _VimuxTmuxSession()
-  return _VimuxTmuxProperty("S")
+  return _VimuxTmuxProperty("#S")
 endfunction
 
 function! _VimuxTmuxIndex()
@@ -135,11 +135,11 @@ function! _VimuxTmuxIndex()
 endfunction
 
 function! _VimuxTmuxPaneIndex()
-    return _VimuxTmuxProperty("P")
+  return _VimuxTmuxProperty("#I.#P")
 endfunction
 
 function! _VimuxTmuxWindowIndex()
-  return _VimuxTmuxProperty("I")
+  return _VimuxTmuxProperty("#I")
 endfunction
 
 function! _VimuxNearestIndex()
@@ -167,9 +167,9 @@ function! _VimuxOption(option, default)
 endfunction
 
 function! _VimuxTmuxProperty(property)
-    return substitute(system("tmux display -p '#".a:property."'"), '\n$', '', '')
+    return substitute(system("tmux display -p '".a:property."'"), '\n$', '', '')
 endfunction
 
 function! _VimuxHasRunner(index)
-  return match(system("tmux list-"._VimuxRunnerType()."s"), a:index.":")
+  return match(system("tmux list-"._VimuxRunnerType()."s -a"), a:index.":")
 endfunction
