@@ -12,6 +12,7 @@ command VimuxScrollDownInspect :call VimuxScrollDownInspect()
 command VimuxInterruptRunner :call VimuxInterruptRunner()
 command VimuxPromptCommand :call VimuxPromptCommand()
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
+command VimuxTogglePane :call VimuxTogglePane()
 
 function! VimuxRunLastCommand()
   if exists("g:VimuxRunnerIndex")
@@ -77,6 +78,18 @@ function! VimuxCloseRunner()
   if exists("g:VimuxRunnerIndex")
     call system("tmux kill-"._VimuxRunnerType()." -t ".g:VimuxRunnerIndex)
     unlet g:VimuxRunnerIndex
+  endif
+endfunction
+
+function! VimuxTogglePane()
+  if exists("g:VimuxRunnerIndex")
+    if _VimuxRunnerType() == "window"
+        call system("tmux join-pane -d -s ".g:VimuxRunnerIndex." -p "._VimuxOption("g:VimuxHeight", 20))
+        let g:VimuxRunnerType = "pane"
+    elseif _VimuxRunnerType() == "pane"
+        call system("tmux break-pane -d -t ".g:VimuxRunnerIndex)
+        let g:VimuxRunnerType = "window"
+    endif
   endif
 endfunction
 
