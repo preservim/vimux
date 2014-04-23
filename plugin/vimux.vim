@@ -87,7 +87,7 @@ function! VimuxTogglePane()
         call system("tmux join-pane -d -s ".g:VimuxRunnerIndex." -p "._VimuxOption("g:VimuxHeight", 20))
         let g:VimuxRunnerType = "pane"
     elseif _VimuxRunnerType() == "pane"
-        call system("tmux break-pane -d -t ".g:VimuxRunnerIndex)
+		let g:VimuxRunnerIndex=substitute(system("tmux break-pane -d -t ".g:VimuxRunnerIndex." -P -F '#{window_index}'"), "\n", "", "")
         let g:VimuxRunnerType = "window"
     endif
   endif
