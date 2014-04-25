@@ -110,7 +110,7 @@ VimuxOpenPane~
 
 This will either open a new pane or use the nearest pane and set it as the
 vimux runner pane for the other vimux commands. You can control if this command
-uses the nearest pane or always creates a new one with g:VimuxUseNearestPane
+uses the nearest pane or always creates a new one with g:VimuxUseNearest
 
 ------------------------------------------------------------------------------
                                                             *VimuxPromptCommand*
@@ -282,12 +282,13 @@ Options:
 Default: "v"
 
 ------------------------------------------------------------------------------
-                                           *VimuxConfiguration_use_nearest_pane*
-2.3 g:VimuxUseNearestPane~
+                                                *VimuxConfiguration_use_nearest*
+2.3 g:VimuxUseNearest
 
-Use exising pane (not used by vim) if found instead of running split-window.
+Use exising pane or window (not used by vim) if found instead of running
+split-window.
 
-  let VimuxUseNearestPane = 1
+  let VimuxUseNearest = 1
 
 Default: 1
 
@@ -313,6 +314,21 @@ the prompt and your input.
   let g:VimuxPromptString = ""
 
 Default: "Command? "
+
+------------------------------------------------------------------------------
+                                                             *VimuxRunnerType*
+2.6 g:VimuxRunnerType~
+
+The type of view object Vimux should use for the runner. For reference, a
+tmux session is a group of windows, and a window is a layout of panes.
+
+  let g:VimuxRunnerType = "window"
+  
+Options:
+  "pane": for panes
+  "window": for windows
+
+Default: "pane"
 
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:

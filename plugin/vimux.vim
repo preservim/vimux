@@ -156,11 +156,11 @@ function! _VimuxTmuxWindowIndex()
 endfunction
 
 function! _VimuxNearestIndex()
-  let panes = split(system("tmux list-"._VimuxRunnerType()."s"), "\n")
+  let views = split(system("tmux list-"._VimuxRunnerType()."s"), "\n")
 
-  for pane in panes
-    if match(pane, "(active)") == -1
-      return split(pane, ":")[0]
+  for view in views
+    if match(view, "(active)") != -1
+      return split(view, ":")[0]
     endif
   endfor
 
