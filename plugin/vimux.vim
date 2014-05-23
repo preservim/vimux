@@ -44,12 +44,25 @@ function! VimuxRunCommand(command, ...)
 endfunction
 
 function! VimuxSendText(text)
-  call VimuxSendKeys('"'.escape(a:text, '"').'"')
+  " Escape double quotes "
+  "call VimuxSendKeys('"'.escape(a:text, '"').'"')
+  " Don't escape, just send it along.
+  call VimuxSendKeys(a:text)
 endfunction
 
 function! VimuxSendKeys(keys)
   if exists("g:VimuxRunnerIndex")
-    call system("tmux send-keys -t ".g:VimuxRunnerIndex." ".a:keys)
+    " This is limited to ~30 lines or so, and I want to send more!
+    " call system("tmux send-keys -t ".g:VimuxRunnerIndex." ".a:keys)
+    " HACK: Write to a temporary file.
+    redir! > /tmp/VimuxSendKeys
+    echo a:keys
+    redir END
+    " Load from the temporary file.
+    " Unfortunately, You have to press Enter to get back to editing.
+    call system("tmux load-buffer /tmp/VimuxSendKeys; tmux paste-buffer -t ".g:VimuxRunnerIndex)
+    " This causes vim to hang. :(
+    " call system("tmux load-buffer -; tmux paste-buffer -t ".g:VimuxRunnerIndex, a:keys)
   else
     echo "No vimux runner pane/window. Create one with VimuxOpenRunner"
   endif
