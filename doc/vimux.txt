@@ -288,7 +288,7 @@ Default: "v"
 Use exising pane or window (not used by vim) if found instead of running
 split-window.
 
-  let VimuxUseNearest = 1
+  let g:VimuxUseNearest = 1
 
 Default: 1
 
@@ -299,7 +299,7 @@ Default: 1
 The keys sent to the runner pane before running a command. By default it sends
 `q` to make sure the pane is not in scroll-mode and `C-u` to clear the line.
 
-  let VimuxResetSequence = ""
+  let g:VimuxResetSequence = ""
 
 Default: "q C-u"
 
