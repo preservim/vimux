@@ -37,7 +37,6 @@ function! VimuxRunCommand(command, ...)
   let g:VimuxLastCommand = a:command
 
   call VimuxSendKeys(resetSequence)
-  echo a:command
   call VimuxSendText(a:command)
 
   if l:autoreturn == 1
