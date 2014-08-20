@@ -117,10 +117,12 @@ uses the nearest pane or always creates a new one with g:VimuxUseNearest
 VimuxPromptCommand~
 
 Prompt for a command and run it in a small horizontal split bellow the current
-pane.
+pane. A parameter can be supplied to predefine a command or a part of the
+command which can be edited in the prompt.
 >
  " Prompt for a command to run map
  map <Leader>vp :VimuxPromptCommand<CR>
+ map <Leader>vm :VimuxPromptCommand("make ")<CR>
 <
 
 ------------------------------------------------------------------------------
