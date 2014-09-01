@@ -11,7 +11,7 @@ command VimuxInspectRunner :call VimuxInspectRunner()
 command VimuxScrollUpInspect :call VimuxScrollUpInspect()
 command VimuxScrollDownInspect :call VimuxScrollDownInspect()
 command VimuxInterruptRunner :call VimuxInterruptRunner()
-command VimuxPromptCommand :call VimuxPromptCommand()
+command -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<args>)
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command VimuxTogglePane :call VimuxTogglePane()
 
@@ -131,8 +131,8 @@ function! VimuxClearRunnerHistory()
   endif
 endfunction
 
-function! VimuxPromptCommand()
-  let l:command = input(_VimuxOption("g:VimuxPromptString", "Command? "))
+function! VimuxPromptCommand(command, ...)
+  let l:command = input(_VimuxOption("g:VimuxPromptString", "Command? "),a:command)
   call VimuxRunCommand(l:command)
 endfunction
 
