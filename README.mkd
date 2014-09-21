@@ -13,6 +13,7 @@ Other auxiliary functions and the ones I talked about above can be found bellow 
 ## Installation
 
 With **[vim-bundle](https://github.com/benmills/vim-bundle)**: `vim-bundle install benmills/vimux`
+With **[Vundle](https://github.com/gmarik/Vundle.vim)**: 'Plugin benmills/vimux' in your .vimrc
 
 Otherwise download the latest [tarball](https://github.com/benmills/vimux/tarball/master), extract it and move `plugin/vimux.vim` inside `~/.vim/plugin`. If you're using [pathogen](https://github.com/tpope/vim-pathogen), then move the entire folder extracted from the tarball into `~/.vim/bundle`.
 
