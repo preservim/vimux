@@ -11,10 +11,11 @@ CONTENTS                                                        *vimux-contents*
       2.1 .............................. |VimuxPromptCommand|
       2.2 .............................. |VimuxRunLastCommand|
       2.3 .............................. |VimuxInspectRunner|
-      2.4 .............................. |VimuxCloseRunner|
-      2.5 .............................. |VimuxInterruptRunner|
-      2.6 .............................. |VimuxClearRunnerHistory|
-      2.7 .............................. |VimuxZoomRunner|
+      2.4 .............................. |VimuxOpenRunner|
+      2.5 .............................. |VimuxCloseRunner|
+      2.6 .............................. |VimuxInterruptRunner|
+      2.7 .............................. |VimuxClearRunnerHistory|
+      2.8 .............................. |VimuxZoomRunner|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -63,7 +64,7 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxRunCommand|
   - |VimuxSendText|
   - |VimuxSendKeys|
-  - |VimuxOpenPane|
+  - |VimuxOpenRunner|
   - |VimuxRunLastCommand|
   - |VimuxCloseRunner|
   - |VimuxInspectRunner|
@@ -105,12 +106,14 @@ does not already exist. You will need to use VimuxOpenPane to do this. You can
 use this command to send keys such as "Enter" or "C-c" to the runner pane.
 
 ------------------------------------------------------------------------------
-                                                               *VimuxOpenPane*
-VimuxOpenPane~
+                                                               *VimuxOpenRunner*
+VimuxOpenRunner~
 
-This will either open a new pane or use the nearest pane and set it as the
-vimux runner pane for the other vimux commands. You can control if this command
-uses the nearest pane or always creates a new one with g:VimuxUseNearest
+This will either open a new pane (or window) or use the nearest pane and set it
+as the vimux runner pane for the other vimux commands. You can control if this
+command uses the nearest pane or always creates a new one with
+|g:VimuxUseNearest|. You can, also, control if this command use a tmux pane or
+window with |g:VimuxRunnerType|.
 
 ------------------------------------------------------------------------------
                                                             *VimuxPromptCommand*
@@ -213,6 +216,9 @@ Full Keybind Example~
  " Inspect runner pane
  map <Leader>vi :VimuxInspectRunner<CR>
 
+ " Open vim tmux runner
+ map <Leader>vo :VimuxOpenRunner<CR>
+
  " Close vim tmux runner opened by VimuxRunCommand
  map <Leader>vq :VimuxCloseRunner<CR>
 
@@ -237,10 +243,10 @@ First, add some helpful mappings.
  endfunction
 
  " If text is selected, save it in the v buffer and send that buffer it to tmux
- vmap <LocalLeader>vs "vy :call VimuxSlime()<CR>
+ vmap <Leader>vs "vy:call VimuxSlime()<CR>
 
  " Select current paragraph and send it to tmux
- nmap <LocalLeader>vs vip<LocalLeader>vs<CR>
+ nmap <Leader>vs vip<Leader>vs<CR>
 <
 
 Now, open a clojure file. Let's say your leader is backslash (\). Type \vp,
@@ -313,7 +319,7 @@ The string presented in the vim command line when Vimux is invoked. Be sure
 to put a space at the end of the string to allow for distinction between
 the prompt and your input.
 
-  let g:VimuxPromptString = ""
+  let g:VimuxPromptString = "[ViMux] $ "
 
 Default: "Command? "
 
