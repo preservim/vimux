@@ -447,5 +447,15 @@ previously-run commands in VimuxPromptCommand.
 <
 Default: 1
 
+------------------------------------------------------------------------------
+                                                             *VimuxSocketPath*
+4.13 g:VimuxSocketPath~
+
+The path to the tmux socket path. See tmux option `-S`
+>
+  let g:VimuxSocketPath = "/path/to/tmux-socket"
+<
+Default: ""
+
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
