@@ -15,6 +15,14 @@ command -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<args>)
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command VimuxTogglePane :call VimuxTogglePane()
 
+function! VimuxRunCommandInDir(command, useFile)
+    let l:file = ""
+    if a:useFile ==# 1
+        let l:file = shellescape(expand('%:t'), 1)
+    endif
+    call VimuxRunCommand("cd ".shellescape(expand('%:p:h'), 1)." && ".a:command." ".l:file." && cd - > /dev/null")
+endfunction
+
 function! VimuxRunLastCommand()
   if exists("g:VimuxRunnerIndex")
     call VimuxRunCommand(g:VimuxLastCommand)
