@@ -351,5 +351,21 @@ Options:
 
 Default: "pane"
 
+------------------------------------------------------------------------------
+                                                             *VimuxPromptString*
+2.7 g:VimuxExpandCommand~
+
+Should the command given at the prompt via VimuxPromptCommand be expanded
+using expand(). 1 to expand the string.
+
+Unfortunately expand() only expands % (etc.) if the string starts with that
+character. So the command is split at spaces and then rejoined after
+expansion. With this simple approach things like "%:h/test.xml" are not
+possible.
+
+  let g:VimuxPromptString = 1
+
+Default: 0
+
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
