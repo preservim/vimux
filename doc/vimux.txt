@@ -64,6 +64,7 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxRunCommand|
   - |VimuxSendText|
   - |VimuxSendKeys|
+  - |VimuxCurrentLine|
   - |VimuxOpenPane|
   - |VimuxRunLastCommand|
   - |VimuxCloseRunner|
@@ -105,6 +106,13 @@ VimuxSendKeys~
 Send keys to the runner pane. This command will not open a new pane if one
 does not already exist. You will need to use VimuxOpenPane to do this. You can
 use this command to send keys such as "Enter" or "C-c" to the runner pane.
+
+------------------------------------------------------------------------------
+                                                            *VimuxCurrentLine*
+VimuxCurrentLine~
+
+Send content of current line to the runner pane then run. This command will 
+open a new pane if one does not already exist. 
 
 ------------------------------------------------------------------------------
                                                                *VimuxOpenPane*
