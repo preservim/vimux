@@ -16,7 +16,6 @@ command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command VimuxTogglePane :call VimuxTogglePane()
 command VimuxCurrentLine :call VimuxCurrentLine()
 
-
 function! VimuxRunCommandInDir(command, useFile)
     let l:file = ""
     if a:useFile ==# 1
