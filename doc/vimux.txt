@@ -15,6 +15,7 @@ CONTENTS                                                        *vimux-contents*
       2.5 .............................. |VimuxInterruptRunner|
       2.6 .............................. |VimuxClearRunnerHistory|
       2.7 .............................. |VimuxZoomRunner|
+      2.8 .............................. |VimuxRunCommandInDir|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -71,6 +72,7 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxPromptCommand|
   - |VimuxClearRunnerHistory|
   - |VimuxZoomRunner|
+  - |VimuxRunCommandInDir|
 
 ------------------------------------------------------------------------------
                                                                *VimuxRunCommand*
@@ -191,6 +193,23 @@ Zoom requires tmux version >= 1.8
 
  " Zoom the tmux runner page
  map <Leader>vz :VimuxZoomRunner<CR>
+<
+
+------------------------------------------------------------------------------
+                                                        *VimuxRunCommandInDir*
+VimuxRunCommandInDir~
+
+Runs the specified command inside the directory of
+the currently opened file. Takes two arguments. command and inFile
+
+command: The command to run
+inFile: If 1 the filename will be appended to the command
+>
+
+ " Compile currently opened latex file to pdf
+ autocmd Filetype tex nnoremap <buffer> <Leader>rr :update<Bar>:call VimuxRunCommandInDir('latexmk -pdf', 1)<CR>
+ " Push the repository of the currently opened file
+ nnoremap <leader>gp :call VimuxRunCommandInDir("git push", 0)<CR>
 <
 
 ==============================================================================
@@ -325,7 +344,7 @@ The type of view object Vimux should use for the runner. For reference, a
 tmux session is a group of windows, and a window is a layout of panes.
 
   let g:VimuxRunnerType = "window"
-  
+
 Options:
   "pane": for panes
   "window": for windows
