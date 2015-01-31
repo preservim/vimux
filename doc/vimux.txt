@@ -92,7 +92,7 @@ vimux from automatically sending a return after the command.
                                                                *VimuxSendText*
 VimuxSendText~
 
-Send raw text to the runer pane. This command will not open a new pane if one
+Send raw text to the runner pane. This command will not open a new pane if one
 does not already exist. You will need to use VimuxOpenPane to do this. This
 command can be used to interact with REPLs or other interactive terminal
 programs that are not shells.
