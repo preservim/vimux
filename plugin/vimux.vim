@@ -64,7 +64,8 @@ function! VimuxSendKeys(keys)
   endif
 endfunction
 
-function! VimuxOpenRunner()
+function! VimuxOpenRunner(...)
+  let l:cmd = exists("a:1") ? ' '.a:1 : ''
   let nearestIndex = _VimuxNearestIndex()
 
   if _VimuxOption("g:VimuxUseNearest", 1) == 1 && nearestIndex != -1
@@ -73,7 +74,7 @@ function! VimuxOpenRunner()
     if _VimuxRunnerType() == "pane"
       let height = _VimuxOption("g:VimuxHeight", 20)
       let orientation = _VimuxOption("g:VimuxOrientation", "v")
-      call system("tmux split-window -p ".height." -".orientation)
+      call system("tmux split-window -p ".height." -".orientation.l:cmd)
     elseif _VimuxRunnerType() == "window"
       call system("tmux new-window")
     endif
