@@ -32,6 +32,7 @@ _Notes:_
 * [vimux-golang](https://github.com/benmills/vimux-golang) Run go tests in vimux
 * [vimux-zeus](https://github.com/jingweno/vimux-zeus) Run zeus commands in vimux
 * [vimix](https://github.com/spiegela/vimix) Run Elixir mix commands in vimux
+* [vimux-cargo](https://github.com/jtdowney/vimux-cargo) run rust tests and projects using cargo and vimux
 
 ## Usage
 
