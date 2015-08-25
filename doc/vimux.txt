@@ -351,5 +351,16 @@ Options:
 
 Default: "pane"
 
+------------------------------------------------------------------------------
+                                                              *VimuxTmuxCommand*
+2.7 g:VimuxTmuxCommand~
+
+The command that Vimux runs when it calls out to tmux. It may be useful to
+redefine this if you're using something like tmate.
+
+  let g:VimuxTmuxCommand = "tmate"
+
+Default: "tmux"
+
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
