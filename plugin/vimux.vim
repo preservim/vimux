@@ -53,7 +53,12 @@ function! VimuxRunCommand(command, ...)
 endfunction
 
 function! VimuxSendText(text)
-  call VimuxSendKeys('"'.escape(a:text, '"$').'"')
+  if exists("g:VimuxRunnerIndex")
+    call system("tmux load-buffer -", a:text)
+    call system("tmux paste-buffer -t " . g:VimuxRunnerIndex)
+  else
+    echo "No vimux runner pane/window. Create one with VimuxOpenRunner"
+  end
 endfunction
 
 function! VimuxSendKeys(keys)
