@@ -33,6 +33,7 @@ _Notes:_
 * [vimux-zeus](https://github.com/jingweno/vimux-zeus) Run zeus commands in vimux
 * [vimix](https://github.com/spiegela/vimix) Run Elixir mix commands in vimux
 * [vimux-cargo](https://github.com/jtdowney/vimux-cargo) run rust tests and projects using cargo and vimux
+* [vimux-bazel-test](https://github.com/pgr0ss/vimux-bazel-test) Run bazel tests in vimux
 
 ## Usage
 
