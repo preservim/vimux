@@ -65,22 +65,47 @@ function! VimuxSendKeys(keys)
 endfunction
 
 function! VimuxOpenRunner()
+  let activeSession = _VimuxGetTargetSession()
   let nearestIndex = _VimuxNearestIndex()
 
-  if _VimuxOption("g:VimuxUseNearest", 1) == 1 && nearestIndex != -1
-    let g:VimuxRunnerIndex = nearestIndex
+  if _VimuxOption("g:VimuxUseNearest", 1) == 1 && nearestIndex != -1 && activeSession != -1
+    let g:VimuxRunnerIndex = activeSession.':'.nearestIndex
   else
     if _VimuxRunnerType() == "pane"
       let height = _VimuxOption("g:VimuxHeight", 20)
       let orientation = _VimuxOption("g:VimuxOrientation", "v")
       call _VimuxTmux("split-window -p ".height." -".orientation)
     elseif _VimuxRunnerType() == "window"
-      call _VimuxTmux("new-window")
+      if activeSession == -1
+         let activeSession = _VimuxOption("g:VimuxTargetSession", '')
+         call _VimuxTmuxSpecial("new-session -d -n \"vimux\" -s \"".activeSession."\"")
+      else
+         call _VimuxTmux("new-window -t ".activeSession)
+      endif
     endif
 
-    let g:VimuxRunnerIndex = _VimuxTmuxIndex()
+    let g:VimuxRunnerIndex = activeSession.':'._VimuxTmuxIndex()
     call _VimuxTmux("last-"._VimuxRunnerType())
   endif
+endfunction
+
+
+function! _VimuxGetTargetSession()
+   let targetSession = ''
+   if _VimuxOption("g:VimuxTargetSession", '') != ''
+      let targetSession = g:VimuxTargetSession
+      let sessions = split(_VimuxTmux("list-sessions"), "\n")
+
+      for session in sessions
+         if match(session, targetSession) != -1
+            return targetSession
+         endif
+      endfor
+      return -1
+   else
+      let targetSession = substitute(_VimuxTmux("display -p '#S'"), '\n$', '', '')
+   endif
+   return targetSession
 endfunction
 
 function! VimuxCloseRunner()
@@ -147,7 +172,18 @@ endfunction
 
 function! _VimuxTmux(arguments)
   let l:command = _VimuxOption("g:VimuxTmuxCommand", "tmux")
+  if _VimuxOption("g:VimuxDebug", 0) != 0
+     echo l:command." ".a:arguments
+  endif
   return system(l:command." ".a:arguments)
+endfunction
+
+function! _VimuxTmuxSpecial(arguments)
+  let l:command = _VimuxOption("g:VimuxTmuxCommand", "tmux")
+  if _VimuxOption("g:VimuxDebug", 0) != 0
+     echo "TMUX= ".l:command." ".a:arguments
+  endif
+  return system("TMUX= ".l:command." ".a:arguments)
 endfunction
 
 function! _VimuxTmuxSession()
@@ -171,13 +207,25 @@ function! _VimuxTmuxWindowIndex()
 endfunction
 
 function! _VimuxNearestIndex()
-  let views = split(_VimuxTmux("list-"._VimuxRunnerType()."s"), "\n")
+   let targetSession = ''
+   if _VimuxOption("g:VimuxTargetSession", '') != ''
+      let targetSession = ' -t '.g:VimuxTargetSession
+   endif
+   let views = split(_VimuxTmux("list-"._VimuxRunnerType()."s".targetSession ), "\n")
 
-  for view in views
-    if match(view, "(active)") == -1
-      return split(view, ":")[0]
-    endif
-  endfor
+   if _VimuxOption("g:VimuxTargetSession", '') != ''
+      for view in views
+         if match(view, "(active)") != -1
+            return split(view, ":")[0]
+         endif
+      endfor
+   else
+      for view in views
+         if match(view, "(active)") == -1
+            return split(view, ":")[0]
+         endif
+      endfor
+  endif
 
   return -1
 endfunction

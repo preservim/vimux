@@ -352,8 +352,20 @@ Options:
 Default: "pane"
 
 ------------------------------------------------------------------------------
+                                                             *VimuxTargetSession*
+2.7 g:VimuxTargetSession
+
+The session the tmux window should belong to. Works only with VimuxRunnerType
+"window". If the session is available the current active window will be used, 
+else the session will be created.
+
+  let g:VimuxRunnerType = "VimuxOut"
+
+Default: ""
+
+------------------------------------------------------------------------------
                                                               *VimuxTmuxCommand*
-2.7 g:VimuxTmuxCommand~
+2.8 g:VimuxTmuxCommand~
 
 The command that Vimux runs when it calls out to tmux. It may be useful to
 redefine this if you're using something like tmate.
