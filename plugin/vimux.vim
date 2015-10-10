@@ -3,7 +3,7 @@ if exists("g:loaded_vimux") || &cp
 endif
 let g:loaded_vimux = 1
 
-command -nargs=* -complete=shellcmd VimuxRunCommand :call VimuxRunCommand(<args>)
+command -nargs=* -complete=shellcmd VimuxRunCommand :call VimuxRunCommand(<q-args>)
 command VimuxRunLastCommand :call VimuxRunLastCommand()
 command VimuxCloseRunner :call VimuxCloseRunner()
 command VimuxZoomRunner :call VimuxZoomRunner()
