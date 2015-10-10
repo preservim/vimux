@@ -3,7 +3,7 @@ if exists("g:loaded_vimux") || &cp
 endif
 let g:loaded_vimux = 1
 
-command -nargs=* VimuxRunCommand :call VimuxRunCommand(<args>)
+command -nargs=* -complete=shellcmd VimuxRunCommand :call VimuxRunCommand(<args>)
 command VimuxRunLastCommand :call VimuxRunLastCommand()
 command VimuxCloseRunner :call VimuxCloseRunner()
 command VimuxZoomRunner :call VimuxZoomRunner()
@@ -11,7 +11,7 @@ command VimuxInspectRunner :call VimuxInspectRunner()
 command VimuxScrollUpInspect :call VimuxScrollUpInspect()
 command VimuxScrollDownInspect :call VimuxScrollDownInspect()
 command VimuxInterruptRunner :call VimuxInterruptRunner()
-command -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<args>)
+command -nargs=? -complete=shellcmd VimuxPromptCommand :call VimuxPromptCommand(<args>)
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command VimuxTogglePane :call VimuxTogglePane()
 
