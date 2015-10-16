@@ -16,6 +16,7 @@ CONTENTS                                                        *vimux-contents*
       2.6 .............................. |VimuxClearRunnerHistory|
       2.7 .............................. |VimuxZoomRunner|
       2.8 .............................. |VimuxRunCommandInDir|
+      2.9 .............................. |VimuxTestCommand|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -211,6 +212,12 @@ inFile: If 1 the filename will be appended to the command
  " Push the repository of the currently opened file
  nnoremap <leader>gp :call VimuxRunCommandInDir("git push", 0)<CR>
 <
+
+------------------------------------------------------------------------------
+                                                        *VimuxTestCommand*
+VimuxTestCommand~
+
+Runs the specified command and closes the pane if its exit status was not zero
 
 ==============================================================================
 MISC (3)                                                             *VimuxMisc*

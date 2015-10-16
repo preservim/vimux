@@ -4,6 +4,7 @@ endif
 let g:loaded_vimux = 1
 
 command -nargs=* VimuxRunCommand :call VimuxRunCommand(<args>)
+command -nargs=* -complete=shellcmd VimuxTestCommand :call VimuxTestCommand(<q-args>)
 command VimuxRunLastCommand :call VimuxRunLastCommand()
 command VimuxCloseRunner :call VimuxCloseRunner()
 command VimuxZoomRunner :call VimuxZoomRunner()
@@ -29,6 +30,10 @@ function! VimuxRunLastCommand()
   else
     echo "No last vimux command."
   endif
+endfunction
+
+function! VimuxTestCommand(command)
+  call VimuxRunCommand(a:command.' && exit')
 endfunction
 
 function! VimuxRunCommand(command, ...)
