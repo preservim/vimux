@@ -352,7 +352,7 @@ Options:
 Default: "pane"
 
 ------------------------------------------------------------------------------
-                                                             *VimuxPromptString*
+                                                             *VimuxExpandCommand*
 2.7 g:VimuxExpandCommand~
 
 Should the command given at the prompt via VimuxPromptCommand be expanded
