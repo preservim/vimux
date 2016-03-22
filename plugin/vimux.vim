@@ -141,7 +141,7 @@ endfunction
 
 function! VimuxPromptCommand(...)
   let command = a:0 == 1 ? a:1 : ""
-  let l:command = input(_VimuxOption("g:VimuxPromptString", "Command? "), command)
+  let l:command = input(_VimuxOption("g:VimuxPromptString", "Command? "), command, 'shellcmd')
   call VimuxRunCommand(l:command)
 endfunction
 
