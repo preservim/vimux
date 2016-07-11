@@ -66,8 +66,11 @@ endfunction
 
 function! VimuxOpenRunner()
   let nearestIndex = _VimuxNearestIndex()
+  let lastIndex = _VimuxLastIndex()
 
-  if _VimuxOption("g:VimuxUseNearest", 1) == 1 && nearestIndex != -1
+  if _VimuxOption("g:VimuxUseLast", 1) == 1 && lastIndex != -1
+    let g:VimuxRunnerIndex = lastIndex
+  elseif _VimuxOption("g:VimuxUseNearest", 1) == 1 && nearestIndex != -1
     let g:VimuxRunnerIndex = nearestIndex
   else
     if _VimuxRunnerType() == "pane"
@@ -180,6 +183,22 @@ function! _VimuxNearestIndex()
   endfor
 
   return -1
+endfunction
+
+function! _VimuxLastIndex()
+
+  let currentID = _VimuxTmuxPaneIndex()
+
+  call _VimuxTmux("last-pane")
+  let lastID = _VimuxTmuxPaneIndex()
+  call _VimuxTmux("last-pane")
+
+  if currentID != lastID
+    return lastID
+  else
+    return -1
+  endif
+
 endfunction
 
 function! _VimuxRunnerType()
