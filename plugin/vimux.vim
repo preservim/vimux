@@ -194,10 +194,16 @@ function! _VimuxLastIndex()
   call _VimuxTmux("last-pane")
 
   if currentID != lastID
-    return lastID
-  else
-    return -1
+    if _VimuxRunnerType() == "window"
+      return lastID
+    elseif _VimuxRunnerType() == "pane"
+      if split(currentID, "\\.")[0] == split(lastID, "\\.")[0]
+        return lastID
+      endif
+    endif
   endif
+
+  return -1
 
 endfunction
 
