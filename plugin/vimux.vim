@@ -199,5 +199,5 @@ function! _VimuxTmuxProperty(property)
 endfunction
 
 function! _VimuxHasRunner(index)
-  return match(_VimuxTmux("list-"._VimuxRunnerType()."s -a"), a:index.":")
+  return match(_VimuxTmux("list-"._VimuxRunnerType()."s -a"), _VimuxTmuxSession().":".a:index.":")
 endfunction
