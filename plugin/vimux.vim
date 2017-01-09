@@ -62,7 +62,7 @@ function! VimuxRunCommand(command, ...)
 endfunction
 
 function! VimuxSendText(text)
-  call VimuxSendKeys('"'.escape(a:text, '\"$').'"')
+  call VimuxSendKeys('"'.escape(a:text, '\"$`').'"')
 endfunction
 
 function! VimuxSendKeys(keys)
