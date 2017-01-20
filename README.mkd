@@ -1,5 +1,8 @@
 # vimux
-
+## begin fork notes
+### Feature: VimuxUseLast
+`let g:VimuxUseLast = 1` => when choosing vimux runner pane, use last active tmux pane
+## end fork notes
 Easily interact with tmux from vim.
 
 ![vimux](https://www.braintreepayments.com/assets/images/blog/vimux3.png)
