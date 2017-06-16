@@ -306,7 +306,7 @@ Default: "v"
                                                 *VimuxConfiguration_use_nearest*
 2.3 g:VimuxUseNearest
 
-Use exising pane or window (not used by vim) if found instead of running
+Use existing pane or window (not used by vim) if found instead of running
 split-window.
 
   let VimuxUseNearest = 1
