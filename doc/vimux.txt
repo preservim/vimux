@@ -15,6 +15,7 @@ CONTENTS                                                        *vimux-contents*
       2.5 .............................. |VimuxInterruptRunner|
       2.6 .............................. |VimuxClearRunnerHistory|
       2.7 .............................. |VimuxZoomRunner|
+      2.8 .............................. |VimuxRunCommandInDir|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -71,6 +72,7 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxPromptCommand|
   - |VimuxClearRunnerHistory|
   - |VimuxZoomRunner|
+  - |VimuxRunCommandInDir|
 
 ------------------------------------------------------------------------------
                                                                *VimuxRunCommand*
@@ -90,7 +92,7 @@ vimux from automatically sending a return after the command.
                                                                *VimuxSendText*
 VimuxSendText~
 
-Send raw text to the runer pane. This command will not open a new pane if one
+Send raw text to the runner pane. This command will not open a new pane if one
 does not already exist. You will need to use VimuxOpenPane to do this. This
 command can be used to interact with REPLs or other interactive terminal
 programs that are not shells.
@@ -117,10 +119,12 @@ uses the nearest pane or always creates a new one with g:VimuxUseNearest
 VimuxPromptCommand~
 
 Prompt for a command and run it in a small horizontal split bellow the current
-pane.
+pane. A parameter can be supplied to predefine a command or a part of the
+command which can be edited in the prompt.
 >
  " Prompt for a command to run map
  map <Leader>vp :VimuxPromptCommand<CR>
+ map <Leader>vm :VimuxPromptCommand("make ")<CR>
 <
 
 ------------------------------------------------------------------------------
@@ -189,6 +193,23 @@ Zoom requires tmux version >= 1.8
 
  " Zoom the tmux runner page
  map <Leader>vz :VimuxZoomRunner<CR>
+<
+
+------------------------------------------------------------------------------
+                                                        *VimuxRunCommandInDir*
+VimuxRunCommandInDir~
+
+Runs the specified command inside the directory of
+the currently opened file. Takes two arguments. command and inFile
+
+command: The command to run
+inFile: If 1 the filename will be appended to the command
+>
+
+ " Compile currently opened latex file to pdf
+ autocmd Filetype tex nnoremap <buffer> <Leader>rr :update<Bar>:call VimuxRunCommandInDir('latexmk -pdf', 1)<CR>
+ " Push the repository of the currently opened file
+ nnoremap <leader>gp :call VimuxRunCommandInDir("git push", 0)<CR>
 <
 
 ==============================================================================
@@ -285,7 +306,7 @@ Default: "v"
                                                 *VimuxConfiguration_use_nearest*
 2.3 g:VimuxUseNearest
 
-Use exising pane or window (not used by vim) if found instead of running
+Use existing pane or window (not used by vim) if found instead of running
 split-window.
 
   let VimuxUseNearest = 1
@@ -323,12 +344,23 @@ The type of view object Vimux should use for the runner. For reference, a
 tmux session is a group of windows, and a window is a layout of panes.
 
   let g:VimuxRunnerType = "window"
-  
+
 Options:
   "pane": for panes
   "window": for windows
 
 Default: "pane"
+
+------------------------------------------------------------------------------
+                                                              *VimuxTmuxCommand*
+2.7 g:VimuxTmuxCommand~
+
+The command that Vimux runs when it calls out to tmux. It may be useful to
+redefine this if you're using something like tmate.
+
+  let g:VimuxTmuxCommand = "tmate"
+
+Default: "tmux"
 
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
