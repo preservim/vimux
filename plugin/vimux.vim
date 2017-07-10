@@ -3,12 +3,20 @@ if exists("g:loaded_vimux") || &cp
 endif
 let g:loaded_vimux = 1
 
-if !exists("g:tmuxCmd")
-  let g:tmuxCmd = "tmux"
-endif
+function! _VimuxOption(option, default)
+  if exists(a:option)
+    return eval(a:option)
+  else
+    return a:default
+  endif
+endfunction
 
-if !executable(g:tmuxCmd)
-  echohl ErrorMsg | echomsg "Failed to find executable ".g:tmuxCmd | echohl None
+function! _VimuxTmuxCmd()
+  return _VimuxOption("g:VimuxTmuxCommand", "tmux")
+endfunction
+
+if !executable(_VimuxTmuxCmd())
+  echohl ErrorMsg | echomsg "Failed to find executable "._VimuxTmuxCmd() | echohl None
   finish
 endif
 
@@ -155,8 +163,7 @@ function! VimuxPromptCommand(...)
 endfunction
 
 function! _VimuxTmux(arguments)
-  let l:command = _VimuxOption("g:VimuxTmuxCommand", g:tmuxCmd)
-  return system(l:command." ".a:arguments)
+  return system(_VimuxTmuxCmd()." ".a:arguments)
 endfunction
 
 function! _VimuxTmuxSession()
@@ -193,14 +200,6 @@ endfunction
 
 function! _VimuxRunnerType()
   return _VimuxOption("g:VimuxRunnerType", "pane")
-endfunction
-
-function! _VimuxOption(option, default)
-  if exists(a:option)
-    return eval(a:option)
-  else
-    return a:default
-  endif
 endfunction
 
 function! _VimuxTmuxProperty(property)
