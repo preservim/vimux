@@ -64,7 +64,7 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxRunCommand|
   - |VimuxSendText|
   - |VimuxSendKeys|
-  - |VimuxOpenPane|
+  - |VimuxOpenRunner|
   - |VimuxRunLastCommand|
   - |VimuxCloseRunner|
   - |VimuxInspectRunner|
@@ -93,7 +93,7 @@ vimux from automatically sending a return after the command.
 VimuxSendText~
 
 Send raw text to the runner pane. This command will not open a new pane if one
-does not already exist. You will need to use VimuxOpenPane to do this. This
+does not already exist. You will need to use VimuxOpenRunner to do this. This
 command can be used to interact with REPLs or other interactive terminal
 programs that are not shells.
 
@@ -103,12 +103,12 @@ programs that are not shells.
 VimuxSendKeys~
 
 Send keys to the runner pane. This command will not open a new pane if one
-does not already exist. You will need to use VimuxOpenPane to do this. You can
-use this command to send keys such as "Enter" or "C-c" to the runner pane.
+does not already exist. You will need to use VimuxOpenRunner to do this. You
+can use this command to send keys such as "Enter" or "C-c" to the runner pane.
 
 ------------------------------------------------------------------------------
-                                                               *VimuxOpenPane*
-VimuxOpenPane~
+                                                               *VimuxOpenRunner*
+VimuxOpenRunner~
 
 This will either open a new pane or use the nearest pane and set it as the
 vimux runner pane for the other vimux commands. You can control if this command
