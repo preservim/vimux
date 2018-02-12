@@ -251,8 +251,7 @@ First, add some helpful mappings.
 
 >
  function! VimuxSlime()
-  call VimuxSendText(@v)
-  call VimuxSendKeys("Enter")
+  call VimuxRunCommand(@v, 0)
  endfunction
 
  " If text is selected, save it in the v buffer and send that buffer it to tmux
