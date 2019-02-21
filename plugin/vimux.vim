@@ -14,6 +14,7 @@ command VimuxInterruptRunner :call VimuxInterruptRunner()
 command -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<args>)
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command VimuxTogglePane :call VimuxTogglePane()
+command -nargs=? VimuxSetRunner :call VimuxSetRunner(<args>)
 
 function! VimuxRunCommandInDir(command, useFile)
     let l:file = ""
@@ -143,6 +144,12 @@ function! VimuxPromptCommand(...)
   let command = a:0 == 1 ? a:1 : ""
   let l:command = input(_VimuxOption("g:VimuxPromptString", "Command? "), command)
   call VimuxRunCommand(l:command)
+endfunction
+
+function! VimuxSetRunner(...)
+  if exists("a:1")
+    let g:VimuxRunnerIndex = a:1
+  endif
 endfunction
 
 function! _VimuxTmux(arguments)
