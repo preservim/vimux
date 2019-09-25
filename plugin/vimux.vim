@@ -1,6 +1,6 @@
-"if exists("g:loaded_vimux") || &cp
-"  finish
-"endif
+if exists("g:loaded_vimux") || &cp
+  finish
+endif
 let g:loaded_vimux = 1
 
 command! -nargs=* VimuxRunCommand :call VimuxRunCommand(<args>)
