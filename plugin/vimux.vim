@@ -5,6 +5,7 @@ let g:loaded_vimux = 1
 
 command -nargs=* VimuxRunCommand :call VimuxRunCommand(<args>)
 command VimuxRunLastCommand :call VimuxRunLastCommand()
+command VimuxOpenRunner :call VimuxOpenRunner()
 command VimuxCloseRunner :call VimuxCloseRunner()
 command VimuxZoomRunner :call VimuxZoomRunner()
 command VimuxInspectRunner :call VimuxInspectRunner()
