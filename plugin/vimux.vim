@@ -45,10 +45,17 @@ function! VimuxRunCommand(command, ...)
   let g:VimuxLastCommand = a:command
 
   call VimuxSendKeys(resetSequence)
-  call VimuxSendText(a:command)
 
-  if l:autoreturn == 1
-    call VimuxSendKeys("Enter")
+  let command = a:command
+  let g:VimuxInteractivePane = get( g:, 'VimuxInteractivePane', 0)
+  if g:VimuxInteractivePane
+      call _VimuxTmux("last-"._VimuxRunnerType())
+	  let command = command . " && tmux last-pane"
+  endif
+  call VimuxSendText(command)
+
+  if l:autoreturn == 1 
+	call VimuxSendKeys("Enter")
   endif
 endfunction
 
