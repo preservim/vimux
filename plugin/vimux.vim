@@ -12,6 +12,7 @@ command VimuxScrollUpInspect :call VimuxScrollUpInspect()
 command VimuxScrollDownInspect :call VimuxScrollDownInspect()
 command VimuxInterruptRunner :call VimuxInterruptRunner()
 command -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<args>)
+command VimuxClearTerminalScreen :call VimuxClearTerminalScreen()
 command VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command VimuxTogglePane :call VimuxTogglePane()
 
@@ -131,6 +132,12 @@ endfunction
 
 function! VimuxInterruptRunner()
   call VimuxSendKeys("^c")
+endfunction
+
+function! VimuxClearTerminalScreen()
+  if exists("g:VimuxRunnerIndex")
+    call VimuxSendKeys("C-l")
+  endif
 endfunction
 
 function! VimuxClearRunnerHistory()
