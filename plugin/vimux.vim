@@ -14,6 +14,7 @@ endif
 
 command -nargs=* VimuxRunCommand :call VimuxRunCommand(<args>)
 command VimuxRunLastCommand :call VimuxRunLastCommand()
+command VimuxOpenRunner :call VimuxOpenRunner()
 command VimuxCloseRunner :call VimuxCloseRunner()
 command VimuxZoomRunner :call VimuxZoomRunner()
 command VimuxInspectRunner :call VimuxInspectRunner()
@@ -80,12 +81,13 @@ function! VimuxOpenRunner()
   if _VimuxOption("g:VimuxUseNearest", 1) == 1 && nearestIndex != -1
     let g:VimuxRunnerIndex = nearestIndex
   else
+    let extraArguments = _VimuxOption("g:VimuxOpenExtraArgs", "")
     if _VimuxRunnerType() == "pane"
       let height = _VimuxOption("g:VimuxHeight", 20)
       let orientation = _VimuxOption("g:VimuxOrientation", "v")
-      call _VimuxTmux("split-window -p ".height." -".orientation)
+      call _VimuxTmux("split-window -p ".height." -".orientation." ".extraArguments)
     elseif _VimuxRunnerType() == "window"
-      call _VimuxTmux("new-window")
+      call _VimuxTmux("new-window ".extraArguments)
     endif
 
     let g:VimuxRunnerIndex = _VimuxTmuxIndex()
