@@ -13,9 +13,10 @@ CONTENTS                                                        *vimux-contents*
       2.3 .............................. |VimuxInspectRunner|
       2.4 .............................. |VimuxCloseRunner|
       2.5 .............................. |VimuxInterruptRunner|
-      2.6 .............................. |VimuxClearRunnerHistory|
-      2.7 .............................. |VimuxZoomRunner|
-      2.8 .............................. |VimuxRunCommandInDir|
+      2.6 .............................. |VimuxClearTerminalScreen|
+      2.7 .............................. |VimuxClearRunnerHistory|
+      2.8 .............................. |VimuxZoomRunner|
+      2.9 .............................. |VimuxRunCommandInDir|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -70,6 +71,7 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxInspectRunner|
   - |VimuxInterruptRunner|
   - |VimuxPromptCommand|
+  - |VimuxClearTerminalScreen|
   - |VimuxClearRunnerHistory|
   - |VimuxZoomRunner|
   - |VimuxRunCommandInDir|
@@ -170,6 +172,15 @@ runner pane.
 <
 
 
+------------------------------------------------------------------------------
+                                                          *VimuxClearTerminalScreen*
+VimuxClearTerminalScreen~
+
+Clear the terminal screen of the runner pane.
+>
+ " Clear the terminal screen of the runner pane.
+ map <Leader>v<C-l> :VimuxClearTerminalScreen<CR>
+<
 
 ------------------------------------------------------------------------------
                                                           *VimuxClearRunnerHistory*
@@ -240,6 +251,9 @@ Full Keybind Example~
 
  " Zoom the runner pane (use <bind-key> z to restore runner pane)
  map <Leader>vz :call VimuxZoomRunner()<CR>
+
+ " Clear the terminal screen of the runner pane.
+ map <Leader>v<C-l> :VimuxClearTerminalScreen<CR>
 >
 
 ------------------------------------------------------------------------------
