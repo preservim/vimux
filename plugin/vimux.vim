@@ -3,6 +3,14 @@ if exists("g:loaded_vimux") || &cp
 endif
 let g:loaded_vimux = 1
 
+function! _VimuxOption(option, default)
+  if exists(a:option)
+    return eval(a:option)
+  else
+    return a:default
+  endif
+endfunction
+
 function! _VimuxTmuxCmd()
   return _VimuxOption("g:VimuxTmuxCommand", "tmux")
 endfunction
@@ -202,14 +210,6 @@ endfunction
 
 function! _VimuxRunnerType()
   return _VimuxOption("g:VimuxRunnerType", "pane")
-endfunction
-
-function! _VimuxOption(option, default)
-  if exists(a:option)
-    return eval(a:option)
-  else
-    return a:default
-  endif
 endfunction
 
 function! _VimuxTmuxProperty(property)
