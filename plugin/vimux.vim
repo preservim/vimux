@@ -3,6 +3,15 @@ if exists("g:loaded_vimux") || &cp
 endif
 let g:loaded_vimux = 1
 
+function! _VimuxTmuxCmd()
+  return _VimuxOption("g:VimuxTmuxCommand", "tmux")
+endfunction
+
+if !executable(_VimuxTmuxCmd())
+  echohl ErrorMsg | echomsg "Failed to find executable "._VimuxTmuxCmd() | echohl None
+  finish
+endif
+
 command -nargs=* VimuxRunCommand :call VimuxRunCommand(<args>)
 command VimuxRunLastCommand :call VimuxRunLastCommand()
 command VimuxCloseRunner :call VimuxCloseRunner()
@@ -146,8 +155,7 @@ function! VimuxPromptCommand(...)
 endfunction
 
 function! _VimuxTmux(arguments)
-  let l:command = _VimuxOption("g:VimuxTmuxCommand", "tmux")
-  return system(l:command." ".a:arguments)
+  return system(_VimuxTmuxCmd()." ".a:arguments)
 endfunction
 
 function! _VimuxTmuxSession()
