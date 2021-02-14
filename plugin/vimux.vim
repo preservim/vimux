@@ -1,4 +1,4 @@
-if exists('g:loaded_vimux') || &cp
+if exists('g:loaded_vimux') || &compatible
   finish
 endif
 let g:loaded_vimux = 1
