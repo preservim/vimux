@@ -99,6 +99,7 @@ function! VimuxOpenRunner()
     endif
 
     let g:VimuxRunnerIndex = _VimuxTmuxIndex()
+    call _VimuxSetRunnerName()
     call _VimuxTmux("last-"._VimuxRunnerType())
   endif
 endfunction
@@ -172,6 +173,9 @@ function! VimuxPromptCommand(...)
 endfunction
 
 function! _VimuxTmux(arguments)
+  if _VimuxOption("g:VimuxDebug", 0) != 0
+    echom _VimuxTmuxCmd()." ".a:arguments
+  endif
   return system(_VimuxTmuxCmd()." ".a:arguments)
 endfunction
 
@@ -197,7 +201,8 @@ endfunction
 
 function! _VimuxNearestIndex()
   let t = _VimuxRunnerType()
-  let views = split(_VimuxTmux("list-".t."s -F '#{".t."_active}:#{".t."_id}'"), "\n")
+  let filter = _VimuxGetTargetFilter()
+  let views = split(_VimuxTmux("list-".t."s -F '#{".t."_active}:#{".t."_id}'".filter), "\n")
 
   for view in views
     if match(view, "1:") == -1
@@ -207,6 +212,33 @@ function! _VimuxNearestIndex()
 
   return -1
 endfunction
+
+function! _VimuxGetTargetFilter()
+  let targetName = _VimuxOption("g:VimuxRunnerName", "")
+  if targetName == ""
+    return ""
+  endif
+  let t = _VimuxRunnerType()
+  if t == "window"
+    return " -f '#{==:#{window_name},".targetName."}'"
+  elseif t == "pane"
+    return " -f '#{==:#{pane_title},".targetName."}'"
+  endif
+endfunction
+
+function! _VimuxSetRunnerName()
+  let targetName = _VimuxOption("g:VimuxRunnerName", "")
+  if targetName == ""
+    return 
+  endif
+  let t = _VimuxRunnerType()
+  if t == "window"
+    call _VimuxTmux("rename-window ".targetName)
+  elseif t == "pane"
+    call _VimuxTmux("select-pane -T ".targetName)
+  endif
+endfunction
+
 
 function! _VimuxRunnerType()
   return _VimuxOption("g:VimuxRunnerType", "pane")
