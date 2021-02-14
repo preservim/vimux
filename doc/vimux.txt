@@ -291,7 +291,7 @@ You can configure Vimux like this:
 
 ------------------------------------------------------------------------------
                                                      *VimuxConfiguration_height*
-2.1 g:VimuxHeight~
+4.1 g:VimuxHeight~
 
 The percent of the screen the split pane Vimux will spawn should take up.
 
@@ -301,7 +301,7 @@ Default: "20"
 
 ------------------------------------------------------------------------------
                                                 *VimuxConfiguration_orientation*
-2.2 g:VimuxOrientation~
+4.2 g:VimuxOrientation~
 
 The default orientation of the split tmux pane. This tells tmux to make the
 pane either vertically or horizontally, which is backward from how Vim handles
@@ -317,7 +317,7 @@ Default: "v"
 
 ------------------------------------------------------------------------------
                                                 *VimuxConfiguration_use_nearest*
-2.3 g:VimuxUseNearest
+4.3 g:VimuxUseNearest
 
 Use existing pane or window (not used by vim) if found instead of running
 split-window.
@@ -328,7 +328,7 @@ Default: 1
 
 ------------------------------------------------------------------------------
                                              *VimuxConfiguration_reset_sequence*
-2.4 g:VimuxResetSequence~
+4.4 g:VimuxResetSequence~
 
 The keys sent to the runner pane before running a command. By default it sends
 `q` to make sure the pane is not in scroll-mode and `C-u` to clear the line.
@@ -339,7 +339,7 @@ Default: "q C-u"
 
 ------------------------------------------------------------------------------
                                                              *VimuxPromptString*
-2.5 g:VimuxPromptString~
+4.5 g:VimuxPromptString~
 
 The string presented in the vim command line when Vimux is invoked. Be sure
 to put a space at the end of the string to allow for distinction between
@@ -351,7 +351,7 @@ Default: "Command? "
 
 ------------------------------------------------------------------------------
                                                              *VimuxRunnerType*
-2.6 g:VimuxRunnerType~
+4.6 g:VimuxRunnerType~
 
 The type of view object Vimux should use for the runner. For reference, a
 tmux session is a group of windows, and a window is a layout of panes.
@@ -365,8 +365,20 @@ Options:
 Default: "pane"
 
 ------------------------------------------------------------------------------
+                                                             *VimuxRunnerName*
+4.7 g:VimuxRunnerName
+
+Setting the name for the runner. Works for panes and windows. This makes the
+VimuxRunner reusable between sessions. Caveat is, all your instances (in the
+same session/window) use the same window. 
+
+  let g:VimuxRunnerName = "vimuxout"
+
+Default: ""
+
+------------------------------------------------------------------------------
                                                               *VimuxTmuxCommand*
-2.7 g:VimuxTmuxCommand~
+4.8 g:VimuxTmuxCommand~
 
 The command that Vimux runs when it calls out to tmux. It may be useful to
 redefine this if you're using something like tmate.
@@ -376,8 +388,8 @@ redefine this if you're using something like tmate.
 Default: "tmux"
 
 ------------------------------------------------------------------------------
-                                                              *VimuxOpenExtraArgs*
-2.8 g:VimuxOpenExtraArgs~
+                                                            *VimuxOpenExtraArgs*
+4.9 g:VimuxOpenExtraArgs~
 
 Allows addtional arguments to be passed to the tmux command that opens the
 runner. Make sure that the arguments specified are valid depending on whether
