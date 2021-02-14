@@ -12,10 +12,10 @@ Other auxiliary functions and the ones I talked about above can be found below w
 
 ## Installation
 
-With **[vim-bundle](https://github.com/benmills/vim-bundle)**: `vim-bundle install benmills/vimux`
-With **[Vundle](https://github.com/gmarik/Vundle.vim)**: `Plugin 'benmills/vimux'` in your .vimrc
+With **[vim-bundle](https://github.com/preservim/vim-bundle)**: `vim-bundle install preservim/vimux`
+With **[Vundle](https://github.com/gmarik/Vundle.vim)**: `Plugin 'preservim/vimux'` in your .vimrc
 
-Otherwise download the latest [tarball](https://github.com/benmills/vimux/tarball/master), extract it and move `plugin/vimux.vim` inside `~/.vim/plugin`. If you're using [pathogen](https://github.com/tpope/vim-pathogen), then move the entire folder extracted from the tarball into `~/.vim/bundle`.
+Otherwise download the latest [tarball](https://github.com/preservim/vimux/tarball/master), extract it and move `plugin/vimux.vim` inside `~/.vim/plugin`. If you're using [pathogen](https://github.com/tpope/vim-pathogen), then move the entire folder extracted from the tarball into `~/.vim/bundle`.
 
 _Notes:_ 
 
@@ -38,4 +38,4 @@ _Notes:_
 
 ## Usage
 
-The full documentation is available [online](https://raw.github.com/benmills/vimux/master/doc/vimux.txt) and accessible inside vim `:help vimux`
+The full documentation is available [online](https://raw.github.com/preservim/vimux/master/doc/vimux.txt) and accessible inside vim `:help vimux`
