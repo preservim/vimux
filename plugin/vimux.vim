@@ -3,20 +3,20 @@ if exists('g:loaded_vimux') || &compatible
 endif
 let g:loaded_vimux = 1
 
-function! s:VimuxOption(option, default)
-  if exists(a:option)
-    return eval(a:option)
-  else
-    return a:default
-  endif
-endfunction
+" Set up all global options with defaults right away, in one place
+let g:VimuxDebug         = get(g:, 'VimuxDebug',         v:false)
+let g:VimuxHeight        = get(g:, 'VimuxHeight',        20)
+let g:VimuxOpenExtraArgs = get(g:, 'VimuxOpenExtraArgs', '')
+let g:VimuxOrientation   = get(g:, 'VimuxOrientation',   'v')
+let g:VimuxPromptString  = get(g:, 'VimuxPromptString',  'Command? ')
+let g:VimuxResetSequence = get(g:, 'VimuxResetSequence', 'q C-u')
+let g:VimuxRunnerName    = get(g:, 'VimuxRunnerName',    '')
+let g:VimuxRunnerType    = get(g:, 'VimuxRunnerType',    'pane')
+let g:VimuxTmuxCommand   = get(g:, 'VimuxTmuxCommand',   'tmux')
+let g:VimuxUseNearest    = get(g:, 'VimuxUseNearest',    v:true)
 
-function! s:VimuxTmuxCmd()
-  return s:VimuxOption('g:VimuxTmuxCommand', 'tmux')
-endfunction
-
-if !executable(s:VimuxTmuxCmd())
-  echohl ErrorMsg | echomsg 'Failed to find executable '.s:VimuxTmuxCmd() | echohl None
+if !executable(g:VimuxTmuxCommand)
+  echohl ErrorMsg | echomsg 'Failed to find executable '.g:VimuxTmuxCommand | echohl None
   finish
 endif
 
@@ -60,7 +60,7 @@ function! VimuxRunCommand(command, ...)
     let l:autoreturn = a:1
   endif
 
-  let resetSequence = s:VimuxOption('g:VimuxResetSequence', 'q C-u')
+  let resetSequence = g:VimuxResetSequence
   let g:VimuxLastCommand = a:command
 
   call VimuxSendKeys(resetSequence)
@@ -86,37 +86,37 @@ endfunction
 function! VimuxOpenRunner()
   let nearestIndex = s:VimuxNearestIndex()
 
-  if s:VimuxOption('g:VimuxUseNearest', 1) ==# 1 && nearestIndex != -1
+  if g:VimuxUseNearest ==# 1 && nearestIndex != -1
     let g:VimuxRunnerIndex = nearestIndex
   else
-    let extraArguments = s:VimuxOption('g:VimuxOpenExtraArgs', '')
-    if s:VimuxRunnerType() ==# 'pane'
-      let height = s:VimuxOption('g:VimuxHeight', 20)
-      let orientation = s:VimuxOption('g:VimuxOrientation', 'v')
+    let extraArguments = g:VimuxOpenExtraArgs
+    if g:VimuxRunnerType ==# 'pane'
+      let height = g:VimuxHeight
+      let orientation = g:VimuxOrientation
       call s:VimuxTmux('split-window -p '.height.' -'.orientation.' '.extraArguments)
-    elseif s:VimuxRunnerType() ==# 'window'
+    elseif g:VimuxRunnerType ==# 'window'
       call s:VimuxTmux('new-window '.extraArguments)
     endif
 
     let g:VimuxRunnerIndex = s:VimuxTmuxIndex()
     call s:VimuxSetRunnerName()
-    call s:VimuxTmux('last-'.s:VimuxRunnerType())
+    call s:VimuxTmux('last-'.g:VimuxRunnerType)
   endif
 endfunction
 
 function! VimuxCloseRunner()
   if exists('g:VimuxRunnerIndex')
-    call s:VimuxTmux('kill-'.s:VimuxRunnerType().' -t '.g:VimuxRunnerIndex)
+    call s:VimuxTmux('kill-'.g:VimuxRunnerType.' -t '.g:VimuxRunnerIndex)
     unlet g:VimuxRunnerIndex
   endif
 endfunction
 
 function! VimuxTogglePane()
   if exists('g:VimuxRunnerIndex')
-    if s:VimuxRunnerType() ==# 'window'
-      call s:VimuxTmux('join-pane -d -s '.g:VimuxRunnerIndex.' -p '.s:VimuxOption('g:VimuxHeight', 20))
+    if g:VimuxRunnerType ==# 'window'
+      call s:VimuxTmux('join-pane -d -s '.g:VimuxRunnerIndex.' -p '.g:VimuxHeight)
       let g:VimuxRunnerType = 'pane'
-    elseif s:VimuxRunnerType() ==# 'pane'
+    elseif g:VimuxRunnerType ==# 'pane'
       let g:VimuxRunnerIndex=substitute(s:VimuxTmux('break-pane -d -t '.g:VimuxRunnerIndex." -P -F '#{window_id}'"), '\n', '', '')
       let g:VimuxRunnerType = 'window'
     endif
@@ -125,28 +125,28 @@ endfunction
 
 function! VimuxZoomRunner()
   if exists('g:VimuxRunnerIndex')
-    if s:VimuxRunnerType() ==# 'pane'
+    if g:VimuxRunnerType ==# 'pane'
       call s:VimuxTmux('resize-pane -Z -t '.g:VimuxRunnerIndex)
-    elseif s:VimuxRunnerType() ==# 'window'
+    elseif g:VimuxRunnerType ==# 'window'
       call s:VimuxTmux('select-window -t '.g:VimuxRunnerIndex)
     endif
   endif
 endfunction
 
 function! VimuxInspectRunner()
-  call s:VimuxTmux('select-'.s:VimuxRunnerType().' -t '.g:VimuxRunnerIndex)
+  call s:VimuxTmux('select-'.g:VimuxRunnerType.' -t '.g:VimuxRunnerIndex)
   call s:VimuxTmux('copy-mode')
 endfunction
 
 function! VimuxScrollUpInspect()
   call VimuxInspectRunner()
-  call s:VimuxTmux('last-'.s:VimuxRunnerType())
+  call s:VimuxTmux('last-'.g:VimuxRunnerType)
   call VimuxSendKeys('C-u')
 endfunction
 
 function! VimuxScrollDownInspect()
   call VimuxInspectRunner()
-  call s:VimuxTmux('last-'.s:VimuxRunnerType())
+  call s:VimuxTmux('last-'.g:VimuxRunnerType)
   call VimuxSendKeys('C-d')
 endfunction
 
@@ -168,15 +168,15 @@ endfunction
 
 function! VimuxPromptCommand(...)
   let command = a:0 ==# 1 ? a:1 : ''
-  let l:command = input(s:VimuxOption('g:VimuxPromptString', 'Command? '), command, 'shellcmd')
+  let l:command = input(g:VimuxPromptString, command, 'shellcmd')
   call VimuxRunCommand(l:command)
 endfunction
 
 function! s:VimuxTmux(arguments)
-  if s:VimuxOption('g:VimuxDebug', 0) != 0
-    echom s:VimuxTmuxCmd().' '.a:arguments
+  if g:VimuxDebug
+    echom g:VimuxTmuxCommand.' '.a:arguments
   endif
-  return system(s:VimuxTmuxCmd().' '.a:arguments)
+  return system(g:VimuxTmuxCommand.' '.a:arguments)
 endfunction
 
 function! s:VimuxTmuxSession()
@@ -184,7 +184,7 @@ function! s:VimuxTmuxSession()
 endfunction
 
 function! s:VimuxTmuxIndex()
-  if s:VimuxRunnerType() ==# 'pane'
+  if g:VimuxRunnerType ==# 'pane'
     return s:VimuxTmuxPaneId()
   else
     return s:VimuxTmuxWindowId()
@@ -200,7 +200,7 @@ function! s:VimuxTmuxWindowId()
 endfunction
 
 function! s:VimuxNearestIndex()
-  let t = s:VimuxRunnerType()
+  let t = g:VimuxRunnerType
   let filter = s:VimuxGetTargetFilter()
   let views = split(s:VimuxTmux('list-'.t."s -F '#{".t.'_active}:#{'.t."_id}'".filter), '\n')
 
@@ -214,11 +214,11 @@ function! s:VimuxNearestIndex()
 endfunction
 
 function! s:VimuxGetTargetFilter()
-  let targetName = s:VimuxOption('g:VimuxRunnerName', '')
+  let targetName = g:VimuxRunnerName
   if targetName ==# ''
     return ''
   endif
-  let t = s:VimuxRunnerType()
+  let t = g:VimuxRunnerType
   if t ==# 'window'
     return " -f '#{==:#{window_name},".targetName."}'"
   elseif t ==# 'pane'
@@ -227,11 +227,11 @@ function! s:VimuxGetTargetFilter()
 endfunction
 
 function! s:VimuxSetRunnerName()
-  let targetName = s:VimuxOption('g:VimuxRunnerName', '')
+  let targetName = g:VimuxRunnerName
   if targetName ==# ''
     return 
   endif
-  let t = s:VimuxRunnerType()
+  let t = g:VimuxRunnerType
   if t ==# 'window'
     call s:VimuxTmux('rename-window '.targetName)
   elseif t ==# 'pane'
@@ -239,16 +239,11 @@ function! s:VimuxSetRunnerName()
   endif
 endfunction
 
-
-function! s:VimuxRunnerType()
-  return s:VimuxOption('g:VimuxRunnerType', 'pane')
-endfunction
-
 function! s:VimuxTmuxProperty(property)
   return substitute(s:VimuxTmux("display -p '".a:property."'"), '\n$', '', '')
 endfunction
 
 function! s:VimuxHasRunner(index)
-  let t = s:VimuxRunnerType()
+  let t = g:VimuxRunnerType
   return match(s:VimuxTmux('list-'.t."s -F '#{".t."_id}'"), a:index)
 endfunction
