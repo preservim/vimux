@@ -1,6 +1,6 @@
-# vimux
+# Vimux: easily interact with tmux from vim
 
-Easily interact with tmux from vim.
+[![Vint](https://github.com/preservim/vimux/workflows/Vint/badge.svg)](https://github.com/preservim/vimux/actions?workflow=Vint)
 
 ![vimux](https://www.braintreepayments.com/blog/content/images/blog/vimux3.png)
 
