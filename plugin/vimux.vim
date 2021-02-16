@@ -35,11 +35,11 @@ command -bar VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command -bar VimuxTogglePane :call VimuxTogglePane()
 
 function! VimuxRunCommandInDir(command, useFile)
-    let l:file = ''
-    if a:useFile ==# 1
-        let l:file = shellescape(expand('%:t'), 1)
-    endif
-    call VimuxRunCommand('(cd '.shellescape(expand('%:p:h'), 1).' && '.a:command.' '.l:file.')')
+  let l:file = ''
+  if a:useFile ==# 1
+    let l:file = shellescape(expand('%:t'), 1)
+  endif
+  call VimuxRunCommand('(cd '.shellescape(expand('%:p:h'), 1).' && '.a:command.' '.l:file.')')
 endfunction
 
 function! VimuxRunLastCommand()
@@ -114,11 +114,11 @@ endfunction
 function! VimuxTogglePane()
   if exists('g:VimuxRunnerIndex')
     if s:VimuxRunnerType() ==# 'window'
-        call s:VimuxTmux('join-pane -d -s '.g:VimuxRunnerIndex.' -p '.s:VimuxOption('g:VimuxHeight', 20))
-        let g:VimuxRunnerType = 'pane'
+      call s:VimuxTmux('join-pane -d -s '.g:VimuxRunnerIndex.' -p '.s:VimuxOption('g:VimuxHeight', 20))
+      let g:VimuxRunnerType = 'pane'
     elseif s:VimuxRunnerType() ==# 'pane'
-        let g:VimuxRunnerIndex=substitute(s:VimuxTmux('break-pane -d -t '.g:VimuxRunnerIndex." -P -F '#{window_id}'"), '\n', '', '')
-        let g:VimuxRunnerType = 'window'
+      let g:VimuxRunnerIndex=substitute(s:VimuxTmux('break-pane -d -t '.g:VimuxRunnerIndex." -P -F '#{window_id}'"), '\n', '', '')
+      let g:VimuxRunnerType = 'window'
     endif
   endif
 endfunction
@@ -245,7 +245,7 @@ function! s:VimuxRunnerType()
 endfunction
 
 function! s:VimuxTmuxProperty(property)
-    return substitute(s:VimuxTmux("display -p '".a:property."'"), '\n$', '', '')
+  return substitute(s:VimuxTmux("display -p '".a:property."'"), '\n$', '', '')
 endfunction
 
 function! s:VimuxHasRunner(index)
