@@ -43,7 +43,7 @@ function! VimuxRunCommandInDir(command, useFile)
 endfunction
 
 function! VimuxRunLastCommand()
-  if exists('g:VimuxRunnerIndex')
+  if exists('g:VimuxLastCommand')
     call VimuxRunCommand(g:VimuxLastCommand)
   else
     echo 'No last vimux command.'
