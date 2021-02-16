@@ -54,18 +54,14 @@ function! VimuxRunCommand(command, ...)
   if !exists('g:VimuxRunnerIndex') || s:hasRunner(g:VimuxRunnerIndex) ==# -1
     call VimuxOpenRunner()
   endif
-
   let l:autoreturn = 1
   if exists('a:1')
     let l:autoreturn = a:1
   endif
-
   let resetSequence = VimuxOption('g:VimuxResetSequence', 'q C-u')
   let g:VimuxLastCommand = a:command
-
   call VimuxSendKeys(resetSequence)
   call VimuxSendText(a:command)
-
   if l:autoreturn ==# 1
     call VimuxSendKeys('Enter')
   endif
@@ -85,7 +81,6 @@ endfunction
 
 function! VimuxOpenRunner()
   let nearestIndex = s:nearestIndex()
-
   if VimuxOption('g:VimuxUseNearest', 1) ==# 1 && nearestIndex != -1
     let g:VimuxRunnerIndex = nearestIndex
   else
@@ -97,7 +92,6 @@ function! VimuxOpenRunner()
     elseif s:runnerType() ==# 'window'
       call s:tmux('new-window '.extraArguments)
     endif
-
     let g:VimuxRunnerIndex = s:tmuxIndex()
     call s:setRunnerName()
     call s:tmux('last-'.s:runnerType())
@@ -203,13 +197,11 @@ function! s:nearestIndex()
   let t = s:runnerType()
   let filter = s:getTargetFilter()
   let views = split(s:tmux('list-'.t."s -F '#{".t.'_active}:#{'.t."_id}'".filter), '\n')
-
   for view in views
     if match(view, '1:') ==# -1
       return split(view, ':')[1]
     endif
   endfor
-
   return -1
 endfunction
 
@@ -229,7 +221,7 @@ endfunction
 function! s:setRunnerName()
   let targetName = VimuxOption('g:VimuxRunnerName', '')
   if targetName ==# ''
-    return 
+    return
   endif
   let t = s:runnerType()
   if t ==# 'window'
@@ -238,7 +230,6 @@ function! s:setRunnerName()
     call s:tmux('select-pane -T '.targetName)
   endif
 endfunction
-
 
 function! s:runnerType()
   return VimuxOption('g:VimuxRunnerType', 'pane')
