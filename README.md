@@ -8,8 +8,6 @@ Vimux was originally inspired by [tslime.vim](https://github.com/jgdavey/tslime.
 
 By default, when you call `VimuxRunCommand` vimux will create a 20% tall horizontal pane under your current tmux pane and execute a command in it without losing the focus on vim. Once that pane exists, whenever you call `VimuxRunCommand` again the command will be executed in that pane. A frequent use case  is wanting to rerun commands over and over. An example of this is running the current file through rspec. Rather than typing that over and over `VimuxRunLastCommand` will execute the last command called with `VimuxRunCommand`.
 
-Other auxiliary functions and the ones talked about above can be found below with full descriptions and example key bindings for your vimrc.
-
 ## Installation
 
 With **[vim-bundle](https://github.com/preservim/vim-bundle)**: `vim-bundle install preservim/vimux`
@@ -19,7 +17,11 @@ Otherwise download the latest [tarball](https://github.com/preservim/vimux/tarba
 
 _Notes:_ 
 
-* Vimux assumes a tmux version >= 1.5. Some older versions might work but it is recommended to use at least version 1.5.
+* Vimux assumes a reasonably new version of tmux. Some older versions might work but it is recommended to use the latest stable release.
+
+## Usage
+
+The full documentation is available [online](https://raw.github.com/preservim/vimux/master/doc/vimux.txt) and accessible inside vim via `:help vimux`
 
 ## Platform-specific Plugins
 
@@ -35,7 +37,3 @@ _Notes:_
 * [vimux-cargo](https://github.com/jtdowney/vimux-cargo) run rust tests and projects using cargo and vimux
 * [vimux-bazel-test](https://github.com/pgr0ss/vimux-bazel-test) Run bazel tests in vimux
 * [vimux-jest-test](https://github.com/tyewang/vimux-jest-test) Run jest tests in vimux
-
-## Usage
-
-The full documentation is available [online](https://raw.github.com/preservim/vimux/master/doc/vimux.txt) and accessible inside vim `:help vimux`
