@@ -287,7 +287,9 @@ extra return. Thanks to @trptcolin for discovering this issue.
 ==============================================================================
 CONFIGURATION (4)                                           *VimuxConfiguration*
 
-You can configure Vimux like this:
+You can configure Vimux as follows. Note that all occurances of global
+variables `g:Vimux...` may also be set using buffer variables `b:Vimux...` to
+change the behavior of Vimux in just the current buffer.
 
 ------------------------------------------------------------------------------
                                                      *VimuxConfiguration_height*
