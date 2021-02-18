@@ -24,7 +24,7 @@ if !executable(VimuxOption('VimuxTmuxCommand'))
   finish
 endif
 
-command -bar -nargs=* VimuxRunCommand :call VimuxRunCommand(<args>)
+command -nargs=* VimuxRunCommand :call VimuxRunCommand(<args>)
 command -bar VimuxRunLastCommand :call VimuxRunLastCommand()
 command -bar VimuxOpenRunner :call VimuxOpenRunner()
 command -bar VimuxCloseRunner :call VimuxCloseRunner()
@@ -33,7 +33,7 @@ command -bar VimuxInspectRunner :call VimuxInspectRunner()
 command -bar VimuxScrollUpInspect :call VimuxScrollUpInspect()
 command -bar VimuxScrollDownInspect :call VimuxScrollDownInspect()
 command -bar VimuxInterruptRunner :call VimuxInterruptRunner()
-command -bar -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<args>)
+command -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<args>)
 command -bar VimuxClearTerminalScreen :call VimuxClearTerminalScreen()
 command -bar VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command -bar VimuxTogglePane :call VimuxTogglePane()
