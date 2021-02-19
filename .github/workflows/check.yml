@@ -14,7 +14,7 @@ jobs:
         run: |
           sudo add-apt-repository universe
           sudo apt-get update
-      - name: Install tmux and ${{ matrix.tagsProvider }}
+      - name: Install tmux and ${{ matrix.vimFlavor }}
         run: |
           sudo apt-get install tmux ${{ matrix.vimFlavor == 'nvim' && 'neovim' || 'vim' }}
       - name: Review versions
