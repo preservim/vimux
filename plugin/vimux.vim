@@ -168,7 +168,7 @@ endfunction
 function! VimuxPromptCommand(...)
   let command = a:0 ==# 1 ? a:1 : ''
   let l:command = input(VimuxOption('VimuxPromptString'), command, 'shellcmd')
-  if VimuxOption("VimuxExpandCommand")
+  if VimuxOption('VimuxExpandCommand')
     let l:command = join(map(split(l:command, ' '), 'expand(v:val)'), ' ')
   endif
   call VimuxRunCommand(l:command)
