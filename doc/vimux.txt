@@ -13,9 +13,10 @@ CONTENTS                                                        *vimux-contents*
       2.3 .............................. |VimuxInspectRunner|
       2.4 .............................. |VimuxCloseRunner|
       2.5 .............................. |VimuxInterruptRunner|
-      2.6 .............................. |VimuxClearRunnerHistory|
-      2.7 .............................. |VimuxZoomRunner|
-      2.8 .............................. |VimuxRunCommandInDir|
+      2.6 .............................. |VimuxClearTerminalScreen|
+      2.7 .............................. |VimuxClearRunnerHistory|
+      2.8 .............................. |VimuxZoomRunner|
+      2.9 .............................. |VimuxRunCommandInDir|
     3. Misc ............................ |VimuxMisc|
       3.1 Example Keybinding............ |VimuxExampleKeybinding|
       3.2 Tslime Replacement............ |VimuxTslimeReplacement|
@@ -27,25 +28,24 @@ ABOUT (1)                                                           *VimuxAbout*
 
 Vimux -- Easily interact with tmux from vim.
 
-What inspired me to write vimux was tslime.vim [1], a plugin that lets you
-send input to tmux. While tslime.vim works well, I felt it wasn't optimized
-for my primary use case which was having a smaller tmux pane that I would use
-to run tests or play with a REPL.
+Vimux was originally inspired by tslime.vim [1], a plugin that lets you send
+input to tmux. While tslime.vim works well, it wasn't optimized for the use
+case of having a smaller tmux pane used to run tests or play with a REPL. The
+goal of Vimux is to make interacting with tmux from vim effortless.
 
-My goal with vimux is to make interacting with tmux from vim effortless. By
-default when you call `VimuxRunCommand` vimux will create a 20% tall
+By default, when you call `VimuxRunCommand` vimux will create a 20% tall
 horizontal pane under your current tmux pane and execute a command in it
-without losing focus of vim. Once that pane exists whenever you call
-`VimuxRunCommand` again the command will be executed in that pane. As I was
-using vimux myself I wanted to rerun commands over and over. An example of
-this was running the current file through rspec. Rather than typing that over
-and over I wrote `VimuxRunLastCommand` that will execute the last command
-you called with `VimuxRunCommand`.
+without losing the focus on vim. Once that pane exists, whenever you call
+`VimuxRunCommand` again the command will be executed in that pane. A frequent
+use case  is wanting to rerun commands over and over. An example of this is
+running the current file through rspec. Rather than typing that over and over
+`VimuxRunLastCommand` will execute the last command called with
+`VimuxRunCommand`.
 
-Other auxiliary functions and the ones I talked about above can be found
-bellow with a full description and example key binds for your vimrc.
+Other auxiliary functions and the ones talked about above can be found bellow
+with full descriptions and example key bindings for your vimrc.
 
-[1] https://github.com/kikijump/tslime.vim
+[1] https://github.com/jgdavey/tslime.vim/network
 
 
 ==============================================================================
@@ -70,6 +70,7 @@ Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxInspectRunner|
   - |VimuxInterruptRunner|
   - |VimuxPromptCommand|
+  - |VimuxClearTerminalScreen|
   - |VimuxClearRunnerHistory|
   - |VimuxZoomRunner|
   - |VimuxRunCommandInDir|
@@ -170,6 +171,15 @@ runner pane.
 <
 
 
+------------------------------------------------------------------------------
+                                                          *VimuxClearTerminalScreen*
+VimuxClearTerminalScreen~
+
+Clear the terminal screen of the runner pane.
+>
+ " Clear the terminal screen of the runner pane.
+ map <Leader>v<C-l> :VimuxClearTerminalScreen<CR>
+<
 
 ------------------------------------------------------------------------------
                                                           *VimuxClearRunnerHistory*
@@ -240,6 +250,9 @@ Full Keybind Example~
 
  " Zoom the runner pane (use <bind-key> z to restore runner pane)
  map <Leader>vz :call VimuxZoomRunner()<CR>
+
+ " Clear the terminal screen of the runner pane.
+ map <Leader>v<C-l> :VimuxClearTerminalScreen<CR>
 >
 
 ------------------------------------------------------------------------------
@@ -251,8 +264,7 @@ First, add some helpful mappings.
 
 >
  function! VimuxSlime()
-  call VimuxSendText(@v)
-  call VimuxSendKeys("Enter")
+  call VimuxRunCommand(@v, 0)
  endfunction
 
  " If text is selected, save it in the v buffer and send that buffer it to tmux
@@ -274,11 +286,13 @@ extra return. Thanks to @trptcolin for discovering this issue.
 ==============================================================================
 CONFIGURATION (4)                                           *VimuxConfiguration*
 
-You can configure Vimux like this:
+You can configure Vimux as follows. Note that all occurances of global
+variables `g:Vimux...` may also be set using buffer variables `b:Vimux...` to
+change the behavior of Vimux in just the current buffer.
 
 ------------------------------------------------------------------------------
                                                      *VimuxConfiguration_height*
-2.1 g:VimuxHeight~
+4.1 g:VimuxHeight~
 
 The percent of the screen the split pane Vimux will spawn should take up.
 
@@ -288,7 +302,7 @@ Default: "20"
 
 ------------------------------------------------------------------------------
                                                 *VimuxConfiguration_orientation*
-2.2 g:VimuxOrientation~
+4.2 g:VimuxOrientation~
 
 The default orientation of the split tmux pane. This tells tmux to make the
 pane either vertically or horizontally, which is backward from how Vim handles
@@ -304,7 +318,7 @@ Default: "v"
 
 ------------------------------------------------------------------------------
                                                 *VimuxConfiguration_use_nearest*
-2.3 g:VimuxUseNearest
+4.3 g:VimuxUseNearest
 
 Use existing pane or window (not used by vim) if found instead of running
 split-window.
@@ -315,7 +329,7 @@ Default: 1
 
 ------------------------------------------------------------------------------
                                              *VimuxConfiguration_reset_sequence*
-2.4 g:VimuxResetSequence~
+4.4 g:VimuxResetSequence~
 
 The keys sent to the runner pane before running a command. By default it sends
 `q` to make sure the pane is not in scroll-mode and `C-u` to clear the line.
@@ -326,7 +340,7 @@ Default: "q C-u"
 
 ------------------------------------------------------------------------------
                                                              *VimuxPromptString*
-2.5 g:VimuxPromptString~
+4.5 g:VimuxPromptString~
 
 The string presented in the vim command line when Vimux is invoked. Be sure
 to put a space at the end of the string to allow for distinction between
@@ -338,7 +352,7 @@ Default: "Command? "
 
 ------------------------------------------------------------------------------
                                                              *VimuxRunnerType*
-2.6 g:VimuxRunnerType~
+4.6 g:VimuxRunnerType~
 
 The type of view object Vimux should use for the runner. For reference, a
 tmux session is a group of windows, and a window is a layout of panes.
@@ -352,8 +366,20 @@ Options:
 Default: "pane"
 
 ------------------------------------------------------------------------------
+                                                             *VimuxRunnerName*
+4.7 g:VimuxRunnerName
+
+Setting the name for the runner. Works for panes and windows. This makes the
+VimuxRunner reusable between sessions. Caveat is, all your instances (in the
+same session/window) use the same window. 
+
+  let g:VimuxRunnerName = "vimuxout"
+
+Default: ""
+
+------------------------------------------------------------------------------
                                                               *VimuxTmuxCommand*
-2.7 g:VimuxTmuxCommand~
+4.8 g:VimuxTmuxCommand~
 
 The command that Vimux runs when it calls out to tmux. It may be useful to
 redefine this if you're using something like tmate.
@@ -363,8 +389,20 @@ redefine this if you're using something like tmate.
 Default: "tmux"
 
 ------------------------------------------------------------------------------
+                                                            *VimuxOpenExtraArgs*
+4.9 g:VimuxOpenExtraArgs~
+
+Allows addtional arguments to be passed to the tmux command that opens the
+runner. Make sure that the arguments specified are valid depending on whether
+you're using panes or windows, and your version of tmux.
+
+  let g:VimuxOpenExtraArgs = "-c #{pane_current_path}"
+
+Default: "tmux"
+
+------------------------------------------------------------------------------
                                                             VimuxExpandCommand
-2.8 g:VimuxExpandCommand~
+4.10 g:VimuxExpandCommand~
 
 Should the command given at the prompt via VimuxPromptCommand be expanded
 using expand(). 1 to expand the string.
