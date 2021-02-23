@@ -14,6 +14,7 @@ let g:VimuxRunnerName    = get(g:, 'VimuxRunnerName',    '')
 let g:VimuxRunnerType    = get(g:, 'VimuxRunnerType',    'pane')
 let g:VimuxTmuxCommand   = get(g:, 'VimuxTmuxCommand',   'tmux')
 let g:VimuxUseNearest    = get(g:, 'VimuxUseNearest',    v:true)
+let g:VimuxExpandCommand = get(g:, 'VimuxExpandCommand', v:false)
 
 function! VimuxOption(name) abort
   return get(b:, a:name, get(g:, a:name))
@@ -167,7 +168,7 @@ endfunction
 function! VimuxPromptCommand(...)
   let command = a:0 ==# 1 ? a:1 : ''
   let l:command = input(VimuxOption('VimuxPromptString'), command, 'shellcmd')
-  if _VimuxOption("g:VimuxExpandCommand", 0) == 1
+  if VimuxOption("VimuxExpandCommand")
     let l:command = join(map(split(l:command, ' '), 'expand(v:val)'), ' ')
   endif
   call VimuxRunCommand(l:command)
