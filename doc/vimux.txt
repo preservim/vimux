@@ -416,5 +416,16 @@ possible.
 
 Default: 0
 
+------------------------------------------------------------------------------
+                                                            *VimuxCloseOnExit*
+4.11 g:VimuxCloseOnExit~
+
+Set this option to 1 or v:true to tell vimux to close the runner when you quit
+vim.
+
+  let g:VimuxCloseOnExit = 1
+
+Default: 0
+
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
