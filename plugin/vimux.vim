@@ -15,6 +15,7 @@ let g:VimuxRunnerType    = get(g:, 'VimuxRunnerType',    'pane')
 let g:VimuxTmuxCommand   = get(g:, 'VimuxTmuxCommand',   'tmux')
 let g:VimuxUseNearest    = get(g:, 'VimuxUseNearest',    v:true)
 let g:VimuxExpandCommand = get(g:, 'VimuxExpandCommand', v:false)
+let g:VimuxCloseOnExit   = get(g:, 'VimuxCloseOnExit',   v:false)
 
 function! VimuxOption(name) abort
   return get(b:, a:name, get(g:, a:name))
@@ -38,6 +39,13 @@ command -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<args>)
 command -bar VimuxClearTerminalScreen :call VimuxClearTerminalScreen()
 command -bar VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command -bar VimuxTogglePane :call VimuxTogglePane()
+
+if VimuxOption('VimuxCloseOnExit')
+    augroup VimuxAutocloseCommands
+        au!
+        autocmd VimLeave * call VimuxCloseRunner()
+    augroup END
+endif
 
 function! VimuxRunCommandInDir(command, useFile)
   let l:file = ''
