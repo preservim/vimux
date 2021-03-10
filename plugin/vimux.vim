@@ -16,6 +16,7 @@ let g:VimuxTmuxCommand   = get(g:, 'VimuxTmuxCommand',   'tmux')
 let g:VimuxUseNearest    = get(g:, 'VimuxUseNearest',    v:true)
 let g:VimuxExpandCommand = get(g:, 'VimuxExpandCommand', v:false)
 let g:VimuxCloseOnExit   = get(g:, 'VimuxCloseOnExit',   v:false)
+let g:VimuxCommandShell  = get(g:, 'VimuxCommandShell',   v:true)
 
 function! VimuxOption(name) abort
   return get(b:, a:name, get(g:, a:name))
@@ -175,7 +176,12 @@ endfunction
 
 function! VimuxPromptCommand(...)
   let command = a:0 ==# 1 ? a:1 : ''
-  let l:command = input(VimuxOption('VimuxPromptString'), command, 'shellcmd')
+  if VimuxOption('VimuxCommandShell')
+    let l:cancelreturn = 'shellcmd'
+  else
+    let l:cancelreturn = v:false
+  endif
+  let l:command = input(VimuxOption('VimuxPromptString'), command, l:cancelreturn)
   if VimuxOption('VimuxExpandCommand')
     let l:command = join(map(split(l:command, ' '), 'expand(v:val)'), ' ')
   endif
