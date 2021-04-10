@@ -5,23 +5,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ubuntuFlavor: ["18.04", "20.04"]
-        vimFlavor: ["vim", "nvim"]
-    runs-on: ubuntu-${{ matrix.ubuntuFlavor }}
+        osFlavor: [ubuntu-20.04, ubuntu-18.04]
+        vimFlavor: [neovim, vim]
+        vimVersion: [stable, unstable]
+        exclude:
+          - vimFlavor: vim
+            vimVersion: unstable
+    runs-on: ${{ matrix.osFlavor }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Enable Universe package repository
         run: |
-          sudo add-apt-repository universe
+          sudo add-apt-repository ${{ matrix.vimVersion == 'stable' && 'universe' || 'ppa:neovim-ppa/unstable' }}
           sudo apt-get update
       - name: Install tmux and ${{ matrix.vimFlavor }}
         run: |
-          sudo apt-get install tmux ${{ matrix.vimFlavor == 'nvim' && 'neovim' || 'vim' }}
+          sudo apt-get install tmux ${{ matrix.vimFlavor }}
       - name: Review versions
         run: |
           tmux -V
-          ${{ matrix.vimFlavor }} --version
+          ${{ matrix.vimFlavor == 'neovim' && 'nvim' || 'vim' }} --version
       # This tests looks for two thigs:
       # * That VIM doesn't hang. If it succedes it will quit quickly. If 5
       #   seconds later the tmux session is still running either the runner pane
@@ -33,7 +37,7 @@ jobs:
       - name: "Try Vimux"
         run: |
           ec="$(mktemp)"
-          tmux new -s ci -d "${{ matrix.vimFlavor == 'nvim' && 'nvim -u /dev/null --headless' || 'vim' }} -i NONE \"+so plugin/vimux.vim\" \"+VimuxRunCommand('date')\" \"+VimuxCloseRunner | qa\"; echo \$? > '$ec'"
+          tmux new -s ci -d "${{ matrix.vimFlavor == 'neovim' && 'nvim -u /dev/null --headless' || 'vim' }} -i NONE \"+so plugin/vimux.vim\" \"+VimuxRunCommand('date')\" \"+VimuxCloseRunner | qa\"; echo \$? > '$ec'"
           sleep 5
           tmux kill-session -t ci && exit 1
           exit "$(cat $ec)"
