@@ -5,8 +5,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        ubuntuFlavor: ["18.04", "20.04"]
         vimFlavor: ["vim", "nvim"]
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-${{ matrix.ubuntuFlavor }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
