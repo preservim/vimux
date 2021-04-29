@@ -122,11 +122,13 @@ endfunction
 function! VimuxTogglePane()
   if exists('g:VimuxRunnerIndex')
     if VimuxOption('VimuxRunnerType') ==# 'window'
-      call VimuxTmux('join-pane -d -s '.g:VimuxRunnerIndex.' -p '.VimuxOption('VimuxHeight'))
-      let VimuxOption('VimuxRunnerType') = 'pane'
+      call VimuxTmux('join-pane -s '.g:VimuxRunnerIndex.' -p '.VimuxOption('VimuxHeight'))
+      let g:VimuxRunnerType = 'pane'
+      let g:VimuxRunnerIndex = s:tmuxIndex()
+      call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
     elseif VimuxOption('VimuxRunnerType') ==# 'pane'
-      let g:VimuxRunnerIndex=substitute(VimuxTmux('break-pane -d -t '.g:VimuxRunnerIndex." -P -F '#{window_id}'"), '\n', '', '')
-      let VimuxOption('VimuxRunnerType') = 'window'
+      let g:VimuxRunnerIndex=substitute(VimuxTmux('break-pane -d -s '.g:VimuxRunnerIndex." -P -F '#{window_id}'"), '\n', '', '')
+      let g:VimuxRunnerType = 'window'
     endif
   endif
 endfunction
