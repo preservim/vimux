@@ -133,7 +133,6 @@ function! VimuxTogglePane()
   endif
 endfunction
 
-
 function! VimuxZoomRunner()
   if exists('g:VimuxRunnerIndex')
     if VimuxOption('VimuxRunnerType') ==# 'pane'
