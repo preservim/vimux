@@ -190,10 +190,14 @@ function! VimuxPromptCommand(...)
 endfunction
 
 function! VimuxTmux(arguments)
-  if VimuxOption('VimuxDebug')
-    echom VimuxOption('VimuxTmuxCommand').' '.a:arguments
+  let command = VimuxOption('VimuxTmuxCommand')
+  if exists("g:VimuxSocketPath")
+    let command .= ' -S ' . g:VimuxSocketPath
   endif
-  return system(VimuxOption('VimuxTmuxCommand').' '.a:arguments)
+  if VimuxOption('VimuxDebug')
+    echom command.' '.a:arguments
+  endif
+  return system(command.' '.a:arguments)
 endfunction
 
 function! s:tmuxSession()
