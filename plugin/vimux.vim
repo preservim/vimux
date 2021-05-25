@@ -27,7 +27,7 @@ if !executable(VimuxOption('VimuxTmuxCommand'))
   finish
 endif
 
-command -nargs=* VimuxRunCommand :call VimuxRunCommand(<args>)
+command -nargs=* VimuxRunCommand :call VimuxRunCommand(<q-args>)
 command -bar VimuxRunLastCommand :call VimuxRunLastCommand()
 command -bar VimuxOpenRunner :call VimuxOpenRunner()
 command -bar VimuxCloseRunner :call VimuxCloseRunner()
@@ -36,7 +36,7 @@ command -bar VimuxInspectRunner :call VimuxInspectRunner()
 command -bar VimuxScrollUpInspect :call VimuxScrollUpInspect()
 command -bar VimuxScrollDownInspect :call VimuxScrollDownInspect()
 command -bar VimuxInterruptRunner :call VimuxInterruptRunner()
-command -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<args>)
+command -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<q-args>)
 command -bar VimuxClearTerminalScreen :call VimuxClearTerminalScreen()
 command -bar VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command -bar VimuxTogglePane :call VimuxTogglePane()
@@ -64,7 +64,32 @@ function! VimuxRunLastCommand()
   endif
 endfunction
 
+function! s:deprecationWarning(msg)
+  echohl Error
+  echomsg 'Deprecation warning: '.a:msg
+  echohl None
+endfunction
+
+""
+" If the command is wrapped in quotes, remove them.
+" Used to make sure that the transition to using <q-args> instead of just
+" <args> is painless.
+function! s:trimQuotes(command)
+  let length = strcharlen(a:command)
+  if length > 0
+    let l:start = strgetchar(a:command, 0)
+    let l:end = strgetchar(a:command, length-1)
+    if l:start == l:end && index(['"', "'"], nr2char(l:start)) >= 0
+      call s:deprecationWarning('No longer necessary to wrap command string in quotes.')
+      echohl None
+      return eval(a:command)
+    endif
+  endif
+  return a:command
+endfunction
+
 function! VimuxRunCommand(command, ...)
+  let trimmed_command = s:trimQuotes(a:command)
   if !exists('g:VimuxRunnerIndex') || s:hasRunner(g:VimuxRunnerIndex) ==# -1
     call VimuxOpenRunner()
   endif
@@ -73,9 +98,9 @@ function! VimuxRunCommand(command, ...)
     let l:autoreturn = a:1
   endif
   let resetSequence = VimuxOption('VimuxResetSequence')
-  let g:VimuxLastCommand = a:command
+  let g:VimuxLastCommand = trimmed_command
   call VimuxSendKeys(resetSequence)
-  call VimuxSendText(a:command)
+  call VimuxSendText(trimmed_command)
   if l:autoreturn ==# 1
     call VimuxSendKeys('Enter')
   endif
@@ -177,7 +202,7 @@ function! VimuxClearRunnerHistory()
 endfunction
 
 function! VimuxPromptCommand(...)
-  let command = a:0 ==# 1 ? a:1 : ''
+  let command = s:trimQuotes(a:0 ==# 1 ? a:1 : '')
   if VimuxOption('VimuxCommandShell')
     let l:command = input(VimuxOption('VimuxPromptString'), command, 'shellcmd')
   else
