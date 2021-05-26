@@ -81,7 +81,6 @@ function! s:trimQuotes(command)
     let l:end = strgetchar(a:command, length-1)
     if l:start == l:end && index(['"', "'"], nr2char(l:start)) >= 0
       call s:deprecationWarning('No longer necessary to wrap command string in quotes.')
-      echohl None
       return eval(a:command)
     endif
   endif
