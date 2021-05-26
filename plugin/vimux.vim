@@ -70,17 +70,26 @@ function! s:deprecationWarning(msg)
   echohl None
 endfunction
 
+let s:quote_regex = "['\"]"
+let s:cmd_regex = '\('.s:quote_regex.'\)\(.*\)\1'
+let s:quote_pattern = '^'.s:cmd_regex.'$'
+let s:paren_pattern = '^('.s:cmd_regex.')$'
+
 ""
-" If the command is wrapped in quotes, remove them.
-" Used to make sure that the transition to using <q-args> instead of just
-" <args> is painless.
+" If the command is wrapped in quotes, remove them. Used to make sure that the
+" transition to using <q-args> instead of just <args> is painless.
 function! s:trimQuotes(command)
   let length = strcharlen(a:command)
   if length > 0
-    let l:start = strgetchar(a:command, 0)
-    let l:end = strgetchar(a:command, length-1)
-    if l:start == l:end && index(['"', "'"], nr2char(l:start)) >= 0
+    let l:start = nr2char(strgetchar(a:command, 0))
+    let l:end = nr2char(strgetchar(a:command, length-1))
+    if l:start == l:end && index(['"', "'"], l:start) >= 0
       call s:deprecationWarning('No longer necessary to wrap command string in quotes.')
+      return substitute(a:command, s:quote_pattern, '\2', '')
+    elseif l:start == '(' && l:end == ')'
+      let msg  = 'Invoking a command like a function, use `:call Command("args")` instead'
+      call s:deprecationWarning(msg)
+      return substitute(a:command, s:paren_pattern, '\2', '')
       return eval(a:command)
     endif
   endif
