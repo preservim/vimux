@@ -125,7 +125,11 @@ command which can be edited in the prompt.
 >
  " Prompt for a command to run map
  map <Leader>vp :VimuxPromptCommand<CR>
- map <Leader>vm :VimuxPromptCommand("make ")<CR>
+
+ " Prefill the command filed with the string "make ".
+ " These maps are equivalent.
+ map <Leader>vm :VimuxPromptCommand make <CR>
+ map <Leader>vm :call VimuxPromptCommand("make ")<CR>
 <
 
 ------------------------------------------------------------------------------
