@@ -100,9 +100,7 @@ function! VimuxOpenRunner() abort
   else
     let extraArguments = VimuxOption('VimuxOpenExtraArgs')
     if VimuxOption('VimuxRunnerType') ==# 'pane'
-      let height = VimuxOption('VimuxHeight')
-      let orientation = VimuxOption('VimuxOrientation')
-      call VimuxTmux('split-window -p '.height.' -'.orientation.' '.extraArguments)
+      call VimuxTmux('split-window '.s:vimuxPaneOptions().' '.extraArguments)
     elseif VimuxOption('VimuxRunnerType') ==# 'window'
       call VimuxTmux('new-window '.extraArguments)
     endif
@@ -122,7 +120,7 @@ endfunction
 function! VimuxTogglePane() abort
   if exists('g:VimuxRunnerIndex')
     if VimuxOption('VimuxRunnerType') ==# 'window'
-      call VimuxTmux('join-pane -s '.g:VimuxRunnerIndex.' -p '.VimuxOption('VimuxHeight'))
+      call VimuxTmux('join-pane -s '.g:VimuxRunnerIndex.' '.s:vimuxPaneOptions())
       let g:VimuxRunnerType = 'pane'
       let g:VimuxRunnerIndex = s:tmuxIndex()
       call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
@@ -218,6 +216,12 @@ endfunction
 
 function! s:tmuxWindowId() abort
   return s:tmuxProperty('#{window_id}')
+endfunction
+
+function! s:vimuxPaneOptions() abort
+    let height = VimuxOption('VimuxHeight')
+    let orientation = VimuxOption('VimuxOrientation')
+    return '-p '.height.' -'.orientation
 endfunction
 
 function! s:nearestIndex() abort
