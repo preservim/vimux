@@ -41,12 +41,10 @@ command -bar VimuxClearTerminalScreen :call VimuxClearTerminalScreen()
 command -bar VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command -bar VimuxTogglePane :call VimuxTogglePane()
 
-if VimuxOption('VimuxCloseOnExit')
-    augroup VimuxAutocloseCommands
-        au!
-        autocmd VimLeave * call VimuxCloseRunner()
-    augroup END
-endif
+augroup VimuxAutocmds
+  au!
+  autocmd VimLeave * call s:autoclose()
+augroup END
 
 function! VimuxRunCommandInDir(command, useFile) abort
   let l:file = ''
@@ -269,4 +267,10 @@ endfunction
 function! s:hasRunner(index) abort
   let t = VimuxOption('VimuxRunnerType')
   return match(VimuxTmux('list-'.t."s -F '#{".t."_id}'"), a:index)
+endfunction
+
+function! s:autoclose() abort
+  if VimuxOption('VimuxCloseOnExit')
+    call VimuxCloseRunner()
+  endif
 endfunction
