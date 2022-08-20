@@ -123,7 +123,12 @@ function! VimuxTogglePane() abort
       let g:VimuxRunnerIndex = s:tmuxIndex()
       call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
     elseif VimuxOption('VimuxRunnerType') ==# 'pane'
-      let g:VimuxRunnerIndex=substitute(VimuxTmux('break-pane -d -s '.g:VimuxRunnerIndex." -P -F '#{window_id}'"), '\n', '', '')
+      let g:VimuxRunnerIndex=substitute(
+                  \ VimuxTmux('break-pane -d -s '.g:VimuxRunnerIndex." -P -F '#{window_id}'"),
+                  \ '\n',
+                  \ '',
+                  \ ''
+                  \)
       let g:VimuxRunnerType = 'window'
     endif
   endif
@@ -228,7 +233,12 @@ endfunction
 function! s:existingRunnerId() abort
   let runnerType = VimuxOption('VimuxRunnerType')
   let filter = s:getTargetFilter()
-  let views = split(VimuxTmux('list-'.runnerType."s -F '#{".runnerType.'_active}:#{'.runnerType."_id}'".filter), '\n')
+  let views = split(
+              \ VimuxTmux(
+              \     'list-'.runnerType.'s'
+              \     ." -F '#{".runnerType.'_active}:#{'.runnerType."_id}'"
+              \     .filter),
+              \ '\n')
   " '1:' is the current active pane (the one with vim).
   " Find the first non-active pane.
   for view in views
