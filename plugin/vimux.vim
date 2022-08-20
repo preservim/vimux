@@ -92,9 +92,9 @@ function! VimuxSendKeys(keys) abort
 endfunction
 
 function! VimuxOpenRunner() abort
-  let nearestIndex = s:nearestIndex()
-  if VimuxOption('VimuxUseNearest') ==# 1 && nearestIndex != -1
-    let g:VimuxRunnerIndex = nearestIndex
+  let existingId = s:existingRunnerId()
+  if VimuxOption('VimuxUseNearest') ==# 1 && existingId !=# ''
+    let g:VimuxRunnerIndex = existingId
   else
     let extraArguments = VimuxOption('VimuxOpenExtraArgs')
     if VimuxOption('VimuxRunnerType') ==# 'pane'
@@ -222,16 +222,21 @@ function! s:vimuxPaneOptions() abort
     return '-p '.height.' -'.orientation
 endfunction
 
-function! s:nearestIndex() abort
+""
+" @return a string of the form '%4', the ID of the pane or window to use,
+"   or '' if no nearest pane or window is found.
+function! s:existingRunnerId() abort
   let runnerType = VimuxOption('VimuxRunnerType')
   let filter = s:getTargetFilter()
   let views = split(VimuxTmux('list-'.runnerType."s -F '#{".runnerType.'_active}:#{'.runnerType."_id}'".filter), '\n')
+  " '1:' is the current active pane (the one with vim).
+  " Find the first non-active pane.
   for view in views
     if match(view, '1:') ==# -1
       return split(view, ':')[1]
     endif
   endfor
-  return -1
+  return ''
 endfunction
 
 function! s:getTargetFilter() abort
