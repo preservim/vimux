@@ -223,9 +223,9 @@ function! s:vimuxPaneOptions() abort
 endfunction
 
 function! s:nearestIndex() abort
-  let t = VimuxOption('VimuxRunnerType')
+  let runnerType = VimuxOption('VimuxRunnerType')
   let filter = s:getTargetFilter()
-  let views = split(VimuxTmux('list-'.t."s -F '#{".t.'_active}:#{'.t."_id}'".filter), '\n')
+  let views = split(VimuxTmux('list-'.runnerType."s -F '#{".runnerType.'_active}:#{'.runnerType."_id}'".filter), '\n')
   for view in views
     if match(view, '1:') ==# -1
       return split(view, ':')[1]
@@ -239,10 +239,10 @@ function! s:getTargetFilter() abort
   if targetName ==# ''
     return ''
   endif
-  let t = VimuxOption('VimuxRunnerType')
-  if t ==# 'window'
+  let runnerType = VimuxOption('VimuxRunnerType')
+  if runnerType ==# 'window'
     return " -f '#{==:#{window_name},".targetName."}'"
-  elseif t ==# 'pane'
+  elseif runnerType ==# 'pane'
     return " -f '#{==:#{pane_title},".targetName."}'"
   endif
 endfunction
@@ -252,10 +252,10 @@ function! s:setRunnerName() abort
   if targetName ==# ''
     return
   endif
-  let t = VimuxOption('VimuxRunnerType')
-  if t ==# 'window'
+  let runnerType = VimuxOption('VimuxRunnerType')
+  if runnerType ==# 'window'
     call VimuxTmux('rename-window '.targetName)
-  elseif t ==# 'pane'
+  elseif runnerType ==# 'pane'
     call VimuxTmux('select-pane -T '.targetName)
   endif
 endfunction
@@ -265,8 +265,8 @@ function! s:tmuxProperty(property) abort
 endfunction
 
 function! s:hasRunner(index) abort
-  let t = VimuxOption('VimuxRunnerType')
-  return match(VimuxTmux('list-'.t."s -F '#{".t."_id}'"), a:index)
+  let runnerType = VimuxOption('VimuxRunnerType')
+  return match(VimuxTmux('list-'.runnerType."s -F '#{".runnerType."_id}'"), a:index)
 endfunction
 
 function! s:autoclose() abort
