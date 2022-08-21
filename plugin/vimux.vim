@@ -232,6 +232,19 @@ endfunction
 "   or '' if no nearest pane or window is found.
 function! s:existingRunnerId() abort
   let runnerType = VimuxOption('VimuxRunnerType')
+  let query = get(VimuxOption('VimuxRunnerQuery'), runnerType, '')
+  if query !=# ''
+    " Try finding the runner using the provided query
+    let message = VimuxTmux('select-'.runnerType.' -t '.query.'')
+    if message ==# ''
+      " Success!
+      let runnerId = s:tmuxIndex()
+      call VimuxTmux('last-'.runnerType)
+      return runnerId
+    endif
+  endif
+  " Try finding the runner in the current window/session, optionally using a
+  " name/title filter
   let filter = s:getTargetFilter()
   let views = split(
               \ VimuxTmux(
