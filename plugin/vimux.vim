@@ -231,23 +231,20 @@ endfunction
 " @return a string of the form '%4', the ID of the pane or window to use,
 "   or '' if no nearest pane or window is found.
 function! s:existingRunnerId() abort
-  let query = VimuxOption('VimuxRunnerQuery')
+  let runnerType = VimuxOption('VimuxRunnerType')
+  let query = get(VimuxOption('VimuxRunnerQuery'), runnerType, '')
   if empty(query)
     if !empty(VimuxOption('VimuxUseNearest'))
       return s:nearestRunnerId()
     endif
   endif
-  let runnerType = VimuxOption('VimuxRunnerType')
-  let query = get(query, runnerType, '')
-  if query !=# ''
-    " Try finding the runner using the provided query
-    let message = VimuxTmux('select-'.runnerType.' -t '.query.'')
-    if message ==# ''
-      " Success!
-      let runnerId = s:tmuxIndex()
-      call VimuxTmux('last-'.runnerType)
-      return runnerId
-    endif
+  " Try finding the runner using the provided query
+  let message = VimuxTmux('select-'.runnerType.' -t '.query.'')
+  if message ==# ''
+    " Success!
+    let runnerId = s:tmuxIndex()
+    call VimuxTmux('last-'.runnerType)
+    return runnerId
   endif
   return ''
 endfunction
