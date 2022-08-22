@@ -93,7 +93,7 @@ endfunction
 
 function! VimuxOpenRunner() abort
   let existingId = s:existingRunnerId()
-  if VimuxOption('VimuxUseNearest') ==# 1 && existingId !=# ''
+  if existingId !=# ''
     let g:VimuxRunnerIndex = existingId
   else
     let extraArguments = VimuxOption('VimuxOpenExtraArgs')
@@ -231,8 +231,14 @@ endfunction
 " @return a string of the form '%4', the ID of the pane or window to use,
 "   or '' if no nearest pane or window is found.
 function! s:existingRunnerId() abort
+  let query = VimuxOption('VimuxRunnerQuery')
+  if empty(query)
+    if !empty(VimuxOption('VimuxUseNearest'))
+      return s:nearestRunnerId()
+    endif
+  endif
   let runnerType = VimuxOption('VimuxRunnerType')
-  let query = get(VimuxOption('VimuxRunnerQuery'), runnerType, '')
+  let query = get(query, runnerType, '')
   if query !=# ''
     " Try finding the runner using the provided query
     let message = VimuxTmux('select-'.runnerType.' -t '.query.'')
@@ -243,9 +249,16 @@ function! s:existingRunnerId() abort
       return runnerId
     endif
   endif
+  return ''
+endfunction
+
+function! s:nearestRunnerId() abort
   " Try finding the runner in the current window/session, optionally using a
   " name/title filter
+  let runnerType = VimuxOption('VimuxRunnerType')
   let filter = s:getTargetFilter()
+  " list-panes -F '#{pane_active}:#{pane_id}' -f '#{==:#{pane_title}, " foo}'
+  " select-pane -t:.'{last}'
   let views = split(
               \ VimuxTmux(
               \     'list-'.runnerType.'s'
