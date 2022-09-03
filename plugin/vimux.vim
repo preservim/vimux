@@ -92,9 +92,9 @@ function! VimuxSendKeys(keys) abort
 endfunction
 
 function! VimuxOpenRunner() abort
-  let nearestIndex = s:nearestIndex()
-  if VimuxOption('VimuxUseNearest') ==# 1 && nearestIndex != -1
-    let g:VimuxRunnerIndex = nearestIndex
+  let existingId = s:existingRunnerId()
+  if existingId !=# ''
+    let g:VimuxRunnerIndex = existingId
   else
     let extraArguments = VimuxOption('VimuxOpenExtraArgs')
     if VimuxOption('VimuxRunnerType') ==# 'pane'
@@ -123,7 +123,12 @@ function! VimuxTogglePane() abort
       let g:VimuxRunnerIndex = s:tmuxIndex()
       call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
     elseif VimuxOption('VimuxRunnerType') ==# 'pane'
-      let g:VimuxRunnerIndex=substitute(VimuxTmux('break-pane -d -s '.g:VimuxRunnerIndex." -P -F '#{window_id}'"), '\n', '', '')
+      let g:VimuxRunnerIndex=substitute(
+                  \ VimuxTmux('break-pane -d -s '.g:VimuxRunnerIndex." -P -F '#{window_id}'"),
+                  \ '\n',
+                  \ '',
+                  \ ''
+                  \)
       let g:VimuxRunnerType = 'window'
     endif
   endif
@@ -222,16 +227,49 @@ function! s:vimuxPaneOptions() abort
     return '-p '.height.' -'.orientation
 endfunction
 
-function! s:nearestIndex() abort
-  let t = VimuxOption('VimuxRunnerType')
+""
+" @return a string of the form '%4', the ID of the pane or window to use,
+"   or '' if no nearest pane or window is found.
+function! s:existingRunnerId() abort
+  let runnerType = VimuxOption('VimuxRunnerType')
+  let query = get(VimuxOption('VimuxRunnerQuery'), runnerType, '')
+  if empty(query)
+    if !empty(VimuxOption('VimuxUseNearest'))
+      return s:nearestRunnerId()
+    endif
+  endif
+  " Try finding the runner using the provided query
+  let message = VimuxTmux('select-'.runnerType.' -t '.query.'')
+  if message ==# ''
+    " Success!
+    let runnerId = s:tmuxIndex()
+    call VimuxTmux('last-'.runnerType)
+    return runnerId
+  endif
+  return ''
+endfunction
+
+function! s:nearestRunnerId() abort
+  " Try finding the runner in the current window/session, optionally using a
+  " name/title filter
+  let runnerType = VimuxOption('VimuxRunnerType')
   let filter = s:getTargetFilter()
-  let views = split(VimuxTmux('list-'.t."s -F '#{".t.'_active}:#{'.t."_id}'".filter), '\n')
+  " list-panes -F '#{pane_active}:#{pane_id}' -f '#{==:#{pane_title}, " foo}'
+  " select-pane -t:.'{last}'
+  let views = split(
+              \ VimuxTmux(
+              \     'list-'.runnerType.'s'
+              \     ." -F '#{".runnerType.'_active}:#{'.runnerType."_id}'"
+              \     .filter),
+              \ '\n')
+  " '1:' is the current active pane (the one with vim).
+  " Find the first non-active pane.
   for view in views
     if match(view, '1:') ==# -1
       return split(view, ':')[1]
     endif
   endfor
-  return -1
+  return ''
 endfunction
 
 function! s:getTargetFilter() abort
@@ -239,10 +277,10 @@ function! s:getTargetFilter() abort
   if targetName ==# ''
     return ''
   endif
-  let t = VimuxOption('VimuxRunnerType')
-  if t ==# 'window'
+  let runnerType = VimuxOption('VimuxRunnerType')
+  if runnerType ==# 'window'
     return " -f '#{==:#{window_name},".targetName."}'"
-  elseif t ==# 'pane'
+  elseif runnerType ==# 'pane'
     return " -f '#{==:#{pane_title},".targetName."}'"
   endif
 endfunction
@@ -252,10 +290,10 @@ function! s:setRunnerName() abort
   if targetName ==# ''
     return
   endif
-  let t = VimuxOption('VimuxRunnerType')
-  if t ==# 'window'
+  let runnerType = VimuxOption('VimuxRunnerType')
+  if runnerType ==# 'window'
     call VimuxTmux('rename-window '.targetName)
-  elseif t ==# 'pane'
+  elseif runnerType ==# 'pane'
     call VimuxTmux('select-pane -T '.targetName)
   endif
 endfunction
@@ -265,8 +303,8 @@ function! s:tmuxProperty(property) abort
 endfunction
 
 function! s:hasRunner(index) abort
-  let t = VimuxOption('VimuxRunnerType')
-  return match(VimuxTmux('list-'.t."s -F '#{".t."_id}'"), a:index)
+  let runnerType = VimuxOption('VimuxRunnerType')
+  return match(VimuxTmux('list-'.runnerType."s -F '#{".runnerType."_id}'"), a:index)
 endfunction
 
 function! s:autoclose() abort

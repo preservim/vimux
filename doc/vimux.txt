@@ -447,5 +447,27 @@ previously-run commands in VimuxPromptCommand.
 <
 Default: 1
 
+------------------------------------------------------------------------------
+                                                            *VimuxRunnerQuery*
+4.13 g:VimuxRunnerQuery~
+
+Set this option to define a query to use for looking up an existing runner
+pane or window when initiating Vimux. Uses the tmux syntax for the target-pane
+and target-window command arguments. (See the man page for tmux). It must be a
+dictionary containing up to two keys, "pane" and "window", defining the query
+to use for the respective runner types.
+
+If no key exists for the current runner type, the search for an existing
+runner falls back to the `VimuxUseNearest` option (and the related
+`VimuxRunnerName`). If that option is false or either command fails, a new
+runner is created instead, positioned according to `VimuxOrientation`.
+>
+  let g:VimuxRunnerQuery = {
+            \ 'pane': '{down-of}',
+            \ 'window': 'vimux',
+            \}
+<
+Default: {}
+
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
