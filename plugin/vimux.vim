@@ -255,8 +255,6 @@ function! s:nearestRunnerId() abort
   " name/title filter
   let runnerType = VimuxOption('VimuxRunnerType')
   let filter = s:getTargetFilter()
-  " list-panes -F '#{pane_active}:#{pane_id}' -f '#{==:#{pane_title}, " foo}'
-  " select-pane -t:.'{last}'
   let views = split(
               \ VimuxTmux(
               \     'list-'.runnerType.'s'
