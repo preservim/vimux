@@ -12,6 +12,7 @@ let g:VimuxPromptString  = get(g:, 'VimuxPromptString',  'Command? ')
 let g:VimuxResetSequence = get(g:, 'VimuxResetSequence', 'q C-u')
 let g:VimuxRunnerName    = get(g:, 'VimuxRunnerName',    '')
 let g:VimuxRunnerType    = get(g:, 'VimuxRunnerType',    'pane')
+let g:VimuxRunnerQuery   = get(g:, 'VimuxRunnerQuery',   {})
 let g:VimuxTmuxCommand   = get(g:, 'VimuxTmuxCommand',   'tmux')
 let g:VimuxUseNearest    = get(g:, 'VimuxUseNearest',    v:true)
 let g:VimuxExpandCommand = get(g:, 'VimuxExpandCommand', v:false)
@@ -254,8 +255,6 @@ function! s:nearestRunnerId() abort
   " name/title filter
   let runnerType = VimuxOption('VimuxRunnerType')
   let filter = s:getTargetFilter()
-  " list-panes -F '#{pane_active}:#{pane_id}' -f '#{==:#{pane_title}, " foo}'
-  " select-pane -t:.'{last}'
   let views = split(
               \ VimuxTmux(
               \     'list-'.runnerType.'s'
