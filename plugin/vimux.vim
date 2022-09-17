@@ -235,7 +235,9 @@ function! s:existingRunnerId() abort
   let runnerType = VimuxOption('VimuxRunnerType')
   let query = get(VimuxOption('VimuxRunnerQuery'), runnerType, '')
   if empty(query)
-    if !empty(VimuxOption('VimuxUseNearest'))
+    if empty(VimuxOption('VimuxUseNearest'))
+      return ''
+    else
       return s:nearestRunnerId()
     endif
   endif
