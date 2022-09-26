@@ -235,17 +235,24 @@ function! s:existingRunnerId() abort
   let runnerType = VimuxOption('VimuxRunnerType')
   let query = get(VimuxOption('VimuxRunnerQuery'), runnerType, '')
   if empty(query)
-    if !empty(VimuxOption('VimuxUseNearest'))
+    if empty(VimuxOption('VimuxUseNearest'))
+      return ''
+    else
       return s:nearestRunnerId()
     endif
   endif
   " Try finding the runner using the provided query
+  let currentId = s:tmuxIndex()
   let message = VimuxTmux('select-'.runnerType.' -t '.query.'')
   if message ==# ''
-    " Success!
+      " A match was found. Make sure it isn't the current vim pane/window
+      " though!
     let runnerId = s:tmuxIndex()
-    call VimuxTmux('last-'.runnerType)
-    return runnerId
+    if runnerId !=# currentId
+        " Success!
+        call VimuxTmux('last-'.runnerType)
+        return runnerId
+    endif
   endif
   return ''
 endfunction
