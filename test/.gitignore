@@ -1,0 +1,3 @@
+data/nvim/lazy/
+state/nvim/lazy/
+config/nvim/lazy-lock.json
