@@ -41,6 +41,7 @@ command -nargs=? VimuxPromptCommand :call VimuxPromptCommand(<args>)
 command -bar VimuxClearTerminalScreen :call VimuxClearTerminalScreen()
 command -bar VimuxClearRunnerHistory :call VimuxClearRunnerHistory()
 command -bar VimuxTogglePane :call VimuxTogglePane()
+command -nargs=0 VimuxTasks :call vimux#RunTasks()
 
 augroup VimuxAutocmds
   au!
