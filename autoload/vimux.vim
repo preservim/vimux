@@ -1,21 +1,41 @@
+" ==================================
+" Default tasks.json file
+let s:DefaultTasks='
+\{
+\  "tasks": [
+\    {
+\      "type": "shell",
+\      "label": "Hello World",
+\      "command": "echo Hello World!"
+\    }
+\  ]
+\}'
 
 " ==================================
 " Load task files
 
 function! s:LoadTasksJson()
-  let json = readfile(".vim/tasks.json")
-  let content = join(json, "\n")
-  let tasks = json_decode(content)
-  " TODO parse the json for valid content ?
-  return tasks.tasks
+  let tasksFile = ".vim/tasks.json"
+  if filereadable(tasksFile)
+    let json = readfile(tasksFile)
+    let content = join(json, "\n")
+    let tasks = json_decode(content)
+    " TODO parse the json for valid content ?
+    return tasks.tasks
+  else
+    return []
+  endif
 endfunction
 
 function! s:LoadPackageJson()
   let json = readfile("package.json")
-  " TODO check if we should run npm or yarn
+  if filereadable("yarn.lock")
+    let node = "yarn"
+  else
+    let node = "npm"
+  endif
   let content = join(json, "\n")
   let tasks = json_decode(content)
-  let node = "yarn"
 
   let tasksArray = []
   for key in keys(tasks.scripts)
@@ -87,8 +107,11 @@ endfunction
 
 function! vimux#RunTasks()
   let tasks = s:LoadTasksJson()
+  if len(tasks) == 0
+    let tasks = [{ "label": "Generate tasks file", "command": "cat > .vim/tasks.json <<< '" .. s:DefaultTasks .. "'" }]
+  endif
   " TODO if no tasks exist prompt to generate a new task file
-  if index(VimuxOption('VimuxTaskAutodetect'), "package.json") >= 0
+  if index(VimuxOption('VimuxTaskAutodetect'), "package.json") >= 0 && filereadable("package.json")
     let packageTasks = s:LoadPackageJson()
     call extend(tasks, packageTasks)
   endif
