@@ -28,6 +28,9 @@ endfunction
 " Popup launcher
 
 function! s:VimuxTasksSink(tasks, id, choice)
+  if a:choice < 0 " cancel popup
+    return
+  endif
   call popup_hide(a:id)
   let task = get(a:tasks, a:choice - 1)
   VimuxRunCommand(task.command)
@@ -42,21 +45,42 @@ function! s:VimuxTasksFilter(tasks, id, key)
   endif
 endfunction
 
-function! s:Popup(tasks)
-  let taskArray = mapnew(tasks, {key, task -> key .. '. ' .. task.label})
+function! s:RunTaskPopup(tasks)
+  let taskArray = mapnew(a:tasks, {key, task -> key .. '. ' .. task.label})
   call popup_menu(taskArray, #{
         \ title: ' Run Task ',
-        \ highlight: 'question',
         \ borderchars: ['─', '│', '─', '│', '╭', '╮', '╯', '╰'],
-        \ callback: function('s:VimuxTasksSink', [tasks]),
+        \ callback: function('s:VimuxTasksSink', [a:tasks]),
         \ border: [],
         \ cursorline: 1,
         \ padding: [1,2,1,2],
-        \ filter: function('s:VimuxTasksFilter', [tasks]),
+        \ filter: function('s:VimuxTasksFilter', [a:tasks]),
         \ mapping: 0,
         \ })
 endfunction
 
+" ==================================
+" FZF Popup function
+function! Pad(s,amt)
+    return a:s . repeat(' ',a:amt - len(a:s))
+endfunction
+
+function! s:VimuxTasksSinkFZF(tasks, selection)
+  for task in a:tasks
+    if task.label == a:selection
+      VimuxRunCommand(task.command)
+      break
+    endif
+  endfor
+endfunction
+
+function! s:RunTaskFZF(tasks)
+    call fzf#run({
+      \ 'source': mapnew(a:tasks, {key, task -> task.label}) ,
+      \ 'sink': function('s:VimuxTasksSinkFZF', [a:tasks]),
+      \ 'options': "--prompt 'Run Task > ' --no-info",
+      \ 'tmux': '-p40%,30%'})
+endfunction
 
 " ==================================
 " Main Popup function
@@ -64,10 +88,16 @@ endfunction
 function! vimux#RunTasks()
   let tasks = s:LoadTasksJson()
   " TODO if no tasks exist prompt to generate a new task file
-  let packageTasks = s:LoadPackageJson()
+  if index(VimuxOption('VimuxTaskAutodetect'), "package.json") >= 0
+    let packageTasks = s:LoadPackageJson()
+    call extend(tasks, packageTasks)
+  endif
 
-  call extend(tasks, packageTasks)
-
-  " TODO check if fzf is available otherwise launch on popup
-  s:Popup(tasks)
+  if VimuxOption('VimuxTasksSelect') == 'popup'
+    call s:RunTaskPopup(tasks)
+  elseif VimuxOption('VimuxTasksSelect') == 'tmux-fzf' && &rtp =~ 'fzf.vim' && glob("~/.vim/plugged/fzf.vim/plugin/fzf.vim")!=#""
+    call s:RunTaskFZF(tasks)
+  else
+    call s:RunTaskPopup(tasks)
+  endif
 endfunction
