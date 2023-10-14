@@ -19,7 +19,7 @@ let g:VimuxExpandCommand  = get(g:, 'VimuxExpandCommand', v:false)
 let g:VimuxCloseOnExit    = get(g:, 'VimuxCloseOnExit',   v:false)
 let g:VimuxCommandShell   = get(g:, 'VimuxCommandShell',   v:true)
 let g:VimuxTasksSelect    = get(g:, 'VimuxTasksSelect', 'tmux-fzf')
-let g:VimuxTaskAutodetect = get(g:, 'VimuxTaskAutodetect',   [ "package.json" ])
+let g:VimuxTaskAutodetect = get(g:, 'VimuxTaskAutodetect',   [ 'package.json' ])
 
 function! VimuxOption(name) abort
   return get(b:, a:name, get(g:, a:name))
