@@ -60,8 +60,8 @@ function! s:VimuxTasksSink(tasks, id, choice) abort
 endfunction
 
 function! s:VimuxTasksFilter(tasks, id, key) abort
-  " TODO fix this temporary patch
-  if a:key ==# '1' || a:key ==# '2' || a:key ==# '3' || a:key ==# '4' || a:key ==# '5'
+  " TODO this only works from 0 to 9
+  if a:key =~# '\d'
     call s:VimuxTasksSink(a:tasks, a:id, a:key)
   else " No shortcut, pass to generic filter
     return popup_filter_menu(a:id, a:key)
@@ -69,7 +69,7 @@ function! s:VimuxTasksFilter(tasks, id, key) abort
 endfunction
 
 function! s:RunTaskPopup(tasks) abort
-  let taskArray = mapnew(a:tasks, {key, task -> key . '. ' . task.label})
+  let taskArray = mapnew(a:tasks, {key, task -> (key + 1) . '. ' . task.label})
   call popup_menu(taskArray, {
         \ 'title': ' Run Task ',
         \ 'borderchars': ['─', '│', '─', '│', '╭', '╮', '╯', '╰'],
