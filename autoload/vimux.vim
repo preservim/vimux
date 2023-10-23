@@ -126,7 +126,6 @@ function! vimux#RunTasks() abort
   if len(tasks) == 0
     let tasks = [{ 'label': 'Generate tasks file', 'command': "cat > .vim/tasks.json <<< '" . s:DefaultTasks . "'" }]
   endif
-  " TODO if no tasks exist prompt to generate a new task file
   if index(VimuxOption('VimuxTaskAutodetect'), 'package.json') >= 0 && filereadable('package.json')
     let packageTasks = s:LoadPackageJson()
     call extend(tasks, packageTasks)
@@ -134,7 +133,7 @@ function! vimux#RunTasks() abort
 
   if VimuxOption('VimuxTasksSelect') ==# 'popup'
     call s:RunTaskPopup(tasks)
-  elseif VimuxOption('VimuxTasksSelect') ==# 'tmux-fzf' && &runtimepath =~# 'fzf.vim' && glob('~/.vim/plugged/fzf.vim/plugin/fzf.vim') !=# ''
+  elseif VimuxOption('VimuxTaksSelect') ==# 'tmux-fzf' && &runtimepath =~# 'fzf.vim' && glob('~/.vim/plugged/fzf.vim/plugin/fzf.vim') !=# ''
     call s:RunTaskFZF(tasks)
   else
     call s:RunTaskPopup(tasks)

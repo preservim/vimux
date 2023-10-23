@@ -62,6 +62,7 @@ process finishes and will see the output in the pane when it's finished.
 
 Furthermore there are several handy commands all starting with 'Vimux':
   - |VimuxRunCommand|
+  - |VimuxTasks|
   - |VimuxSendText|
   - |VimuxSendKeys|
   - |VimuxOpenRunner|
@@ -88,6 +89,22 @@ vimux from automatically sending a return after the command.
  " Run command without sending a return
  map <Leader>rq :call VimuxRunCommand("clear; rspec " . bufname("%"), 0)<CR>
 <
+
+------------------------------------------------------------------------------
+                                                               *VimuxTasks*
+VimuxTasks~
+
+Launch a picker to select a task configured in a `tasks.json` file or from a
+supported launcher.
+
+Supported Launchers:
+
+  - yarn / npm (package.json)
+
+>
+ " Run the current file with rspec
+ map <Leader>rt :VimuxTasks<CR>
+
 
 ------------------------------------------------------------------------------
                                                                *VimuxSendText*
@@ -468,6 +485,29 @@ runner is created instead, positioned according to `VimuxOrientation`.
             \}
 <
 Default: {}
+
+------------------------------------------------------------------------------
+                                                            *VimuxTasksSelect*
+4.14 g:VimuxTasksSelect~
+
+Set this option to either `tmux-fzf` or `popup` to determine what will be used
+for the task picker
+>
+  let g:VimuxTasksSelect = "tmux-fzf"
+<
+Default: "tmux-fzf"
+
+------------------------------------------------------------------------------
+                                                            *VimuxTaskAutodetect*
+4.15 g:VimuxTaskAutodetect~
+
+This options defines which autodetections of supported tasks you want to make
+available. Currently only `package.json` is possible.
+>
+  let g:VimuxTaskAutodetect = []
+<
+Default: [ "package.json" ]
+
 
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
