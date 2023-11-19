@@ -192,11 +192,12 @@ function! VimuxPromptCommand(...) abort
 endfunction
 
 function! VimuxTmux(arguments) abort
+  let l:tmuxCommand = VimuxOption('VimuxTmuxCommand').' '.a:arguments
   if VimuxOption('VimuxDebug')
-    echom VimuxOption('VimuxTmuxCommand').' '.a:arguments
+    echom l:tmuxCommand
   endif
   if has_key(environ(), 'TMUX')
-    return system(VimuxOption('VimuxTmuxCommand').' '.a:arguments)
+    return system(l:tmuxCommand)
   else
     throw 'Aborting, because not inside tmux session.'
   endif
