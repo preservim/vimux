@@ -5,13 +5,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        osFlavor: [ubuntu-20.04, ubuntu-18.04]
         vimFlavor: [neovim, vim]
         vimVersion: [stable, unstable]
         exclude:
           - vimFlavor: vim
             vimVersion: unstable
-    runs-on: ${{ matrix.osFlavor }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
