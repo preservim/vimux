@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.osFlavor }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Enable Universe package repository
         run: |
           sudo add-apt-repository ${{ matrix.vimVersion == 'stable' && 'universe' || 'ppa:neovim-ppa/unstable' }}
