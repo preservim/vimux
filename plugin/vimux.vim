@@ -197,7 +197,11 @@ function! VimuxTmux(arguments) abort
     echom l:tmuxCommand
   endif
   if has_key(environ(), 'TMUX')
-    return system(l:tmuxCommand)
+    let l:output = system(l:tmuxCommand)
+    if v:shell_error
+      throw 'Tmux command failed with message:' . l:output
+    endif
+    return l:output
   else
     throw 'Aborting, because not inside tmux session.'
   endif
