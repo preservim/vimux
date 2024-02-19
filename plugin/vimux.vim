@@ -225,7 +225,7 @@ endfunction
 function! s:vimuxPaneOptions() abort
     let height = VimuxOption('VimuxHeight')
     let orientation = VimuxOption('VimuxOrientation')
-    return '-p '.height.' -'.orientation
+    return '-l '.height.'% -'.orientation
 endfunction
 
 ""
