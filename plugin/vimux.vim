@@ -195,7 +195,7 @@ function! VimuxTmux(arguments) abort
   if VimuxOption('VimuxDebug')
     echom VimuxOption('VimuxTmuxCommand').' '.a:arguments
   endif
-  if has_key(environ(), 'TMUX')
+  if exists('*environ') && has_key(environ(), 'TMUX') || $TMUX != ''
     return system(VimuxOption('VimuxTmuxCommand').' '.a:arguments)
   else
     throw 'Aborting, because not inside tmux session.'
