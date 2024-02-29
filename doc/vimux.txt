@@ -469,5 +469,16 @@ runner is created instead, positioned according to `VimuxOrientation`.
 <
 Default: {}
 
+------------------------------------------------------------------------------
+                                                            *VimuxDebug*
+4.13 g:VimuxDebug~
+
+If you're having trouble with vimux, set this option to get vimux to pass each
+tmux command to |echomsg| before running it.
+>
+  let g:VimuxDebug = v:true
+<
+Default: v:false
+
 ==============================================================================
 vim:tw=78:ts=2:sw=2:expandtab:ft=help:norl:
