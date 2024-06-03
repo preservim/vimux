@@ -5,16 +5,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        osFlavor: [ubuntu-20.04, ubuntu-18.04]
         vimFlavor: [neovim, vim]
         vimVersion: [stable, unstable]
         exclude:
           - vimFlavor: vim
             vimVersion: unstable
-    runs-on: ${{ matrix.osFlavor }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Enable Universe package repository
         run: |
           sudo add-apt-repository ${{ matrix.vimVersion == 'stable' && 'universe' || 'ppa:neovim-ppa/unstable' }}
