@@ -5,7 +5,7 @@ let g:loaded_vimux = 1
 
 " Set up all global options with defaults right away, in one place
 let g:VimuxDebug         = get(g:, 'VimuxDebug',         v:false)
-let g:VimuxHeight        = get(g:, 'VimuxHeight',        20)
+let g:VimuxHeight        = get(g:, 'VimuxHeight',        '20%')
 let g:VimuxOpenExtraArgs = get(g:, 'VimuxOpenExtraArgs', '')
 let g:VimuxOrientation   = get(g:, 'VimuxOrientation',   'v')
 let g:VimuxPromptString  = get(g:, 'VimuxPromptString',  'Command? ')
@@ -230,7 +230,7 @@ endfunction
 function! s:vimuxPaneOptions() abort
     let height = VimuxOption('VimuxHeight')
     let orientation = VimuxOption('VimuxOrientation')
-    return '-l '.height.'% -'.orientation
+    return '-l '.height.' -'.orientation
 endfunction
 
 ""
