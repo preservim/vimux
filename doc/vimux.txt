@@ -294,11 +294,12 @@ change the behavior of Vimux in just the current buffer.
                                                      *VimuxConfiguration_height*
 4.1 g:VimuxHeight~
 
-The percent of the screen the split pane Vimux will spawn should take up.
+The part of the screen the split pane Vimux will spawn should take up. This
+option accepts both a number of lines/columns or a percentage.
 >
   let g:VimuxHeight = "40"
 <
-Default: "20"
+Default: "20%"
 
 ------------------------------------------------------------------------------
                                                 *VimuxConfiguration_orientation*
