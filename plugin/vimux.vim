@@ -167,13 +167,13 @@ function! VimuxInterruptRunner() abort
 endfunction
 
 function! VimuxClearTerminalScreen() abort
-  if exists('g:VimuxRunnerIndex')
+  if exists('g:VimuxRunnerIndex') && s:hasRunner(g:VimuxRunnerIndex) !=# -1
     call VimuxSendKeys('C-l')
   endif
 endfunction
 
 function! VimuxClearRunnerHistory() abort
-  if exists('g:VimuxRunnerIndex')
+  if exists('g:VimuxRunnerIndex') && s:hasRunner(g:VimuxRunnerIndex) !=# -1
     call VimuxTmux('clear-history -t '.g:VimuxRunnerIndex)
   endif
 endfunction
