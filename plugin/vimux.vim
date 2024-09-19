@@ -80,7 +80,6 @@ function! VimuxRunCommand(command, ...) abort
     let l:versionString = s:tmuxProperty('#{version}')
     if str2float(l:versionString) < 3.2
         let l:resetSequence = 'q '.l:resetSequence
-    else
     endif
   endtry
   call VimuxSendKeys(l:resetSequence)
