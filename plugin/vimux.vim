@@ -9,7 +9,7 @@ let g:VimuxHeight        = get(g:, 'VimuxHeight',        '20%')
 let g:VimuxOpenExtraArgs = get(g:, 'VimuxOpenExtraArgs', '')
 let g:VimuxOrientation   = get(g:, 'VimuxOrientation',   'v')
 let g:VimuxPromptString  = get(g:, 'VimuxPromptString',  'Command? ')
-let g:VimuxResetSequence = get(g:, 'VimuxResetSequence', 'q C-u')
+let g:VimuxResetSequence = get(g:, 'VimuxResetSequence', 'C-u')
 let g:VimuxRunnerName    = get(g:, 'VimuxRunnerName',    '')
 let g:VimuxRunnerType    = get(g:, 'VimuxRunnerType',    'pane')
 let g:VimuxRunnerQuery   = get(g:, 'VimuxRunnerQuery',   {})
@@ -71,9 +71,19 @@ function! VimuxRunCommand(command, ...) abort
   if exists('a:1')
     let l:autoreturn = a:1
   endif
-  let resetSequence = VimuxOption('VimuxResetSequence')
+  let l:resetSequence = VimuxOption('VimuxResetSequence')
   let g:VimuxLastCommand = a:command
-  call VimuxSendKeys(resetSequence)
+
+  try
+    call VimuxTmux('copy-mode -q -t '.g:VimuxRunnerIndex)
+  catch
+    let l:versionString = s:tmuxProperty('#{version}')
+    if str2float(l:versionString) < 3.2
+        let l:resetSequence = 'q '.l:resetSequence
+    endif
+  endtry
+  call VimuxSendKeys(l:resetSequence)
+
   call VimuxSendText(a:command)
   if l:autoreturn ==# 1
     call VimuxSendKeys('Enter')
