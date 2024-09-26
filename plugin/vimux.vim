@@ -74,16 +74,8 @@ function! VimuxRunCommand(command, ...) abort
   let l:resetSequence = VimuxOption('VimuxResetSequence')
   let g:VimuxLastCommand = a:command
 
-  try
-    call VimuxTmux('copy-mode -q -t '.g:VimuxRunnerIndex)
-  catch
-    let l:versionString = s:tmuxProperty('#{version}')
-    if str2float(l:versionString) < 3.2
-        let l:resetSequence = 'q '.l:resetSequence
-    endif
-  endtry
+  call s:exitCopyMode()
   call VimuxSendKeys(l:resetSequence)
-
   call VimuxSendText(a:command)
   if l:autoreturn ==# 1
     call VimuxSendKeys('Enter')
@@ -178,6 +170,7 @@ endfunction
 
 function! VimuxClearTerminalScreen() abort
   if exists('g:VimuxRunnerIndex') && s:hasRunner(g:VimuxRunnerIndex) !=# -1
+    call s:exitCopyMode()
     call VimuxSendKeys('C-l')
   endif
 endfunction
@@ -215,6 +208,17 @@ function! VimuxTmux(arguments) abort
   else
     throw 'Aborting, because not inside tmux session.'
   endif
+endfunction
+
+function! s:exitCopyMode() abort
+  try
+    call VimuxTmux('copy-mode -q -t '.g:VimuxRunnerIndex)
+  catch
+    let l:versionString = s:tmuxProperty('#{version}')
+    if str2float(l:versionString) < 3.2
+        call VimuxSendKeys('q')
+    endif
+  endtry
 endfunction
 
 function! s:tmuxSession() abort
