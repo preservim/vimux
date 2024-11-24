@@ -96,7 +96,7 @@ endfunction
 
 function! VimuxOpenRunner() abort
   let existingId = s:existingRunnerId()
-  if existingId !=# ''
+  if !exists('g:VimuxRunnerIndex') && existingId !=# ''
     let g:VimuxRunnerIndex = existingId
   else
     let extraArguments = VimuxOption('VimuxOpenExtraArgs')
@@ -329,7 +329,8 @@ endfunction
 
 function! s:hasRunner(index) abort
   let runnerType = VimuxOption('VimuxRunnerType')
-  return match(VimuxTmux('list-'.runnerType."s -F '#{".runnerType."_id}'"), a:index)
+  let allPanes = runnerType ==# 'pane' ? '-a ' : ''
+  return match(VimuxTmux('list-'.runnerType."s ".allPanes."-F '#{".runnerType."_id}'"), a:index)
 endfunction
 
 function! s:autoclose() abort
