@@ -64,7 +64,7 @@ function! VimuxRunLastCommand() abort
 endfunction
 
 function! VimuxRunCommand(command, ...) abort
-  if !exists('g:VimuxRunnerIndex') || s:hasRunner(g:VimuxRunnerIndex) ==# -1
+  if ! s:hasRunner()
     call VimuxOpenRunner()
   endif
   let l:autoreturn = 1
@@ -87,14 +87,13 @@ function! VimuxSendText(text) abort
 endfunction
 
 function! VimuxSendKeys(keys) abort
-  if exists('g:VimuxRunnerIndex')
-    call VimuxTmux('send-keys -t '.g:VimuxRunnerIndex.' '.a:keys)
-  else
-    echo 'No vimux runner pane/window. Create one with VimuxOpenRunner'
-  endif
+  call VimuxTmux('send-keys -t '.g:VimuxRunnerIndex.' '.a:keys)
 endfunction
 
 function! VimuxOpenRunner() abort
+  if s:hasRunner()
+      return
+  endif
   let existingId = s:existingRunnerId()
   if existingId !=# ''
     let g:VimuxRunnerIndex = existingId
@@ -112,14 +111,14 @@ function! VimuxOpenRunner() abort
 endfunction
 
 function! VimuxCloseRunner() abort
-  if exists('g:VimuxRunnerIndex')
+  if s:hasRunner()
     call VimuxTmux('kill-'.VimuxOption('VimuxRunnerType').' -t '.g:VimuxRunnerIndex)
-    unlet g:VimuxRunnerIndex
   endif
+  unlet g:VimuxRunnerIndex
 endfunction
 
 function! VimuxTogglePane() abort
-  if exists('g:VimuxRunnerIndex')
+    if s:hasRunner()
     if VimuxOption('VimuxRunnerType') ==# 'window'
       call VimuxTmux('join-pane -s '.g:VimuxRunnerIndex.' '.s:vimuxPaneOptions())
       let g:VimuxRunnerType = 'pane'
@@ -138,7 +137,7 @@ function! VimuxTogglePane() abort
 endfunction
 
 function! VimuxZoomRunner() abort
-  if exists('g:VimuxRunnerIndex')
+  if s:hasRunner()
     if VimuxOption('VimuxRunnerType') ==# 'pane'
       call VimuxTmux('resize-pane -Z -t '.g:VimuxRunnerIndex)
     elseif VimuxOption('VimuxRunnerType') ==# 'window'
@@ -169,14 +168,14 @@ function! VimuxInterruptRunner() abort
 endfunction
 
 function! VimuxClearTerminalScreen() abort
-  if exists('g:VimuxRunnerIndex') && s:hasRunner(g:VimuxRunnerIndex) !=# -1
+  if s:hasRunner()
     call s:exitCopyMode()
     call VimuxSendKeys('C-l')
   endif
 endfunction
 
 function! VimuxClearRunnerHistory() abort
-  if exists('g:VimuxRunnerIndex') && s:hasRunner(g:VimuxRunnerIndex) !=# -1
+  if s:hasRunner()
     call VimuxTmux('clear-history -t '.g:VimuxRunnerIndex)
   endif
 endfunction
@@ -327,9 +326,14 @@ function! s:tmuxProperty(property) abort
   return substitute(VimuxTmux("display -p '".a:property."'"), '\n$', '', '')
 endfunction
 
-function! s:hasRunner(index) abort
-  let runnerType = VimuxOption('VimuxRunnerType')
-  return match(VimuxTmux('list-'.runnerType."s -F '#{".runnerType."_id}'"), a:index)
+function! s:hasRunner() abort
+  if ! exists('g:VimuxRunnerIndex')
+      return v:false
+  endif
+  let l:runnerType = VimuxOption('VimuxRunnerType')
+  let l:command = 'list-'.runnerType."s -F '#{".runnerType."_id}'"
+  let l:found = match(VimuxTmux(l:command), g:VimuxRunnerIndex)
+  return l:found != -1
 endfunction
 
 function! s:autoclose() abort
