@@ -116,7 +116,7 @@ function! VimuxCloseRunner() abort
 endfunction
 
 function! VimuxTogglePane() abort
-    if s:hasRunner()
+  if s:hasRunner()
     if VimuxOption('VimuxRunnerType') ==# 'window'
       call VimuxTmux('join-pane -s '.g:VimuxRunnerIndex.' '.s:vimuxPaneOptions())
       let g:VimuxRunnerType = 'pane'
