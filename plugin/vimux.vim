@@ -120,7 +120,7 @@ function! VimuxCloseRunner() abort
   if s:hasRunner()
     call VimuxTmux('kill-'.VimuxOption('VimuxRunnerType').' -t '.g:VimuxRunnerIndex)
   endif
-  unlet g:VimuxRunnerIndex
+  unlet! g:VimuxRunnerIndex
 endfunction
 
 function! VimuxTogglePane() abort
