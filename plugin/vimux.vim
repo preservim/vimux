@@ -73,19 +73,27 @@ function! VimuxRunCommand(command, ...) abort
   let g:VimuxLastCommand = a:command
 
   call s:exitCopyMode()
-  call VimuxSendKeys(l:resetSequence)
-  call VimuxSendText(a:command)
+  call s:sendKeys(l:resetSequence)
+  call s:sendText(a:command)
   if l:autoreturn ==# 1
-    call VimuxSendKeys('Enter')
+    call s:sendKeys('Enter')
   endif
 endfunction
 
 function! VimuxSendText(text) abort
-  call VimuxSendKeys(shellescape(substitute(a:text, '\n$', ' ', '')))
+  if s:hasRunner()
+    call s:sendText(text)
+  else
+    echo 'No vimux runner pane/window. Create one with VimuxOpenRunner'
+  endif
 endfunction
 
 function! VimuxSendKeys(keys) abort
-  call VimuxTmux('send-keys -t '.g:VimuxRunnerIndex.' '.a:keys)
+  if s:hasRunner()
+    call s:sendKeys(keys)
+  else
+    echo 'No vimux runner pane/window. Create one with VimuxOpenRunner'
+  endif
 endfunction
 
 function! VimuxOpenRunner() abort
@@ -152,23 +160,23 @@ endfunction
 function! VimuxScrollUpInspect() abort
   call VimuxInspectRunner()
   call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
-  call VimuxSendKeys('C-u')
+  call s:sendKeys('C-u')
 endfunction
 
 function! VimuxScrollDownInspect() abort
   call VimuxInspectRunner()
   call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
-  call VimuxSendKeys('C-d')
+  call s:sendKeys('C-d')
 endfunction
 
 function! VimuxInterruptRunner() abort
-  call VimuxSendKeys('^c')
+  call s:sendKeys('^c')
 endfunction
 
 function! VimuxClearTerminalScreen() abort
   if s:hasRunner()
     call s:exitCopyMode()
-    call VimuxSendKeys('C-l')
+    call s:sendKeys('C-l')
   endif
 endfunction
 
@@ -213,7 +221,7 @@ function! s:exitCopyMode() abort
   catch
     let l:versionString = s:tmuxProperty('#{version}')
     if str2float(l:versionString) < 3.2
-        call VimuxSendKeys('q')
+        call s:sendKeys('q')
     endif
   endtry
 endfunction
@@ -338,4 +346,12 @@ function! s:autoclose() abort
   if VimuxOption('VimuxCloseOnExit')
     call VimuxCloseRunner()
   endif
+endfunction
+
+function! s:sendKeys(keys) abort
+  call VimuxTmux('send-keys -t '.g:VimuxRunnerIndex.' '.a:keys)
+endfunction
+
+function! s:sendText(text) abort
+    call s:sendKeys(shellescape(substitute(a:text, '\n$', ' ', '')))
 endfunction
