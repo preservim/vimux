@@ -98,7 +98,7 @@ endfunction
 
 function! VimuxOpenRunner() abort
   if s:hasRunner()
-      return
+    return
   endif
   let existingId = s:existingRunnerId()
   if existingId !=# ''
@@ -132,11 +132,11 @@ function! VimuxTogglePane() abort
       call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
     elseif VimuxOption('VimuxRunnerType') ==# 'pane'
       let g:VimuxRunnerIndex=substitute(
-                  \ VimuxTmux('break-pane -d -s '.g:VimuxRunnerIndex." -P -F '#{window_id}'"),
-                  \ '\n',
-                  \ '',
-                  \ ''
-                  \)
+            \ VimuxTmux('break-pane -d -s '.g:VimuxRunnerIndex." -P -F '#{window_id}'"),
+            \ '\n',
+            \ '',
+            \ ''
+            \)
       let g:VimuxRunnerType = 'window'
     endif
   else
@@ -240,7 +240,7 @@ function! s:exitCopyMode() abort
   catch
     let l:versionString = s:tmuxProperty('#{version}')
     if str2float(l:versionString) < 3.2
-        call s:sendKeys('q')
+      call s:sendKeys('q')
     endif
   endtry
 endfunction
@@ -266,9 +266,9 @@ function! s:tmuxWindowId() abort
 endfunction
 
 function! s:vimuxPaneOptions() abort
-    let height = VimuxOption('VimuxHeight')
-    let orientation = VimuxOption('VimuxOrientation')
-    return '-l '.height.' -'.orientation
+  let height = VimuxOption('VimuxHeight')
+  let orientation = VimuxOption('VimuxOrientation')
+  return '-l '.height.' -'.orientation
 endfunction
 
 ""
@@ -288,13 +288,13 @@ function! s:existingRunnerId() abort
   let currentId = s:tmuxIndex()
   let message = VimuxTmux('select-'.runnerType.' -t '.query.'')
   if message ==# ''
-      " A match was found. Make sure it isn't the current vim pane/window
-      " though!
+    " A match was found. Make sure it isn't the current vim pane/window
+    " though!
     let runnerId = s:tmuxIndex()
     if runnerId !=# currentId
-        " Success!
-        call VimuxTmux('last-'.runnerType)
-        return runnerId
+      " Success!
+      call VimuxTmux('last-'.runnerType)
+      return runnerId
     endif
   endif
   return ''
@@ -306,11 +306,11 @@ function! s:nearestRunnerId() abort
   let runnerType = VimuxOption('VimuxRunnerType')
   let filter = s:getTargetFilter()
   let views = split(
-              \ VimuxTmux(
-              \     'list-'.runnerType.'s'
-              \     ." -F '#{".runnerType.'_active}:#{'.runnerType."_id}'"
-              \     .filter),
-              \ '\n')
+        \ VimuxTmux(
+        \     'list-'.runnerType.'s'
+        \     ." -F '#{".runnerType.'_active}:#{'.runnerType."_id}'"
+        \     .filter),
+        \ '\n')
   " '1:' is the current active pane (the one with vim).
   " Find the first non-active pane.
   for view in views
@@ -353,7 +353,7 @@ endfunction
 
 function! s:hasRunner() abort
   if ! exists('g:VimuxRunnerIndex')
-      return v:false
+    return v:false
   endif
   let l:runnerType = VimuxOption('VimuxRunnerType')
   let l:command = 'list-'.runnerType."s -F '#{".runnerType."_id}'"
@@ -372,7 +372,7 @@ function! s:sendKeys(keys) abort
 endfunction
 
 function! s:sendText(text) abort
-    call s:sendKeys(shellescape(substitute(a:text, '\n$', ' ', '')))
+  call s:sendKeys(shellescape(substitute(a:text, '\n$', ' ', '')))
 endfunction
 
 function! s:echoNoRunner() abort
