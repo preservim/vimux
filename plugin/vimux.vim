@@ -84,7 +84,7 @@ function! VimuxSendText(text) abort
   if s:hasRunner()
     call s:sendText(text)
   else
-    echo 'No vimux runner pane/window. Create one with VimuxOpenRunner'
+    call s:echoNoRunner()
   endif
 endfunction
 
@@ -92,7 +92,7 @@ function! VimuxSendKeys(keys) abort
   if s:hasRunner()
     call s:sendKeys(keys)
   else
-    echo 'No vimux runner pane/window. Create one with VimuxOpenRunner'
+    call s:echoNoRunner()
   endif
 endfunction
 
@@ -139,6 +139,8 @@ function! VimuxTogglePane() abort
                   \)
       let g:VimuxRunnerType = 'window'
     endif
+  else
+    call s:echoNoRunner()
   endif
 endfunction
 
@@ -149,6 +151,8 @@ function! VimuxZoomRunner() abort
     elseif VimuxOption('VimuxRunnerType') ==# 'window'
       call VimuxTmux('select-window -t '.g:VimuxRunnerIndex)
     endif
+  else
+    call s:echoNoRunner()
   endif
 endfunction
 
@@ -158,6 +162,7 @@ function! VimuxInspectRunner() abort
     call VimuxTmux('copy-mode')
     return v:true
   endif
+  call s:echoNoRunner()
   return v:false
 endfunction
 
@@ -178,6 +183,8 @@ endfunction
 function! VimuxInterruptRunner() abort
   if s:hasRunner()
     call s:sendKeys('^c')
+  else
+    call s:echoNoRunner()
   endif
 endfunction
 
@@ -185,12 +192,16 @@ function! VimuxClearTerminalScreen() abort
   if s:hasRunner()
     call s:exitCopyMode()
     call s:sendKeys('C-l')
+  else
+    call s:echoNoRunner()
   endif
 endfunction
 
 function! VimuxClearRunnerHistory() abort
   if s:hasRunner()
     call VimuxTmux('clear-history -t '.g:VimuxRunnerIndex)
+  else
+    call s:echoNoRunner()
   endif
 endfunction
 
@@ -362,4 +373,8 @@ endfunction
 
 function! s:sendText(text) abort
     call s:sendKeys(shellescape(substitute(a:text, '\n$', ' ', '')))
+endfunction
+
+function! s:echoNoRunner() abort
+  echo 'No vimux runner pane/window. Create one with VimuxOpenRunner'
 endfunction
