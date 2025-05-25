@@ -82,7 +82,7 @@ endfunction
 
 function! VimuxSendText(text) abort
   if s:hasRunner()
-    call s:sendText(text)
+    call s:sendText(a:text)
   else
     call s:echoNoRunner()
   endif
@@ -90,7 +90,7 @@ endfunction
 
 function! VimuxSendKeys(keys) abort
   if s:hasRunner()
-    call s:sendKeys(keys)
+    call s:sendKeys(a:keys)
   else
     call s:echoNoRunner()
   endif
