@@ -153,24 +153,32 @@ function! VimuxZoomRunner() abort
 endfunction
 
 function! VimuxInspectRunner() abort
-  call VimuxTmux('select-'.VimuxOption('VimuxRunnerType').' -t '.g:VimuxRunnerIndex)
-  call VimuxTmux('copy-mode')
+  if s:hasRunner()
+    call VimuxTmux('select-'.VimuxOption('VimuxRunnerType').' -t '.g:VimuxRunnerIndex)
+    call VimuxTmux('copy-mode')
+    return v:true
+  endif
+  return v:false
 endfunction
 
 function! VimuxScrollUpInspect() abort
-  call VimuxInspectRunner()
-  call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
-  call s:sendKeys('C-u')
+  if VimuxInspectRunner()
+    call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
+    call s:sendKeys('C-u')
+  endif
 endfunction
 
 function! VimuxScrollDownInspect() abort
-  call VimuxInspectRunner()
-  call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
-  call s:sendKeys('C-d')
+  if VimuxInspectRunner()
+    call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
+    call s:sendKeys('C-d')
+  endif
 endfunction
 
 function! VimuxInterruptRunner() abort
-  call s:sendKeys('^c')
+  if s:hasRunner()
+    call s:sendKeys('^c')
+  endif
 endfunction
 
 function! VimuxClearTerminalScreen() abort
