@@ -64,9 +64,7 @@ function! VimuxRunLastCommand() abort
 endfunction
 
 function! VimuxRunCommand(command, ...) abort
-  if ! s:hasRunner()
-    call VimuxOpenRunner()
-  endif
+  call VimuxOpenRunner()
   let l:autoreturn = 1
   if exists('a:1')
     let l:autoreturn = a:1
