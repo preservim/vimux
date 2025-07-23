@@ -352,7 +352,7 @@ function! s:tmuxProperty(property) abort
 endfunction
 
 function! s:hasRunner() abort
-  if get(g:, 'VimuxRunnerIndex', '') == ''
+  if get(g:, 'VimuxRunnerIndex', '') ==? ''
     return v:false
   endif
   let l:runnerType = VimuxOption('VimuxRunnerType')
