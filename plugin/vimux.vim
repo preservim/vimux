@@ -300,6 +300,11 @@ function! s:existingRunnerId() abort
   return ''
 endfunction
 
+function! s:isPaneAvailable(paneId)
+  let currentCmd = VimuxTmux('display-message -p -t ' . a:paneId . ' "#{pane_current_command}"')
+  return match(currentCmd, '\v(bash|zsh|sh|fish)') != -1
+endfunction
+
 function! s:nearestRunnerId() abort
   " Try finding the runner in the current window/session, optionally using a
   " name/title filter
@@ -314,8 +319,13 @@ function! s:nearestRunnerId() abort
   " '1:' is the current active pane (the one with vim).
   " Find the first non-active pane.
   for view in views
+    let runnerId = split(view, ':')[1]
+    if runnerType ==# 'pane' && !s:isPaneAvailable(runnerId)
+      continue
+    endif
+
     if match(view, '1:') ==# -1
-      return split(view, ':')[1]
+      return runnerId
     endif
   endfor
   return ''
