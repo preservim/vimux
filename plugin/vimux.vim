@@ -310,15 +310,15 @@ function! s:nearestRunnerId() abort
   " name/title filter
   let runnerType = VimuxOption('VimuxRunnerType')
   let filter = s:getTargetFilter()
+  let lastField = runnerType ==# 'pane' ? 'pane_last' : 'window_last_flag'
+  let format = " -F '#{".runnerType."_active}:#{".runnerType."_id}:#{".lastField."}'"
   let views = split(
-        \ VimuxTmux(
-        \     'list-'.runnerType.'s'
-        \     ." -F '#{".runnerType.'_active}:#{'.runnerType."_id}'"
-        \     .filter),
+        \ VimuxTmux('list-'.runnerType.'s' . format . filter),
         \ '\n')
+  let last_runner_first = sort(views, {a, b -> str2nr(split(b, ':')[2]) - str2nr(split(a, ':')[2])})
   " '1:' is the current active pane (the one with vim).
   " Find the first non-active pane.
-  for view in views
+  for view in last_runner_first
     let runnerId = split(view, ':')[1]
     if runnerType ==# 'pane' && !s:isPaneAvailable(runnerId)
       continue
