@@ -356,7 +356,7 @@ function! s:hasRunner() abort
     return v:false
   endif
   let l:runnerType = VimuxOption('VimuxRunnerType')
-  let l:command = 'list-'.runnerType."s -F '#{".runnerType."_id}'"
+  let l:command = 'list-'.runnerType."s -a -F '#{".runnerType."_id}'"
   let l:found = match(VimuxTmux(l:command), g:VimuxRunnerIndex)
   return l:found != -1
 endfunction
