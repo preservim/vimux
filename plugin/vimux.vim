@@ -329,7 +329,7 @@ function! s:hasRunner() abort
     return v:false
   endif
   let l:command = "list-panes -a -F '#{pane_id}'"
-  let l:found = match(VimuxTmux(l:command), g:VimuxRunnerIndex)
+  let l:found = match(VimuxTmux(l:command), g:VimuxRunnerIndex.'\>')
   return l:found != -1
 endfunction
 
