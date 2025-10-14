@@ -101,7 +101,7 @@ function! VimuxOpenRunner() abort
     return
   endif
   let existingId = s:existingRunnerId()
-  if existingId !=# ''
+  if !exists('g:VimuxRunnerIndex') && existingId !=# ''
     let g:VimuxRunnerIndex = existingId
   else
     let extraArguments = VimuxOption('VimuxOpenExtraArgs')
@@ -355,9 +355,8 @@ function! s:hasRunner() abort
   if get(g:, 'VimuxRunnerIndex', '') ==? ''
     return v:false
   endif
-  let l:runnerType = VimuxOption('VimuxRunnerType')
-  let l:command = 'list-'.runnerType."s -F '#{".runnerType."_id}'"
-  let l:found = match(VimuxTmux(l:command), g:VimuxRunnerIndex)
+  let runnerType = VimuxOption('VimuxRunnerType')
+  let l:found = match(VimuxTmux('list-'.runnerType."s -a -F '#{".runnerType."_id}'"), g:VimuxRunnerIndex)
   return l:found != -1
 endfunction
 
