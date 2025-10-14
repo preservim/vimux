@@ -110,7 +110,7 @@ function! VimuxOpenRunner() abort
     elseif VimuxOption('VimuxRunnerType') ==# 'window'
       call VimuxTmux('new-window '.extraArguments)
     endif
-    let g:VimuxRunnerIndex = s:tmuxIndex()
+    let g:VimuxRunnerIndex = s:tmuxProperty('#{pane_id}')
     call s:setRunnerName()
     call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
   endif
@@ -128,15 +128,9 @@ function! VimuxTogglePane() abort
     if VimuxOption('VimuxRunnerType') ==# 'window'
       call VimuxTmux('join-pane -s '.g:VimuxRunnerIndex.' '.s:vimuxPaneOptions())
       let g:VimuxRunnerType = 'pane'
-      let g:VimuxRunnerIndex = s:tmuxIndex()
       call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
     elseif VimuxOption('VimuxRunnerType') ==# 'pane'
-      let g:VimuxRunnerIndex=substitute(
-            \ VimuxTmux('break-pane -d -s '.g:VimuxRunnerIndex." -P -F '#{window_id}'"),
-            \ '\n',
-            \ '',
-            \ ''
-            \)
+      call VimuxTmux('break-pane -d -s '.g:VimuxRunnerIndex)
       let g:VimuxRunnerType = 'window'
     endif
   else
@@ -245,26 +239,6 @@ function! s:exitCopyMode() abort
   endtry
 endfunction
 
-function! s:tmuxSession() abort
-  return s:tmuxProperty('#S')
-endfunction
-
-function! s:tmuxIndex() abort
-  if VimuxOption('VimuxRunnerType') ==# 'pane'
-    return s:tmuxPaneId()
-  else
-    return s:tmuxWindowId()
-  end
-endfunction
-
-function! s:tmuxPaneId() abort
-  return s:tmuxProperty('#{pane_id}')
-endfunction
-
-function! s:tmuxWindowId() abort
-  return s:tmuxProperty('#{window_id}')
-endfunction
-
 function! s:vimuxPaneOptions() abort
   let height = VimuxOption('VimuxHeight')
   let orientation = VimuxOption('VimuxOrientation')
@@ -272,8 +246,8 @@ function! s:vimuxPaneOptions() abort
 endfunction
 
 ""
-" @return a string of the form '%4', the ID of the pane or window to use,
-"   or '' if no nearest pane or window is found.
+" @return a string of the form '%4', the ID of the pane to use,
+"   or '' if no nearest pane is found.
 function! s:existingRunnerId() abort
   let runnerType = VimuxOption('VimuxRunnerType')
   let query = get(VimuxOption('VimuxRunnerQuery'), runnerType, '')
@@ -285,12 +259,11 @@ function! s:existingRunnerId() abort
     endif
   endif
   " Try finding the runner using the provided query
-  let currentId = s:tmuxIndex()
+  let currentId = s:tmuxProperty('#{pane_id}')
   let message = VimuxTmux('select-'.runnerType.' -t '.query.'')
   if message ==# ''
-    " A match was found. Make sure it isn't the current vim pane/window
-    " though!
-    let runnerId = s:tmuxIndex()
+    " A match was found. Make sure it isn't the current vim pane!
+    let runnerId = s:tmuxProperty('#{pane_id}')
     if runnerId !=# currentId
       " Success!
       call VimuxTmux('last-'.runnerType)
@@ -355,8 +328,7 @@ function! s:hasRunner() abort
   if get(g:, 'VimuxRunnerIndex', '') ==? ''
     return v:false
   endif
-  let l:runnerType = VimuxOption('VimuxRunnerType')
-  let l:command = 'list-'.runnerType."s -a -F '#{".runnerType."_id}'"
+  let l:command = "list-panes -a -F '#{pane_id}'"
   let l:found = match(VimuxTmux(l:command), g:VimuxRunnerIndex)
   return l:found != -1
 endfunction
