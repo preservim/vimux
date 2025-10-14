@@ -140,11 +140,8 @@ endfunction
 
 function! VimuxZoomRunner() abort
   if s:hasRunner()
-    if VimuxOption('VimuxRunnerType') ==# 'pane'
-      call VimuxTmux('resize-pane -Z -t '.g:VimuxRunnerIndex)
-    elseif VimuxOption('VimuxRunnerType') ==# 'window'
-      call VimuxTmux('select-window -t '.g:VimuxRunnerIndex)
-    endif
+    call s:selectRunner()
+    call VimuxTmux('resize-pane -Z -t '.g:VimuxRunnerIndex)
   else
     call s:echoNoRunner()
   endif
@@ -152,7 +149,7 @@ endfunction
 
 function! VimuxInspectRunner() abort
   if s:hasRunner()
-    call VimuxTmux('select-'.VimuxOption('VimuxRunnerType').' -t '.g:VimuxRunnerIndex)
+    call s:selectRunner()
     call VimuxTmux('copy-mode')
     return v:true
   endif
@@ -226,6 +223,11 @@ function! VimuxTmux(arguments) abort
   else
     throw 'Aborting, because not inside tmux session.'
   endif
+endfunction
+
+function! s:selectRunner() abort
+    call VimuxTmux('select-window -t '.g:VimuxRunnerIndex)
+    call VimuxTmux('select-pane -t '.g:VimuxRunnerIndex)
 endfunction
 
 function! s:exitCopyMode() abort
@@ -308,6 +310,8 @@ function! s:getTargetFilter() abort
 endfunction
 
 function! s:setRunnerName() abort
+  " To be called only while the runner is active, including its window and
+  " session
   let targetName = VimuxOption('VimuxRunnerName')
   if targetName ==# ''
     return
