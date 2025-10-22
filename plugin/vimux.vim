@@ -118,7 +118,7 @@ endfunction
 
 function! VimuxCloseRunner() abort
   if s:hasRunner()
-    call VimuxTmux('kill-'.VimuxOption('VimuxRunnerType').' -t '.g:VimuxRunnerIndex)
+    call VimuxTmux('kill-pane -t '.g:VimuxRunnerIndex)
   endif
   unlet! g:VimuxRunnerIndex
 endfunction
