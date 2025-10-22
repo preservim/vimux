@@ -111,7 +111,10 @@ function! VimuxOpenRunner() abort
       call VimuxTmux('new-window '.extraArguments)
     endif
     let g:VimuxRunnerIndex = s:tmuxProperty('#{pane_id}')
-    call s:setRunnerName()
+    let targetName = VimuxOption('VimuxRunnerName')
+    if targetName !=# ''
+      call VimuxTmux('select-pane -T '.targetName)
+    endif
     call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
   endif
 endfunction
@@ -283,7 +286,7 @@ function! s:nearestRunnerId() abort
   let views = split(
         \ VimuxTmux(
         \     'list-'.runnerType.'s'
-        \     ." -F '#{".runnerType.'_active}:#{'.runnerType."_id}'"
+        \     ." -F '#{".runnerType.'_active}:#{pane_id}"'
         \     .filter),
         \ '\n')
   " '1:' is the current active pane (the one with vim).
@@ -306,21 +309,6 @@ function! s:getTargetFilter() abort
     return " -f '#{==:#{window_name},".targetName."}'"
   elseif runnerType ==# 'pane'
     return " -f '#{==:#{pane_title},".targetName."}'"
-  endif
-endfunction
-
-function! s:setRunnerName() abort
-  " To be called only while the runner is active, including its window and
-  " session
-  let targetName = VimuxOption('VimuxRunnerName')
-  if targetName ==# ''
-    return
-  endif
-  let runnerType = VimuxOption('VimuxRunnerType')
-  if runnerType ==# 'window'
-    call VimuxTmux('rename-window '.targetName)
-  elseif runnerType ==# 'pane'
-    call VimuxTmux('select-pane -T '.targetName)
   endif
 endfunction
 
