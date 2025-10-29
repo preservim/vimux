@@ -158,8 +158,10 @@ endfunction
 
 function! VimuxInspectRunner() abort
   if s:hasRunner()
-    call VimuxTmux('select-'.VimuxOption('VimuxRunnerType').' -t '.g:VimuxRunnerIndex)
-    call VimuxTmux('copy-mode')
+    call VimuxTmux('switch-client -t '.g:VimuxRunnerIndex)
+    call VimuxTmux('select-window -t '.g:VimuxRunnerIndex)
+    call VimuxTmux('select-pane -t '.g:VimuxRunnerIndex)
+    call VimuxTmux('copy-mode -t '.g:VimuxRunnerIndex)
     return v:true
   endif
   call s:echoNoRunner()
