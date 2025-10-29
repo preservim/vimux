@@ -146,10 +146,10 @@ endfunction
 
 function! VimuxZoomRunner() abort
   if s:hasRunner()
+    call VimuxTmux('switch-client -t '.g:VimuxRunnerIndex)
+    call VimuxTmux('select-window -t '.g:VimuxRunnerIndex)
     if VimuxOption('VimuxRunnerType') ==# 'pane'
       call VimuxTmux('resize-pane -Z -t '.g:VimuxRunnerIndex)
-    elseif VimuxOption('VimuxRunnerType') ==# 'window'
-      call VimuxTmux('select-window -t '.g:VimuxRunnerIndex)
     endif
   else
     call s:echoNoRunner()
