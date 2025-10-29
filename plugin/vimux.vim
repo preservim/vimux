@@ -129,7 +129,7 @@ function! VimuxTogglePane() abort
       call VimuxTmux('join-pane -s '.g:VimuxRunnerIndex.' '.s:vimuxPaneOptions())
       let g:VimuxRunnerType = 'pane'
       let g:VimuxRunnerIndex = s:tmuxIndex()
-      call VimuxTmux('last-'.VimuxOption('VimuxRunnerType'))
+      call VimuxTmux('last-pane')
     elseif VimuxOption('VimuxRunnerType') ==# 'pane'
       let g:VimuxRunnerIndex=substitute(
             \ VimuxTmux('break-pane -d -s '.g:VimuxRunnerIndex." -P -F '#{window_id}'"),
