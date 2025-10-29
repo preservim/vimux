@@ -353,6 +353,10 @@ function! s:tmuxProperty(property) abort
   return substitute(VimuxTmux("display -p '".a:property."'"), '\n$', '', '')
 endfunction
 
+function! VimuxHasRunner() abort
+  return s:hasRunner()
+endfunction
+
 function! s:hasRunner() abort
   if get(g:, 'VimuxRunnerIndex', '') ==? ''
     return v:false
