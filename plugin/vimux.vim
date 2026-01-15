@@ -17,7 +17,8 @@ let g:VimuxTmuxCommand   = get(g:, 'VimuxTmuxCommand',   'tmux')
 let g:VimuxUseNearest    = get(g:, 'VimuxUseNearest',    v:true)
 let g:VimuxExpandCommand = get(g:, 'VimuxExpandCommand', v:false)
 let g:VimuxCloseOnExit   = get(g:, 'VimuxCloseOnExit',   v:false)
-let g:VimuxCommandShell  = get(g:, 'VimuxCommandShell',   v:true)
+let g:VimuxCommandShell  = get(g:, 'VimuxCommandShell',  v:true)
+let g:VimuxEchoNoRunner  = get(g:, 'VimuxEchoNoRunner',  v:true)
 
 function! VimuxOption(name) abort
   return get(b:, a:name, get(g:, a:name))
@@ -382,5 +383,7 @@ function! s:sendText(text) abort
 endfunction
 
 function! s:echoNoRunner() abort
-  echo 'No vimux runner pane/window. Create one with VimuxOpenRunner'
+  if VimuxOption('VimuxEchoNoRunner')
+    echo 'No vimux runner pane/window. Create one with VimuxOpenRunner'
+  endif
 endfunction
