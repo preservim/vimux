@@ -361,10 +361,12 @@ function! s:hasRunner() abort
   if get(g:, 'VimuxRunnerIndex', '') ==? ''
     return v:false
   endif
-  let runnerType = VimuxOption('VimuxRunnerType')
-  let l:command = 'list-'.runnerType."s -a -F '#{".runnerType."_id}'"
-  let l:found = match(VimuxTmux(l:command), g:VimuxRunnerIndex.'\>')
-  return l:found != -1
+  try
+    call VimuxTmux('send-keys -t '.g:VimuxRunnerIndex)
+    return v:true
+  catch
+    return v:false
+  endtry
 endfunction
 
 function! s:autoclose() abort
